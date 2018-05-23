@@ -1,17 +1,12 @@
 package org.scalaide.core
 package opentype
 
+import testsetup.SDTTestUtils._
+import org.junit._
 import org.eclipse.core.runtime.Path
-import org.eclipse.jdt.core.IOrdinaryClassFile
-import org.junit.AfterClass
-import org.junit.Assert
-import org.junit.BeforeClass
-import org.junit.Test
-import org.scalaide.core.IScalaProject
 import org.scalaide.core.internal.jdt.model.ScalaClassFile
-
-import org.scalaide.core.testsetup.SDTTestUtils.createProjects
-import org.scalaide.core.testsetup.SDTTestUtils.deleteProjects
+import org.eclipse.jdt.core.IOrdinaryClassFile
+import org.scalaide.core.IScalaProject
 
 object ScalaBinaryTypeTest {
   var prj: IScalaProject = _
