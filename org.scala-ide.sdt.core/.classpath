@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="target/lib/miglayout-3.7.4.jar"/>
 	<classpathentry kind="lib" path="target/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="target/lib/compiler-interface-1.2.2.jar" sourcepath="target/lib/compiler-interface-1.2.2-sources.jar"/>
-	<classpathentry kind="lib" path="target/lib/scalap-2.12.7.jar"/>
+	<classpathentry kind="lib" path="target/lib/scalap-2.12.8.jar"/>
 	<classpathentry kind="lib" path="target/lib/zinc_2.12-1.2.2.jar" sourcepath="target/lib/zinc_2.12-1.2.2-sources.jar"/>
 	<classpathentry kind="lib" path="target/lib/zinc-apiinfo_2.12-1.2.2.jar" sourcepath="target/lib/zinc-apiinfo_2.12-1.2.2-sources.jar"/>
 	<classpathentry kind="lib" path="target/lib/zinc-classfile_2.12-1.2.2.jar" sourcepath="target/lib/zinc-classfile_2.12-1.2.2-sources.jar"/>

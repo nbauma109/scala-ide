@@ -83,7 +83,7 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
       if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
         owner.initialize
       original.companionSymbol orElse {
-        ctx.lookup(original.name.companionName, owner).suchThat(sym =>
+        ctx.lookupSibling(original, original.name.companionName).suchThat(sym =>
           (original.isTerm || sym.hasModuleFlag) &&
           (sym isCoDefinedWith original)
         )
