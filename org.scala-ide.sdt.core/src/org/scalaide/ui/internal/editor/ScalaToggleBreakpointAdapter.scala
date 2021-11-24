@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.IStructuredSelection
 import org.eclipse.jface.viewers.StructuredSelection
 import org.eclipse.ui.IEditorInput
 import org.eclipse.ui.IWorkbenchPart
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.jdt.model.ScalaSourceTypeElement
 import org.scalaide.logging.HasLogger
@@ -127,7 +128,7 @@ class ScalaToggleBreakpointAdapter extends ToggleBreakpointAdapter with HasLogge
               case _                             => ()
             }
           case IJavaElement.TYPE =>
-            toggleClassBreakpoints(part, sel)
+            ToggleBreakpointAdapter.toggleClassBreakpoints(part, sel)
           case _ =>
             toggleLineBreakpointsImpl(part, selection)
         }
@@ -144,7 +145,7 @@ class ScalaToggleBreakpointAdapter extends ToggleBreakpointAdapter with HasLogge
    * The implementation of this method is copied from the super class, which had
    * to be overwritten because it doesn't know how to get a ScalaCompilationUnit.
    */
-  override def translateToMembers(part: IWorkbenchPart, selection: ISelection): ISelection = {
+  def translateToMembers(part: IWorkbenchPart, selection: ISelection): ISelection = {
     def typeRoot(input: IEditorInput): Option[ITypeRoot] =
       Option(input.getAdapter(classOf[IClassFile]).asInstanceOf[IClassFile])
         .orElse(IScalaPlugin().scalaCompilationUnit(input).asInstanceOf[Option[ICompilationUnit]])
@@ -202,4 +203,9 @@ object ScalaToggleBreakpointAdapterUtils extends ReflectionUtils {
     else
       createQualifiedTypeNameMethod.invoke(tba, tpe).asInstanceOf[String]
   }
+
+   def getTextEditor(part: IWorkbenchPart): ITextEditor = {
+     val x = part.asInstanceOf[ITextEditor];
+     if (x != null) x else part.getAdapter(classOf[ITextEditor])
+   }
 }

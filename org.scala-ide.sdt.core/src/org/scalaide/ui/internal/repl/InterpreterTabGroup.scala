@@ -43,14 +43,14 @@ import org.scalaide.util.eclipse.SWTUtils
  */
 class InterpreterTabGroup extends AbstractLaunchConfigurationTabGroup {
   override def createTabs(dialog: ILaunchConfigurationDialog, mode: String) = {
-    setTabs(Array[ILaunchConfigurationTab](
+    setTabs(
       new InterpreterMainTab(),
       new JavaArgumentsTab(),
       new JavaJRETab(),
       new JavaClasspathTab(),
       new SourceLookupTab(),
       new EnvironmentTab(),
-      new CommonTab()))
+      new CommonTab())
   }
 }
 

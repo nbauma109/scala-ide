@@ -48,7 +48,7 @@ class ScalaSpellingEngine extends ISpellingEngine {
     } {
       if (monitor != null && monitor.isCanceled || listener.isProblemsThresholdReached)
         return
-      checker.execute(listener, new SpellCheckIterator(document, partition, checker.getLocale))
+      checker.execute(listener, new SpellCheckIterator(document, partition, checker.getLocale, monitor))
     }
   }
 
