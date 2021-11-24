@@ -65,9 +65,8 @@ class ExtractTrait extends RefactoringExecutorWithWizard {
       // Create a new file for the extracted trait
       val fileChange: Option[EclipseChange] = newFileChanges.headOption.map(newFile => {
         val pkg = file.getCompilationUnit.getParent
-        //TODO find out what has changed around here
-        //val path = pkg.getPath.append(traitName + ".scala")
-        new CreateFileChange(null, newFile.text, file.getResource.asInstanceOf[IFile].getCharset)
+        val path = pkg.getPath.append(traitName + ".scala")
+        new CreateFileChange(path, newFile.text, file.getResource.asInstanceOf[IFile].getCharset)
       })
 
       val changes = fileChange.toList ::: scalaChangesToEclipseChanges(textChanges).toList

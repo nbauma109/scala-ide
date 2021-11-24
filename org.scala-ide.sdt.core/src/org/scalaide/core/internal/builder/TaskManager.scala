@@ -4,6 +4,7 @@
 package org.scalaide.core.internal.builder
 
 import java.io.InputStream
+import java.nio.charset.CharacterCodingException
 
 import scala.reflect.internal.util.Position
 import scala.reflect.internal.util.SourceFile
@@ -59,7 +60,13 @@ object TaskManager {
   private def extractComments(sourceFile: SourceFile, contentStream: InputStream, charset: String): Seq[Comment] = {
     val contents = try {
       scala.io.Source.fromInputStream(contentStream)(charset).mkString
-    } finally contentStream.close()
+    }
+    catch {
+      //TODO: What would be more correct way to handle charsets.
+      //It might be possible to use compiler setting for encoding and/or report error and fallback to UTF-8 etc
+      case _ : CharacterCodingException => return Seq.empty;
+    }
+    finally contentStream.close()
 
     for {
       token <- ScalaLexer.rawTokenise(contents, forgiveErrors = true)

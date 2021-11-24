@@ -120,7 +120,7 @@
         <repo.eclipse>${repo.eclipse.2021-12}</repo.eclipse>
         <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
         <repo.ajdt>${repo.ajdt.2021-12}</repo.ajdt>
-        <weaving.hook.plugin.version>1.2.200.v20180827-1235</weaving.hook.plugin.version>
+        <weaving.hook.plugin.version>1.3.100.v20211021-1418</weaving.hook.plugin.version>
       </properties>
     </profile>
 
