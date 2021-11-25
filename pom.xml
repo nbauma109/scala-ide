@@ -71,6 +71,13 @@
     <scala211.scala-xml.version>1.0.6</scala211.scala-xml.version>
     <scala211.scala-parser-combinators.version>1.0.5</scala211.scala-parser-combinators.version>
     <scala211.scala-swing.version>1.0.1</scala211.scala-swing.version>
+
+    <!-- Scala 2.13.x -->
+    <scala213.version>2.13.7</scala213.version>
+    <scala213.binary.version>2.13</scala213.binary.version>
+    <scala213.scala-xml.version>1.0.6</scala213.scala-xml.version>
+    <scala213.scala-parser-combinators.version>1.0.6</scala213.scala-parser-combinators.version>
+
     <!-- Scala 2.12.x -->
     <scala212.version>2.12.6</scala212.version>
     <scala212.binary.version>2.12</scala212.binary.version>
@@ -100,6 +107,16 @@
       <id>retryFlakyTests</id>
       <properties>
         <retryFlakyTests>true</retryFlakyTests>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>scala-2.13.x</id>
+      <properties>
+        <scala.version>${scala213.version}</scala.version>
+        <scala.short.version>213</scala.short.version>
+        <scala.minor.version>2.13</scala.minor.version>
+        <version.suffix>2_13</version.suffix>
       </properties>
     </profile>
 
