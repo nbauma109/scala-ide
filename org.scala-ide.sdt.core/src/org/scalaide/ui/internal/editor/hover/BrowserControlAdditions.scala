@@ -27,7 +27,7 @@ trait BrowserControlAdditions extends BrowserInformationControl with HasLogger {
   override def computeSizeHint(): Point = {
     val gc = new GC(control)
     gc.setFont(JFaceResources.getFontRegistry().get(IScalaHover.HoverFontId))
-    val averageCharWidth = gc.getFontMetrics().getAverageCharWidth()
+    val averageCharWidth = gc.getFontMetrics().getAverageCharacterWidth()
     gc.dispose()
 
     val p = super.computeSizeHint()
