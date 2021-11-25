@@ -164,7 +164,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-packaging-plugin</artifactId>
         <configuration>
-          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm'-${buildNumber}'</format>
+          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm'-xxxx'</format>
           <archiveSite>true</archiveSite>
         </configuration>
       </plugin>
