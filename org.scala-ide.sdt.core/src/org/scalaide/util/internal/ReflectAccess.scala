@@ -1,5 +1,7 @@
 package org.scalaide.util.internal
 
+import scala.language.dynamics
+
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 

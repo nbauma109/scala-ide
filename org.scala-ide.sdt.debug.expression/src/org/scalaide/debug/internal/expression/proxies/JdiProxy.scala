@@ -3,6 +3,8 @@
  */
 package org.scalaide.debug.internal.expression.proxies
 
+import scala.language.dynamics
+
 import scala.reflect.ClassTag
 import scala.reflect.classTag
 

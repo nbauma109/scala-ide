@@ -1,5 +1,7 @@
 package org.scalaide.core.internal.launching
 
+import scala.language.postfixOps
+
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.debug.core.DebugPlugin

@@ -9,9 +9,9 @@ import java.io.File
 import org.eclipse.core.runtime.Status
 import org.scalaide.core.IScalaPlugin
 import org.scalaide.logging.HasLogger
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
 import org.scalaide.core.SdtConstants
+import org.scalaide.core.Publisher
+import org.scalaide.core.Subscriber
 
 case class ModifiedScalaInstallations()
 

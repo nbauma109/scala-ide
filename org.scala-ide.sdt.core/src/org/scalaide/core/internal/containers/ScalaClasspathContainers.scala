@@ -65,7 +65,7 @@ class ScalaLibraryClasspathContainerInitializer extends ScalaClasspathContainerI
 }
 
 class ScalaCompilerClasspathContainerInitializer extends ScalaClasspathContainerInitializer(SdtConstants.ScalaCompilerContName) {
-  override def entries = Array(platformInstallation.compiler.libraryEntries())
+  override def entries = Array[IClasspathEntry](platformInstallation.compiler.libraryEntries())
 }
 
 abstract class ScalaClasspathContainerPage(containerPath: IPath, name: String, override val itemTitle: String, desc: String) extends NewElementWizardPage(name)

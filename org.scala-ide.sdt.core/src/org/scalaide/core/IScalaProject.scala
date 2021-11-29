@@ -9,7 +9,6 @@ import org.scalaide.core.internal.builder.EclipseBuildManager
 import org.eclipse.jface.preference.IPreferenceStore
 import org.eclipse.core.runtime.SubMonitor
 import org.eclipse.core.runtime.IProgressMonitor
-import scala.collection.mutable.Publisher
 import java.io.File
 import org.eclipse.core.runtime.IPath
 import org.scalaide.core.compiler.IPresentationCompilerProxy

@@ -1,5 +1,7 @@
 package org.scalaide.ui.internal.templates
 
+import scala.language.postfixOps
+
 import org.eclipse.jface.text.templates.TemplateContextType
 import org.eclipse.jface.text.IDocument
 import org.eclipse.jface.text.templates.DocumentTemplateContext

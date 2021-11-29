@@ -47,77 +47,8 @@
       <artifactId>json-io</artifactId>
       <version>${json-io.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-core_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-classpath_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>compiler-interface</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-ide</groupId>
-      <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-persist_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-apiinfo_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-classfile_${scala.minor.version}</artifactId>
-      <version>${zinc.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>util-interface</artifactId>
-      <version>${sbt-util.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>util-logging_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>util-control_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>util-relation_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>io_${scala.minor.version}</artifactId>
-      <version>${sbt-io.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>sbinary_${scala.minor.version}</artifactId>
-      <version>${sbinary.version}</version>
-    </dependency>
-    <dependency>
+
+    <!--dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scalap</artifactId>
       <version>${scala212.version}</version>
@@ -128,15 +59,52 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang.modules</groupId>
+      <artifactId>scala-xml_${scala.minor.version}</artifactId>
+      <version>2.0.1</version>
+    </dependency-->
+
+    <dependency>
+      <groupId>org.scala-ide</groupId>
+      <artifactId>org.scala-refactoring</artifactId>
+      <version>4.7.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-ide</groupId>
+      <artifactId>org.scala-ide.sdt.aspects</artifactId>
+      <version>4.7.1-SNAPSHOT</version>
+    </dependency>
+
+    <!--dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>zinc-compile-core_2.13</artifactId>
+      <version>1.5.7</version>
+    </dependency-->
+
+    <dependency>
+      <groupId>org.scala-sbt</groupId>
+      <artifactId>zinc_${scala.minor.version}</artifactId>
+      <version>${zinc.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scalariform</groupId>
+      <artifactId>scalariform_${scala.minor.version}</artifactId>
+      <version>0.2.10</version>
+    </dependency>
+
   </dependencies>
 
-  <repositories>
+  <!--repositories>
     <repository>
       <id>bintray.com</id>
       <name>bintray repo</name>
       <url>https://dl.bintray.com/sbt/maven-releases/</url>
     </repository>
-  </repositories>
+  </repositories-->
 
   <build>
     <plugins>
@@ -171,136 +139,10 @@
                   <artifactId>json-io</artifactId>
                   <classifier>sources</classifier>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-core_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-core_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-classpath_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-classpath_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>compiler-interface</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>compiler-interface</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-ide</groupId>
-                  <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-ide</groupId>
-                  <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-persist_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-persist_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-apiinfo_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-apiinfo_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-classfile_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>zinc-classfile_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-interface</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-interface</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-logging_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-logging_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-control_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-control_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-relation_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>util-relation_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>io_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>io_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>sbinary_${scala.minor.version}</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.scala-sbt</groupId>
-                  <artifactId>sbinary_${scala.minor.version}</artifactId>
-                  <classifier>sources</classifier>
-                </artifactItem>
-                <artifactItem>
+                <!--artifactItem>
                   <groupId>org.scala-lang</groupId>
                   <artifactId>scalap</artifactId>
-                </artifactItem>
+                </artifactItem-->
               </artifactItems>
             </configuration>
           </execution>

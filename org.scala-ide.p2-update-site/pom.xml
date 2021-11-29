@@ -16,27 +16,11 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.scala-refactoring</groupId>
-      <artifactId>org.scala-refactoring.library_${scala.version}</artifactId>
-      <version>${scala-refactoring.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.scalariform</groupId>
       <artifactId>scalariform_${scala.minor.version}</artifactId>
       <version>${scalariform.version}</version>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>scala-ide.refactoring.repo</id>
-      <name>Scala IDE refactoring repository</name>
-      <url>${repo.scala-refactoring}</url>
-      <snapshots>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <modules>
     <module>org.scala-ide.p2-update-site.feature</module>

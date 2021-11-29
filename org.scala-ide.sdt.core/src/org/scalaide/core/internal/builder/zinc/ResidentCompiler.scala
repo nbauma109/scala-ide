@@ -3,6 +3,8 @@ package org.scalaide.core.internal.builder.zinc
 import java.io.File
 import java.util.Optional
 
+import scala.language.postfixOps
+
 import scala.reflect.internal.util.NoPosition
 import scala.reflect.internal.util.Position
 import scala.tools.nsc.settings.SpecificScalaVersion

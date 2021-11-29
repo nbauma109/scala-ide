@@ -124,8 +124,36 @@
           </filesets>
         </configuration>
       </plugin>
+      <!-- force run the scala compiler projects before tycho compilation is run -->
       <plugin>
-        <!-- force run the scala compiler projects before tycho compilation is run -->
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>${scala.plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <args>
+            <arg>-feature</arg>
+            <arg>-unchecked</arg>
+            <arg>-deprecation</arg>
+            <arg>-language:_</arg>
+            <arg>-Xlint</arg>
+            <arg>-Xfuture</arg>
+            <arg>-Xfatal-warnings</arg> >
+            <arg>-Yno-adapted-args</arg>
+            <arg>-Ywarn-dead-code</arg>
+            <arg>-Ywarn-unused-import</arg>
+            <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
+          </args>
+        </configuration>
+      </plugin>
+      <!--plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
         <executions>
@@ -136,7 +164,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
       <plugin>
         <!-- configuration of which test suite to run -->
         <groupId>org.eclipse.tycho</groupId>

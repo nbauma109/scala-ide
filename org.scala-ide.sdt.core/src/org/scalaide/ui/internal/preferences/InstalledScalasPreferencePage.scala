@@ -31,11 +31,11 @@ import org.eclipse.core.runtime.Status
 import org.scalaide.core.internal.project.ModifiedScalaInstallations
 import scala.util.Failure
 import scala.util.Success
-import scala.collection.mutable.Publisher
 import org.scalaide.core.internal.project.CustomScalaInstallationLabel
 import org.scalaide.core.internal.project.LabeledScalaInstallation
 import scala.PartialFunction.cond
 import org.scalaide.core.SdtConstants
+import org.scalaide.core.Publisher
 
 class InstalledScalasPreferencePage extends PreferencePage with IWorkbenchPreferencePage with ScalaInstallationUIProviders with Publisher[ModifiedScalaInstallations] {
 

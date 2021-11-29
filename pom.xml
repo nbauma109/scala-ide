@@ -20,22 +20,20 @@
   <properties>
     <encoding>UTF-8</encoding>
     <retryFlakyTests>true</retryFlakyTests>
-    <!-- p2 repositories location -->
+
+    <!-- Eclipse p2 repositories location -->
     <repo.eclipse.2021-12>http://download.eclipse.org/releases/2021-12</repo.eclipse.2021-12>
     <repo.ajdt.2021-12>http://download.eclipse.org/tools/ajdt/410/dev/update</repo.ajdt.2021-12>
-    <repo.eclipse.neon>http://download.eclipse.org/releases/neon</repo.eclipse.neon>
-    <repo.ajdt.neon>http://download.eclipse.org/tools/ajdt/46/dev/update</repo.ajdt.neon>
-    <repo.eclipse.oxygen>http://download.eclipse.org/releases/oxygen</repo.eclipse.oxygen>
-    <repo.ajdt.oxygen>http://download.eclipse.org/tools/ajdt/47/dev/update</repo.ajdt.oxygen>
-    <repo.equinox.launcher>http://download.scala-ide.org/plugins/equinox-weaving-launcher/releases/site</repo.equinox.launcher>
-    <repo.scala-ide.root>http://download.scala-ide.org</repo.scala-ide.root>
     <repo.nebula>http://download.eclipse.org/nebula/releases/latest</repo.nebula>
 
-    <!-- fixed versions -->
+    <!-- general external libraries versions -->
     <miglayout.version>3.7.4</miglayout.version>
     <log4j.version>1.2.17</log4j.version>
     <json-io.version>4.1.6</json-io.version>
     <mockito.version>1.9.5</mockito.version>
+
+
+    <!-- scala related libraries versions -->
     <zinc.version>1.0.0</zinc.version>
     <sbt-util.version>1.0.0</sbt-util.version>
     <sbt-io.version>1.0.0</sbt-io.version>
@@ -52,6 +50,7 @@
     <properties-maven.plugin.version>1.1.10</properties-maven.plugin.version>
     <buildnumber-maven.plugin.version>1.4</buildnumber-maven.plugin.version>
     <maven-clean.plugin.version>2.5</maven-clean.plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
     <!-- Weaving plugin version -->
     <weaving.hook.plugin.version>Select an Eclipse profile</weaving.hook.plugin.version>
@@ -63,15 +62,6 @@
     <tycho.test.jvmArgs>-Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
 
     <!-- base versions -->
-    <!-- Scala 2.10.x -->
-    <scala210.version>2.10.6</scala210.version>
-    <!-- Scala 2.11.x -->
-    <scala211.version>2.11.11</scala211.version>
-    <scala211.binary.version>2.11</scala211.binary.version>
-    <scala211.scala-xml.version>1.0.6</scala211.scala-xml.version>
-    <scala211.scala-parser-combinators.version>1.0.5</scala211.scala-parser-combinators.version>
-    <scala211.scala-swing.version>1.0.1</scala211.scala-swing.version>
-
     <!-- Scala 2.13.x -->
     <scala213.version>2.13.7</scala213.version>
     <scala213.binary.version>2.13</scala213.binary.version>
@@ -79,7 +69,7 @@
     <scala213.scala-parser-combinators.version>1.0.6</scala213.scala-parser-combinators.version>
 
     <!-- Scala 2.12.x -->
-    <scala212.version>2.12.6</scala212.version>
+    <scala212.version>2.12.15</scala212.version>
     <scala212.binary.version>2.12</scala212.binary.version>
     <scala212.scala-xml.version>1.0.6</scala212.scala-xml.version>
     <scala212.scala-parser-combinators.version>1.0.6</scala212.scala-parser-combinators.version>
@@ -98,8 +88,8 @@
     <version.tag>local</version.tag>
 
     <!-- the repos containing the Scala dependencies -->
-    <repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
-    <repo.typesafe>https://proxy-ch.typesafe.com:8082/artifactory/ide-${scala.minor.version}</repo.typesafe>
+    <!--repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
+    <repo.typesafe>https://proxy-ch.typesafe.com:8082/artifactory/ide-${scala.minor.version}</repo.typesafe-->
   </properties>
 
   <profiles>
@@ -118,6 +108,29 @@
         <scala.minor.version>2.13</scala.minor.version>
         <version.suffix>2_13</version.suffix>
       </properties>
+      <build>
+      <plugins>
+        <!-- scala compiler -->
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>${scala.plugin.version}</version>
+          <!--configuration>
+            <args>
+              <arg>-feature</arg>
+              <arg>-unchecked</arg>
+              <arg>-deprecation</arg>
+              <arg>-language:_</arg>
+              <arg>-Xlint:unused</arg>
+              <arg>-Xfuture</arg>
+              <arg>-Xfatal-warnings</arg> >
+              <arg>-Ywarn-dead-code</arg>
+              <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
+            </args>
+          </configuration-->
+        </plugin>
+      </plugins>
+      </build>
     </profile>
 
     <profile>
@@ -128,6 +141,29 @@
         <scala.minor.version>2.12</scala.minor.version>
         <version.suffix>2_12</version.suffix>
       </properties>
+      <build>
+      <plugins>
+        <!-- scala compiler -->
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>${scala.plugin.version}</version>
+          <!--configuration>
+            <args>
+              <arg>-feature</arg>
+              <arg>-unchecked</arg>
+              <arg>-deprecation</arg>
+              <arg>-language:_</arg>
+              <arg>-Xlint:unused</arg>
+              <arg>-Xfuture</arg>
+              <arg>-Xfatal-warnings</arg> >
+              <arg>-Ywarn-dead-code</arg>
+              <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
+            </args>
+          </configuration-->
+        </plugin>
+      </plugins>
+      </build>
     </profile>
 
     <profile>
@@ -135,20 +171,9 @@
       <properties>
         <eclipse.codename>2021-12</eclipse.codename>
         <repo.eclipse>${repo.eclipse.2021-12}</repo.eclipse>
-        <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
+        <jdt.core.version.range>[3.28.0,4.0.0)</jdt.core.version.range>
         <repo.ajdt>${repo.ajdt.2021-12}</repo.ajdt>
         <weaving.hook.plugin.version>1.3.100.v20211021-1418</weaving.hook.plugin.version>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>eclipse-oxygen</id>
-      <properties>
-        <eclipse.codename>oxygen</eclipse.codename>
-        <repo.eclipse>${repo.eclipse.oxygen}</repo.eclipse>
-        <repo.ajdt>${repo.ajdt.oxygen}</repo.ajdt>
-        <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
-        <weaving.hook.plugin.version>1.2.0.v20160929-1449</weaving.hook.plugin.version>
       </properties>
     </profile>
 
@@ -233,12 +258,6 @@
     <profile>
       <id>set-version-specific-files</id>
       <properties>
-        <zinc.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.feature</zinc.feature.dir>
-        <zinc.source.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
-        <scala210.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.feature</scala210.feature.dir>
-        <scala210.source.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.source.feature</scala210.source.feature.dir>
-        <scala211.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.feature</scala211.feature.dir>
-        <scala211.source.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.source.feature</scala211.source.feature.dir>
         <scala212.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.feature</scala212.feature.dir>
         <scala212.source.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.source.feature</scala212.source.feature.dir>
         <sdt.core.dir>org.scala-ide.sdt.core</sdt.core.dir>
@@ -264,108 +283,6 @@
                   <resources>
                     <resource>
                       <directory>${sdt.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-zinc-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${zinc.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${zinc.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-zinc-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${zinc.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${zinc.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala210-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala210-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.source.feature.dir}/resources</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
@@ -446,9 +363,6 @@
                           <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
                         </filterset>
                     </copy>
-                    <copy file="${sdt.update-site.dir}/resources/site-${version.suffix}.xml"
-                        tofile="${sdt.update-site.dir}/site.xml"
-                        overwrite="true" />
                   </target>
                 </configuration>
                 <goals>
@@ -524,6 +438,7 @@
     <pluginManagement>
       <!-- define the version of all used plugins, and some default configuration -->
       <plugins>
+
         <!-- osgi bundle builder -->
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -535,12 +450,14 @@
             <manifestLocation>${project.build.directory}/META-INF</manifestLocation>
           </configuration>
         </plugin>
+
         <!-- set property value from file -->
         <plugin>
           <groupId>org.kuali.maven.plugins</groupId>
           <artifactId>properties-maven-plugin</artifactId>
           <version>${properties-maven.plugin.version}</version>
         </plugin>
+
         <!-- tycho plugins -->
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -577,6 +494,7 @@
           <artifactId>tycho-versions-plugin</artifactId>
           <version>${tycho.plugin.version}</version>
         </plugin>
+
         <!-- aspectJ support -->
         <plugin>
           <groupId>com.github.m50d</groupId>
@@ -590,8 +508,9 @@
             </dependency>
           </dependencies>
         </plugin>
+
         <!-- scala compiler -->
-        <plugin>
+        <!--plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>scala-maven-plugin</artifactId>
           <version>${scala.plugin.version}</version>
@@ -603,14 +522,15 @@
               <arg>-language:_</arg>
               <arg>-Xlint</arg>
               <arg>-Xfuture</arg>
-              <!-- <arg>-Xfatal-warnings</arg> -->
+              <arg>-Xfatal-warnings</arg> >
               <arg>-Yno-adapted-args</arg>
               <arg>-Ywarn-dead-code</arg>
               <arg>-Ywarn-unused-import</arg>
               <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
             </args>
           </configuration>
-        </plugin>
+        </plugin-->
+
         <!-- git hash extractor -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -622,6 +542,7 @@
           <artifactId>maven-clean-plugin</artifactId>
           <version>${maven-clean.plugin.version}</version>
         </plugin>
+
         <!-- Scalastyle -->
         <plugin>
           <groupId>org.scalastyle</groupId>
