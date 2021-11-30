@@ -16,20 +16,22 @@ trait SourcePathFinder {
           val sproject = IScalaPlugin().getScalaProject(project)
           (sproject.buildManager.latestAnalysis, sourceFolders(sproject))
       }
-    analyses.collect {
-      case (a: Analysis, sourceFolders) =>
-        a.relations.definesClass(className)
-          .flatMap { foundRelativeSrc =>
-            val path = foundRelativeSrc.getPath
-            sourceFolders.collect {
-              case sf if path.startsWith(sf) =>
-                path.substring(sf.length)
-            }
-          }
-    }.collectFirst {
-      case files if files.nonEmpty =>
-        files
-    }.flatMap { _.headOption }
+    //TODO upgrade to scala 2.12.15
+    //analyses.collect {
+    //  case (a: Analysis, sourceFolders) =>
+    //    a.relations.definesClass(className)
+    //      .flatMap { foundRelativeSrc =>
+    //        val path = foundRelativeSrc.getPath
+    //        sourceFolders.collect {
+    //          case sf if path.startsWith(sf) =>
+    //            path.substring(sf.length)
+    //        }
+    //      }
+    //}.collectFirst {
+    //  case files if files.nonEmpty =>
+    //    files
+    //}.flatMap { _.headOption }
+    None
   }
 }
 

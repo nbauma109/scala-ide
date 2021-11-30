@@ -82,12 +82,15 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
       //         The condition prevents cycles and allows the `orElse` case below to kick in.
       if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
         owner.initialize
-      original.companionSymbol orElse {
-        ctx.lookup(original.name.companionName, owner).suchThat(sym =>
-          (original.isTerm || sym.hasModuleFlag) &&
-          (sym isCoDefinedWith original)
-        )
-      }
+      original.companionSymbol
+
+      //TODO: upgrade to scala 2.12.15
+      //orElse {
+      //  ctx.lookup(original.name.companionName, owner).suchThat(sym =>
+      //    (original.isTerm || sym.hasModuleFlag) &&
+      //    (sym isCoDefinedWith original)
+      //  )
+      //}
     }
   }
 
@@ -536,9 +539,6 @@ object ScalaPresentationCompiler {
       case '\n' | '\r' => ' '
       case c           => c
     }
-
-    override def echo(msg: String): Unit =
-      logger.debug(s"[$spcName]: $msg")
 
   }
 }

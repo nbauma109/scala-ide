@@ -19,6 +19,7 @@ import org.scalaide.util.internal.SbtUtils
 import sbt.internal.inc.FreshCompilerCache
 import sbt.internal.inc.IncrementalCompilerImpl
 import xsbti.CompileFailed
+import xsbti.VirtualFile
 import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileOrder
 import xsbti.compile.CompileProgress
@@ -48,7 +49,7 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
   private val zincCompiler = new IncrementalCompilerImpl
   private val sbtReporter = new SbtBuildReporter(project)
   private val lookup = new DefaultPerClasspathEntryLookup {
-    override def definesClass(classpathEntry: File) =
+    override def definesClass(classpathEntry: VirtualFile) =
       Locator.NoClass
   }
   private val classpath = libs ++ project.scalaClasspath.userCp.map(_.toFile) toArray
@@ -81,10 +82,12 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
     def cache = new FreshCompilerCache
 
     sbtReporter.reset()
-    zincCompiler.compile(comps.scalac, comps.javac, Array(compiledSource), classpath, output, cache, scalacOpts,
-      javaOptions = Array(), Optional.empty[CompileAnalysis], Optional.empty[MiniSetup], lookup, sbtReporter,
-      CompileOrder.ScalaThenJava, skip = false, Optional.empty[CompileProgress], incOptions, extra = Array(),
-      sbtLogger)
+
+    //TODO: upgrade to zinc 1.6.0
+    //zincCompiler.compile(comps.scalac, comps.javac, Array(compiledSource), classpath, output, cache, scalacOpts,
+    //  javaOptions = Array(), Optional.empty[CompileAnalysis], Optional.empty[MiniSetup], lookup, sbtReporter,
+    //  CompileOrder.ScalaThenJava, skip = false, Optional.empty[CompileProgress], incOptions, extra = Array(),
+    //  sbtLogger)
 
     toCompilationResult(sbtReporter.problems.collect(problemToCompilationError))
   } catch {

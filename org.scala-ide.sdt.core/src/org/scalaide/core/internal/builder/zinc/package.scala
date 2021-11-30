@@ -1,5 +1,6 @@
 package org.scalaide.core.internal.builder
 
+import java.nio.file.Files
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -12,12 +13,14 @@ import sbt.internal.inc.Locate
 import sbt.internal.inc.classpath.ClasspathUtilities
 import xsbti.Logger
 import xsbti.Reporter
+import xsbti.VirtualFile
 import xsbti.compile.ClasspathOptions
 import xsbti.compile.CompilerBridgeProvider
 import xsbti.compile.DefinesClass
 import xsbti.compile.IncToolOptions
 import xsbti.compile.JavaCompiler
 import xsbti.compile.ScalaInstance
+import xsbti.compile.Output
 
 package object zinc {
   private[zinc] object Locator {
@@ -34,7 +37,9 @@ package object zinc {
         NoClass
 
     class DirectoryLocator(dir: File) extends DefinesClass {
-      override def apply(className: String): Boolean = Locate.classFile(dir, className).isFile
+      override def apply(className: String): Boolean = {
+        Files.isRegularFile(Locate.classFile(dir.toPath, className))
+      }
     }
 
     class JarLocator(jar: File) extends DefinesClass {
@@ -63,7 +68,7 @@ package object zinc {
   }
 
   private[zinc] object unimplementedJavaCompiler extends JavaCompiler {
-    override def run(srcs: Array[File], opts: Array[String], incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
+    override def run(srcs: Array[VirtualFile], opts: Array[String], output: Output, incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
       throw new NotImplementedError("expects to be not called")
   }
 

@@ -138,8 +138,10 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
     val scalaInstall = findInstallation(project)
     logger.info(s"Running compiler using $scalaInstall")
     val progress = new SbtProgress
+
+    //TODO: upgrade to zink 1.6.0
     val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,
-      addToClasspath, srcOutputs)
+      addToClasspath, srcOutputs, null)
     val analysis =
       try
         Some(aggressiveCompile(inputs, sbtLogger))
@@ -161,12 +163,13 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
    * @note See discussion under https://github.com/sbt/sbt/issues/1372
    */
   private def createAdditionalMarkers(analysis: Analysis, compiledFiles: Set[IFile]): Unit = {
-    for {
-      (file, info) <- analysis.infos.allInfos
-      resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(file.toURI())
-      // this file might have been deleted in the meantime
-      if resource.exists() && !compiledFiles(resource)
-    } createMarkers(info)
+    //TODO: upgrade to zinc 1.6.0
+    //for {
+    //  (file, info) <- analysis.infos.allInfos
+    //  resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(file.toURI())
+    //  // this file might have been deleted in the meantime
+    //  if resource.exists() && !compiledFiles(resource)
+    //} createMarkers(info)
   }
 
   /**
@@ -258,7 +261,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
       }
     }
 
-    override def advance(current: Int, total: Int): Boolean =
+    override def advance(current: Int, total: Int, prevPhase: String , nextPhase: String ): Boolean =
       if (monitor.isCanceled) {
         throw new OperationCanceledException
       } else {

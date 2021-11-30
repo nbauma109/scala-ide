@@ -48,7 +48,7 @@
       <version>${json-io.version}</version>
     </dependency>
 
-    <!--dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scalap</artifactId>
       <version>${scala212.version}</version>
@@ -60,7 +60,7 @@
       </exclusions>
     </dependency>
 
-    <dependency>
+    <!--dependency>
       <groupId>org.scala-lang.modules</groupId>
       <artifactId>scala-xml_${scala.minor.version}</artifactId>
       <version>2.0.1</version>

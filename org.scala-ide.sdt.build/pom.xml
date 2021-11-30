@@ -21,8 +21,8 @@
     <module>../org.scala-refactoring</module>
     <module>../org.scala-ide.sdt.aspects</module>
     <module>../org.scala-ide.sdt.core</module>
-    <!--module>../org.scala-ide.sdt.debug</module>
-    <module>../org.scala-ide.sdt.debug.expression</module-->
+    <module>../org.scala-ide.sdt.debug</module>
+    <module>../org.scala-ide.sdt.debug.expression</module>
   </modules>
 
   <!--modules>
@@ -60,24 +60,24 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <!--repository>
+    <repository>
       <id>scala-refactoring</id>
       <name>Scala Refactoring p2 repository</name>
       <layout>p2</layout>
       <url>file:../org.scala-ide.p2-update-site/org.scala-ide.p2-update-site.update-site/target/site</url>
     </repository>
-    <repository>
+    <!--repository>
       <id>zinc</id>
       <name>local zinc update site</name>
       <layout>p2</layout>
       <url>file:../org.scala-ide.zinc/org.scala-ide.zinc.update-site/target/site</url>
-    </repository>
+    </repository-->
     <repository>
       <id>scala${scala.short.version}</id>
       <name>Scala ${scala.short.version} library and jars</name>
       <layout>p2</layout>
       <url>file:../org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.update-site/target/site</url>
-    </repository-->
+    </repository>
     <repository>
       <id>eclipse.nebula</id>
       <name>Eclipse Nebula repository</name>

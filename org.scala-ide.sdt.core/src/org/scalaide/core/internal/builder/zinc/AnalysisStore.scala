@@ -22,5 +22,6 @@ object AnalysisStore {
       backing.set(materializeApis(contents.getAnalysis, contents.getMiniSetup))
     }
     def get(): Optional[AnalysisContents] = backing.get()
+    def unsafeGet(): AnalysisContents = backing.unsafeGet()
   }
 }

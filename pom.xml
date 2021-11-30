@@ -34,7 +34,8 @@
 
 
     <!-- scala related libraries versions -->
-    <zinc.version>1.0.0</zinc.version>
+    <!--zinc.version>1.0.0</zinc.version-->
+    <zinc.version>1.6.0-M1</zinc.version>
     <sbt-util.version>1.0.0</sbt-util.version>
     <sbt-io.version>1.0.0</sbt-io.version>
     <sbinary.version>0.4.4</sbinary.version>

@@ -17,8 +17,10 @@ import org.scalaide.util.eclipse.FileUtils
 
 import xsbti.Logger
 import xsbti.Reporter
+import xsbti.VirtualFile
 import xsbti.compile.IncToolOptions
 import xsbti.compile.JavaCompiler
+import xsbti.compile.Output
 
 /**
  * Eclipse Java compiler interface, used by the SBT builder.
@@ -29,7 +31,10 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
 
   override def project = p
 
-  override def run(sources: Array[File], unusedOptions: Array[String], unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+  override def run(sources0: Array[VirtualFile], unusedOptions: Array[String], unusedOutput: Output, unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+    //TODO: upgrade to zink 1.6.0
+    val sources = Array[File]()
+
     val scalaProject = IScalaPlugin().getScalaProject(project)
     val allSourceFiles = scalaProject.allSourceFiles()
     val depends = scalaProject.directDependencies
