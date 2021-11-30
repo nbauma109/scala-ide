@@ -11,11 +11,23 @@ import org.eclipse.jdt.launching.JavaRuntime
 import org.scalaide.core.SdtConstants
 
 trait ClasspathGetterForLaunchDelegate extends AbstractJavaLaunchConfigurationDelegate {
+
+  override def getClasspathAndModulepath(configuration: ILaunchConfiguration): Array[Array[String]] = {
+    //TODO: What about modules ?
+    val javaClassPathAndModules = super.getClasspathAndModulepath(configuration)
+    val classpath = buildClassPath(configuration, javaClassPathAndModules(0))
+    Array[Array[String]](classpath,javaClassPathAndModules(1))
+  }
+  
   override def getClasspath(configuration: ILaunchConfiguration): Array[String] = {
-    val baseClasspath = super.getClasspath(configuration).toSeq
-    (baseClasspath ++ scalaClasspath(configuration, baseClasspath)).toArray
+    buildClassPath(configuration,getClasspathAndModulepath(configuration)(0))
   }
 
+  private def buildClassPath(configuration: ILaunchConfiguration, javaClasspath: Array[String]) : Array[String] = {
+    val baseClasspath = javaClasspath.toSeq
+    (baseClasspath ++ scalaClasspath(configuration, baseClasspath)).toArray
+  }
+      
   private def scalaClasspath(configuration: ILaunchConfiguration, baseClasspath: Seq[String]): Seq[String] = {
     val vmAttributesMap = getVMSpecificAttributesMap(configuration)
     val modifiedAttrMap: mutable.Map[String, Array[String]] = if (vmAttributesMap == null) mutable.Map()

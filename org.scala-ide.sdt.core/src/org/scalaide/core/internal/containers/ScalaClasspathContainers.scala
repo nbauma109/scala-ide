@@ -90,8 +90,9 @@ abstract class ScalaClasspathContainerPage(containerPath: IPath, name: String, o
   override def initialize(javaProject: IJavaProject, currentEntries: Array[IClasspathEntry]) = {
     import org.scalaide.util.eclipse.SWTUtils.noArgFnToSelectionAdapter
 
-    scalaProject = ScalaPlugin().asScalaProject(javaProject.getProject())
-    val rcp = javaProject.getRawClasspath()
+    val baseProject = if (javaProject != null) javaProject.getProject() else null
+    scalaProject = ScalaPlugin().asScalaProject(baseProject)
+    val rcp = if (javaProject != null) javaProject.getRawClasspath() else Array[IClasspathEntry]()
     if (hasCustomContainer(rcp, new Path(SdtConstants.ScalaLibContId), IClasspathEntry.CPE_CONTAINER) && hasCustomContainer(rcp, new Path(SdtConstants.ScalaCompilerContId), IClasspathEntry.CPE_CONTAINER)) {
       createControlDelegate = { (parent: Composite) =>
         setTitle("Unhandled edition case")
@@ -148,7 +149,7 @@ abstract class ScalaClasspathContainerPage(containerPath: IPath, name: String, o
             pr.projectSpecificStorage.setValue(SettingConverterUtil.SCALA_DESIRED_INSTALLATION, sc.toString())
           }
         }
-        scalaProject.isDefined
+        true
       }
     }
 
