@@ -119,12 +119,13 @@ class SpyView extends ViewPart with HasLogger {
         val editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()
         doWithCompilationUnit(editor) { unit =>
           unit.scalaProject.presentationCompiler { compiler =>
-            import compiler._
+            //import compiler._
+            import compiler.treeBrowsers._
 
             typedTreeAtSelection(compiler)(unit.lastSourceMap().sourceFile, editor.asInstanceOf[ITextEditor].getSelectionProvider().getSelection()) match {
-              case Left(tree) =>
-                import treeBrowsers._
-
+              //TODO: upgrade to scala 2.12.15
+              case Left(tree: ProgramTree) =>
+                //import treeBrowsers._
                 // inlined `treeBrowser.browse` because we don't want to block waiting for the frame to
                 // the frame to close
                 val tm = new ASTTreeModel(tree)

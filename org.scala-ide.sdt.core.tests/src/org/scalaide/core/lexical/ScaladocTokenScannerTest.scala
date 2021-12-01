@@ -102,7 +102,8 @@ class ScaladocTokenScannerTest {
      * The scanner returns a token for each character but we want all consecutive
      * token of the same type grouped as one single token.
      */
-    val groupedToken = (Seq(data.head) /: data.tail) {
+    //val groupedToken = (Seq(data.head) /: data.tail) {
+    val groupedToken = data.tail.foldLeft(Seq(data.head)) {
       case (token, t @ (scc, _, len)) =>
         val (sccBefore, offBefore, lenBefore) = token.last
         if (sccBefore == scc)

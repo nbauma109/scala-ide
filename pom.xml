@@ -365,6 +365,9 @@
                           <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
                         </filterset>
                     </copy>
+                    <copy file="${sdt.update-site.dir}/resources/site-${version.suffix}.xml"
+                        tofile="${sdt.update-site.dir}/site.xml"
+                        overwrite="true" />
                   </target>
                 </configuration>
                 <goals>

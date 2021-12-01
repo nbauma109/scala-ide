@@ -178,7 +178,7 @@ class CompilerSettingsTest {
     project.presentationCompiler { comp =>
       val settings = new Settings
       settings.processArguments(scalacArgs.toList, true)
-      val resolver = new scala.tools.util.PathResolver(settings)
+      val resolver = new scala.tools.util.PathResolver(settings, new scala.tools.nsc.CloseableRegistry)
       assertEquals("Calculated javaextdirs should be empty", "", resolver.Calculated.javaExtDirs.trim)
     }
   }
