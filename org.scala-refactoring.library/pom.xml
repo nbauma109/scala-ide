@@ -8,9 +8,10 @@
     <version>4.7.1-SNAPSHOT</version>
     <relativePath>../org.scala-ide.sdt.build/pom.xml</relativePath>
   </parent>
-  <artifactId>org.scala-refactoring</artifactId>
+  <artifactId>org.scala-refactoring.library</artifactId>
+  <packaging>eclipse-plugin</packaging>
 
-  <build>
+  <!--build>
     <plugins>
       <plugin>
         <groupId>net.alchim31.maven</groupId>
@@ -22,5 +23,5 @@
         </configuration>
       </plugin>
     </plugins>
-  </build>
+  </build-->
 </project>

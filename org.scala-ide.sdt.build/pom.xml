@@ -18,7 +18,7 @@
   </scm>
 
   <modules>
-    <module>../org.scala-refactoring</module>
+    <module>../org.scala-refactoring.library</module>
     <module>../org.scala-ide.sdt.aspects</module>
     <module>../org.scala-ide.sdt.core</module>
     <module>../org.scala-ide.sdt.debug</module>

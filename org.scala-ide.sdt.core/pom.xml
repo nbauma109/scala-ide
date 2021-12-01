@@ -68,7 +68,7 @@
 
     <dependency>
       <groupId>org.scala-ide</groupId>
-      <artifactId>org.scala-refactoring</artifactId>
+      <artifactId>org.scala-refactoring.library</artifactId>
       <version>4.7.1-SNAPSHOT</version>
     </dependency>
 
@@ -77,12 +77,6 @@
       <artifactId>org.scala-ide.sdt.aspects</artifactId>
       <version>4.7.1-SNAPSHOT</version>
     </dependency>
-
-    <!--dependency>
-      <groupId>org.scala-sbt</groupId>
-      <artifactId>zinc-compile-core_2.13</artifactId>
-      <version>1.5.7</version>
-    </dependency-->
 
     <dependency>
       <groupId>org.scala-sbt</groupId>
@@ -106,7 +100,7 @@
         <executions>
           <!-- copy the jar dependencies -->
           <execution>
-            <id>copy</id>
+            <id>copy basic</id>
             <phase>initialize</phase>
             <goals>
               <goal>copy</goal>
@@ -136,6 +130,29 @@
                   <artifactId>scalap</artifactId>
                 </artifactItem>
               </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy zink</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeGroupIds>org.scala-sbt</includeGroupIds>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy zink sources</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeGroupIds>org.scala-sbt</includeGroupIds>
+              <classifier>sources</classifier>
             </configuration>
           </execution>
         </executions>
