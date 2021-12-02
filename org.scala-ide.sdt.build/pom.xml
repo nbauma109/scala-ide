@@ -75,12 +75,6 @@
       <layout>p2</layout>
       <url>file:../org.scala-ide.p2-update-site/org.scala-ide.p2-update-site.update-site/target/site</url>
     </repository>
-    <!--repository>
-      <id>zinc</id>
-      <name>local zinc update site</name>
-      <layout>p2</layout>
-      <url>file:../org.scala-ide.zinc/org.scala-ide.zinc.update-site/target/site</url>
-    </repository-->
     <repository>
       <id>scala${scala.short.version}</id>
       <name>Scala ${scala.short.version} library and jars</name>
@@ -152,6 +146,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <!-- plugin used to extract the git hash and store it in ${buildNumber} -->
         <groupId>org.codehaus.mojo</groupId>
@@ -170,16 +165,18 @@
           <shortRevisionLength>7</shortRevisionLength>
         </configuration>
       </plugin>
+
       <plugin>
         <!-- create a better version number -->
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-packaging-plugin</artifactId>
         <configuration>
-          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm'-xxxx'</format>
+          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm</format>
           <archiveSite>true</archiveSite>
         </configuration>
       </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>

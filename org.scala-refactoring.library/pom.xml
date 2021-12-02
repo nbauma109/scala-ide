@@ -11,17 +11,4 @@
   <artifactId>org.scala-refactoring.library</artifactId>
   <packaging>eclipse-plugin</packaging>
 
-  <!--build>
-    <plugins>
-      <plugin>
-        <groupId>net.alchim31.maven</groupId>
-        <artifactId>scala-maven-plugin</artifactId>
-        <version>${scala.plugin.version}</version>
-        <configuration>
-          <args>
-          </args>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build-->
 </project>
