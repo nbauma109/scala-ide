@@ -48,6 +48,8 @@ Require-Bundle: org.eclipse.core.expressions,
  org.scala-lang.scala-reflect;bundle-version="[@SCALA_MINOR_VERSION@,2.13)",
  org.scala-lang.scala-compiler;bundle-version="[@SCALA_MINOR_VERSION@,2.13)",
  org.scala-lang.modules.scala-xml;bundle-version="[1.0.2,1.0.10]",
+ org.scala-ide.zinc.library,
+ org.scala-ide.zinc.compiler.bridge,
  org.scala-refactoring.library,
  scalariform
 Import-Package: org.eclipse.osgi.service.datalocation,
@@ -190,4 +192,5 @@ Bundle-ClassPath: .,
  target/lib/util-relation_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar,
  target/lib/io_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar,
  target/lib/sbinary_@SCALA_MINOR_VERSION@-@SBINARY_VERSION@.jar,
- target/lib/scalap-@SCALA_VERSION@.jar
+ target/lib/scalap-@SCALA_VERSION@.jar,
+ target/lib/file-tree-views-2.1.7.jar

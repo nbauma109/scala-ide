@@ -23,6 +23,10 @@
     </profile>
   </profiles>
 
+  <modules>
+    <module>../org.scala-ide.zinc</module>
+  </modules>
+
   <build>
     <plugins>
       <plugin>

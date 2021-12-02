@@ -76,6 +76,12 @@
       <url>file:../org.scala-ide.p2-update-site/org.scala-ide.p2-update-site.update-site/target/site</url>
     </repository>
     <repository>
+      <id>zinc</id>
+      <name>local zinc update site</name>
+      <layout>p2</layout>
+      <url>file:../org.scala-ide.zinc/org.scala-ide.zinc.update-site/target/site</url>
+    </repository>
+    <repository>
       <id>scala${scala.short.version}</id>
       <name>Scala ${scala.short.version} library and jars</name>
       <layout>p2</layout>
