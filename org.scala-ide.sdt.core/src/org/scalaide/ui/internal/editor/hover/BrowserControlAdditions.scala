@@ -31,7 +31,7 @@ trait BrowserControlAdditions extends BrowserInformationControl with HasLogger {
     gc.dispose()
 
     val p = super.computeSizeHint()
-    p.x += averageCharWidth * 10
+    p.x += (averageCharWidth * 10).toInt
     p
   }
 }
