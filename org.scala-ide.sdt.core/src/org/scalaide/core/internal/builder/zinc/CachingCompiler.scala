@@ -5,9 +5,7 @@ import java.io.File
 import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.Analysis
-import sbt.internal.inc.IncrementalCompilerImpl
 import sbt.internal.inc.MixedAnalyzingCompiler
-import sbt.util.InterfaceUtil.o2jo
 import xsbti.Logger
 import xsbti.Reporter
 import xsbti.VirtualFile

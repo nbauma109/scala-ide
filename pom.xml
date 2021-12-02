@@ -34,9 +34,7 @@
 
     <!-- sbt related libraries versions -->
     <zinc.version>1.6.0-M1</zinc.version>
-    <sbt-util.version>1.0.0</sbt-util.version>
-    <sbt-io.version>1.0.0</sbt-io.version>
-    <sbinary.version>0.4.4</sbinary.version>
+    <sbinary.version>0.5.1</sbinary.version>
     <scala-refactoring.version>0.14.0-SNAPSHOT</scala-refactoring.version>
     <scalariform.version>0.2.6</scalariform.version>
 
@@ -251,10 +249,9 @@
                           <filter token="JSON_IO_VERSION" value="${json-io.version}"/>
                           <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
                           <filter token="ZINC_VERSION" value="${zinc.version}"/>
-                          <filter token="SBT_UTIL_VERSION" value="${sbt-util.version}"/>
-                          <filter token="SBT_IO_VERSION" value="${sbt-io.version}"/>
                           <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
                           <filter token="SCALA_VERSION" value="${scala.version}"/>
+                          <filter token="SCALA_MINOR_VERSION" value="${scala.minor.version}"/>
                           <filter token="SCALA_IDE_VERSION" value="${version}"/>
                         </filterset>
                     </copy>
@@ -275,6 +272,22 @@
                     <copy file="${sdt.update-site.dir}/resources/site-${version.suffix}.xml"
                         tofile="${sdt.update-site.dir}/site.xml"
                         overwrite="true" />
+
+                    <copy file="${sdt.core.dir}/resources/.classpath"
+                        tofile="${sdt.core.dir}/.classpath"
+                        overwrite="true">
+                        <filterset>
+                          <filter token="MIGLAYOUT_VERSION" value="${miglayout.version}"/>
+                          <filter token="LOG4J_VERSION" value="${log4j.version}"/>
+                          <filter token="JSON_IO_VERSION" value="${json-io.version}"/>
+                          <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
+                          <filter token="ZINC_VERSION" value="${zinc.version}"/>
+                          <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
+                          <filter token="SCALA_VERSION" value="${scala.version}"/>
+                          <filter token="SCALA_MINOR_VERSION" value="${scala.minor.version}"/>
+                          <filter token="SCALA_IDE_VERSION" value="${version}"/>
+                        </filterset>
+                    </copy>
                   </target>
                 </configuration>
                 <goals>
