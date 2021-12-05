@@ -21,5 +21,10 @@
         <classpathentry kind="lib" path="target/lib/io_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/io_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
         <classpathentry kind="lib" path="target/lib/sbinary_@SCALA_MINOR_VERSION@-@SBINARY_VERSION@.jar" sourcepath="target/lib/sbinary_@SCALA_MINOR_VERSION@-@SBINARY_VERSION@-sources.jar"/>
         <classpathentry kind="lib" path="target/lib/scalap-@SCALA_VERSION@.jar" sourcepath="target/lib/scalap-@SCALA_VERSION@-sources.jar"/>
+
+        <classpathentry kind="lib" path="target/lib/file-tree-views-@FILE_TREE_VIEWS_VERSION@.jar" sourcepath="target/lib/file-tree-views-@FILE_TREE_VIEWS_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/jna-platform-5.8.0.jar" sourcepath="target/lib/jna-platform-@JNA_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/jna-@JNA_VERSION@.jar" sourcepath="target/lib/jna-@JNA_VERSION@-sources.jar"/>
+
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -150,11 +150,23 @@
     </dependency>
 
 
-     <dependency>
-         <groupId>com.swoval</groupId>
-         <artifactId>file-tree-views</artifactId>
-         <version>2.1.7</version>
-     </dependency>
+    <dependency>
+        <groupId>com.swoval</groupId>
+        <artifactId>file-tree-views</artifactId>
+        <version>2.1.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna-platform</artifactId>
+        <version>5.8.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>5.8.0</version>
+    </dependency>
 
   </dependencies>
 
@@ -181,6 +193,15 @@
                  <artifactId>file-tree-views</artifactId>
                 </artifactItem>
 
+                <artifactItem>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna-platform</artifactId>
+                </artifactItem>
+
+                <artifactItem>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna</artifactId>
+                </artifactItem>
 
                 <artifactItem>
                   <groupId>log4j</groupId>
