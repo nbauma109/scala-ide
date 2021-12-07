@@ -168,6 +168,11 @@
         <version>5.8.0</version>
     </dependency>
 
+    <dependency>
+        <groupId>net.openhft</groupId>
+        <artifactId>zero-allocation-hashing</artifactId>
+        <version>0.10.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -201,6 +206,11 @@
                 <artifactItem>
                     <groupId>net.java.dev.jna</groupId>
                     <artifactId>jna</artifactId>
+                </artifactItem>
+
+                <artifactItem>
+                    <groupId>net.openhft</groupId>
+                    <artifactId>zero-allocation-hashing</artifactId>
                 </artifactItem>
 
                 <artifactItem>

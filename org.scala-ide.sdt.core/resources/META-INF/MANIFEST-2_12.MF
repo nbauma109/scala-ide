@@ -193,4 +193,5 @@ Bundle-ClassPath: .,
  target/lib/scalap-@SCALA_VERSION@.jar,
  target/lib/file-tree-views-@FILE_TREE_VIEWS_VERSION@.jar,
  target/lib/jna-platform-@JNA_VERSION@.jar,
- target/lib/jna-@JNA_VERSION@.jar
+ target/lib/jna-@JNA_VERSION@.jar,
+ target/lib/zero-allocation-hashing-@ZERO_ALLOCATION_VERSION@.jar

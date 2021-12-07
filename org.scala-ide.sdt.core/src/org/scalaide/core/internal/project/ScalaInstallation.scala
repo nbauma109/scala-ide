@@ -313,13 +313,16 @@ object ScalaInstallation {
 
     // TODO: upgrade to zinc 1.6 It compiles bridge, but additional work is necessary to make sure it is correct
     val scalaLoader: ClassLoader = store.getOrUpdate(si)(new URLClassLoader(si.allJars.map(_.classJar.toFile.toURI.toURL).toArray, ClassLoader.getSystemClassLoader))
-    val loaderCompilerOnly = new URLClassLoader(Array[java.net.URL](si.compiler.classJar.toFile.toURI.toURL), ClassLoader.getSystemClassLoader)
+    val loaderCompilerOnly = new URLClassLoader(Array[java.net.URL](
+          si.compiler.classJar.toFile.toURI.toURL,
+          si.library.classJar.toFile.toURI.toURL),
+        ClassLoader.getSystemClassLoader)
     val loaderLibraryOnly = new URLClassLoader(Array[java.net.URL](si.library.classJar.toFile.toURI.toURL), ClassLoader.getSystemClassLoader)
 
     new ScalaInstance(
       si.version.unparse,
       scalaLoader,
-      loaderCompilerOnly,
+      scalaLoader,
       loaderLibraryOnly,
       Array[java.io.File](si.library.classJar.toFile),
       Array[java.io.File](si.compiler.classJar.toFile),

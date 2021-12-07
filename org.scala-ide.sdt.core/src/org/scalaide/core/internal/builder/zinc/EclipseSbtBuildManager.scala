@@ -28,6 +28,7 @@ import org.scalaide.util.eclipse.FileUtils
 import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.Analysis
+import sbt.internal.inc.PlainVirtualFileConverter
 import sbt.util.InterfaceUtil.problem
 import xsbti.CompileFailed
 import xsbti.Logger
@@ -141,7 +142,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
 
     //TODO: upgrade to zink 1.6.0
     val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,
-      addToClasspath, srcOutputs, null)
+      addToClasspath, srcOutputs, PlainVirtualFileConverter.converter)
     val analysis =
       try
         Some(aggressiveCompile(inputs, sbtLogger))

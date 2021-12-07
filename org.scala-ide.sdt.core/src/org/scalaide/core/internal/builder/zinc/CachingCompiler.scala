@@ -1,11 +1,17 @@
 package org.scalaide.core.internal.builder.zinc
 
 import java.io.File
+import java.nio.file.Path
+import java.util.Optional
 
 import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.Analysis
+import sbt.internal.inc.IncrementalCompilerImpl
 import sbt.internal.inc.MixedAnalyzingCompiler
+import sbt.internal.inc.PlainVirtualFileConverter
+import sbt.internal.inc.Stamps
+import sbt.util.InterfaceUtil.o2jo
 import xsbti.Logger
 import xsbti.Reporter
 import xsbti.VirtualFile
@@ -43,13 +49,35 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
       }.getOrElse((Option(SbtUtils.readAnalysis(cacheFile)), None))
 
     // TODO: new upgrade to zinc 1.6
-    //cacheAndReturnLastAnalysis(new IncrementalCompilerImpl().compile(comps.scalac, comps.javac, in.sources, in.classpath, in.output, in.cache,
-    //  in.scalacOptions, in.javacOptions, o2jo(previousAnalysis), o2jo(previousSetup), lookup, sbtReporter, in.order,
-    //  skip = false, in.progress, in.incOptions, extra = Array(), log))
-    previousAnalysis match {
-      case a: Analysis => a
-      case None => null
-    }
+    val sources: Array[Path] = in.sources.map(_.toPath()).toArray
+    val classpath: Array[Path]= in.classpath.map(_.toPath()).toArray
+    val converter = PlainVirtualFileConverter.converter
+    val stamper = Stamps.timeWrapBinaryStamps(converter)
+    val compilationResult = new IncrementalCompilerImpl().compile(
+      comps.scalac,
+      comps.javac,
+      sources,
+      classpath,
+      in.output,
+      o2jo[xsbti.compile.Output](None),
+      o2jo[xsbti.compile.AnalysisStore](None),
+      in.cache,
+      in.scalacOptions,
+      in.javacOptions,
+      o2jo[xsbti.compile.CompileAnalysis](previousAnalysis),
+      o2jo[xsbti.compile.MiniSetup](previousSetup),
+      lookup,
+      sbtReporter,
+      in.order,
+      false,
+      in.progress,
+      in.incOptions,
+      o2jo[Path](None),
+      Array[xsbti.T2[String, String]](),
+      converter,
+      stamper,
+      log)
+    cacheAndReturnLastAnalysis(compilationResult)
   }
 
   private def cacheAndReturnLastAnalysis(compilationResult: CompileResult): Analysis = {

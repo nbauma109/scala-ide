@@ -25,6 +25,7 @@
         <classpathentry kind="lib" path="target/lib/file-tree-views-2.1.7.jar" sourcepath="target/lib/file-tree-views-2.1.7-sources.jar"/>
         <classpathentry kind="lib" path="target/lib/jna-platform-5.8.0.jar" sourcepath="target/lib/jna-platform-5.8.0-sources.jar"/>
         <classpathentry kind="lib" path="target/lib/jna-5.8.0.jar" sourcepath="target/lib/jna-5.8.0-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zero-allocation-hashing-0.10.1.jar" sourcepath="target/lib/zero-allocation-hashing-0.10.1-sources.jar"/>
 
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
