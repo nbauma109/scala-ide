@@ -31,9 +31,8 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
 
   override def project = p
 
-  override def run(sources0: Array[VirtualFile], unusedOptions: Array[String], unusedOutput: Output, unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
-    //TODO: upgrade to zink 1.6.0
-    val sources = Array[File]()
+  override def run(sources: Array[VirtualFile], unusedOptions: Array[String], unusedOutput: Output, unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+    val sourceFiles = Array[File]()
 
     val scalaProject = IScalaPlugin().getScalaProject(project)
     val allSourceFiles = scalaProject.allSourceFiles()
@@ -53,7 +52,7 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
         container.refreshLocal(IResource.DEPTH_INFINITE, null)
       }
 
-      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sources, project)
+      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sourceFiles, project)
       try {
         ProductExposer.showJavaCompilationProducts(project)
         scalaJavaBuilder.build(INCREMENTAL_BUILD, new java.util.HashMap(), monitor)

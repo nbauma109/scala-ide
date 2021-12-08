@@ -9,8 +9,6 @@ import org.scalaide.util.internal.SbtUtils
 import sbt.internal.inc.Analysis
 import sbt.internal.inc.IncrementalCompilerImpl
 import sbt.internal.inc.MixedAnalyzingCompiler
-import sbt.internal.inc.PlainVirtualFileConverter
-import sbt.internal.inc.Stamps
 import sbt.util.InterfaceUtil.o2jo
 import xsbti.Logger
 import xsbti.Reporter
@@ -48,19 +46,17 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
         case (a, s) => (Option(a), Option(s))
       }.getOrElse((Option(SbtUtils.readAnalysis(cacheFile)), None))
 
-    // TODO: new upgrade to zinc 1.6
+    // TODO: upgrade to zinc 1.6
     val sources: Array[Path] = in.sources.map(_.toPath()).toArray
     val classpath: Array[Path]= in.classpath.map(_.toPath()).toArray
-    val converter = PlainVirtualFileConverter.converter
-    val stamper = Stamps.timeWrapBinaryStamps(converter)
     val compilationResult = new IncrementalCompilerImpl().compile(
       comps.scalac,
       comps.javac,
       sources,
       classpath,
       in.output,
-      o2jo[xsbti.compile.Output](None),
-      o2jo[xsbti.compile.AnalysisStore](None),
+      Optional.empty[xsbti.compile.Output],
+      Optional.empty[xsbti.compile.AnalysisStore],
       in.cache,
       in.scalacOptions,
       in.javacOptions,
@@ -72,9 +68,9 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
       false,
       in.progress,
       in.incOptions,
-      o2jo[Path](None),
+      Optional.empty[Path],
       Array[xsbti.T2[String, String]](),
-      converter,
+      fileConverter,
       stamper,
       log)
     cacheAndReturnLastAnalysis(compilationResult)

@@ -10,10 +10,15 @@ import org.scalaide.core.internal.ScalaPlugin
 
 import sbt.internal.inc.AnalyzingCompiler
 import sbt.internal.inc.Locate
-import sbt.internal.inc.classpath.ClasspathUtilities
+import sbt.internal.inc.PlainVirtualFileConverter
+import sbt.internal.inc.Stamps
+import sbt.internal.inc.classpath.ClasspathUtil
+
 import xsbti.Logger
 import xsbti.Reporter
 import xsbti.VirtualFile
+import xsbti.FileConverter
+
 import xsbti.compile.ClasspathOptions
 import xsbti.compile.CompilerBridgeProvider
 import xsbti.compile.DefinesClass
@@ -23,6 +28,9 @@ import xsbti.compile.ScalaInstance
 import xsbti.compile.Output
 
 package object zinc {
+  lazy val fileConverter: FileConverter = PlainVirtualFileConverter.converter
+  lazy val stamper = Stamps.timeWrapBinaryStamps(fileConverter)
+
   private[zinc] object Locator {
     val NoClass = new DefinesClass {
       override def apply(className: String) = false
@@ -31,7 +39,7 @@ package object zinc {
     def apply(f: File): DefinesClass =
       if (f.isDirectory)
         new DirectoryLocator(f)
-      else if (f.exists && ClasspathUtilities.isArchive(f))
+      else if (f.exists && ClasspathUtil.isArchive(f.toPath()))
         new JarLocator(f)
       else
         NoClass

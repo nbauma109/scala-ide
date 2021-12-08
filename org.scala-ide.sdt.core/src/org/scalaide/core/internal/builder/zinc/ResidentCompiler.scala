@@ -1,10 +1,10 @@
 package org.scalaide.core.internal.builder.zinc
 
 import java.io.File
+import java.nio.file.Path
 import java.util.Optional
 
 import scala.language.postfixOps
-
 import scala.reflect.internal.util.NoPosition
 import scala.reflect.internal.util.Position
 import scala.tools.nsc.settings.SpecificScalaVersion
@@ -20,11 +20,9 @@ import sbt.internal.inc.FreshCompilerCache
 import sbt.internal.inc.IncrementalCompilerImpl
 import xsbti.CompileFailed
 import xsbti.VirtualFile
-import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileOrder
 import xsbti.compile.CompileProgress
 import xsbti.compile.IncOptions
-import xsbti.compile.MiniSetup
 
 object ResidentCompiler {
   def apply(project: IScalaProject, compilationOutputFolder: File, extraLibsToCompile: Option[IPath],
@@ -45,14 +43,14 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
                                 extraLibsToCompile: Option[IPath]) extends HasLogger {
   import ResidentCompiler._
   private val sbtLogger = SbtUtils.defaultSbtLogger(logger)
-  private val libs = extraLibsToCompile.map(_.toFile).toSeq
+  private val libs = extraLibsToCompile.map(_.toFile.toPath()).toSeq
   private val zincCompiler = new IncrementalCompilerImpl
   private val sbtReporter = new SbtBuildReporter(project)
   private val lookup = new DefaultPerClasspathEntryLookup {
     override def definesClass(classpathEntry: VirtualFile) =
       Locator.NoClass
   }
-  private val classpath = libs ++ project.scalaClasspath.userCp.map(_.toFile) toArray
+  private val classpath: Array[Path] = (libs ++ project.scalaClasspath.userCp.map(_.toFile.toPath())).toArray
   private val scalacOpts = (project.effectiveScalaInstallation.version match {
     case SpecificScalaVersion(2, 10, _, _) =>
       project.scalacArguments.filterNot(opt => opt == "-Xsource:2.10" || opt == "-Ymacro-expand:none")
@@ -83,13 +81,34 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
 
     sbtReporter.reset()
 
-    //TODO: upgrade to zinc 1.6.0
-    //zincCompiler.compile(comps.scalac, comps.javac, Array(compiledSource), classpath, output, cache, scalacOpts,
-    //  javaOptions = Array(), Optional.empty[CompileAnalysis], Optional.empty[MiniSetup], lookup, sbtReporter,
-    //  CompileOrder.ScalaThenJava, skip = false, Optional.empty[CompileProgress], incOptions, extra = Array(),
-    //  sbtLogger)
+    // TODO: upgrade to zinc 1.6
+    val sources =  Array[Path](compiledSource.toPath())
+    zincCompiler.compile(
+      comps.scalac,
+      comps.javac,
+      sources,
+      classpath,
+      output,
+      Optional.empty[xsbti.compile.Output],
+      Optional.empty[xsbti.compile.AnalysisStore],
+      cache,
+      scalacOpts,
+      Array[String](),
+      Optional.empty[xsbti.compile.CompileAnalysis],
+      Optional.empty[xsbti.compile.MiniSetup],
+      lookup,
+      sbtReporter,
+      CompileOrder.ScalaThenJava,
+      false,
+      Optional.empty[CompileProgress],
+      incOptions,
+      Optional.empty[Path],
+      Array[xsbti.T2[String, String]](),
+      fileConverter,
+      stamper,
+      sbtLogger)
 
-    toCompilationResult(sbtReporter.problems.collect(problemToCompilationError))
+      toCompilationResult(sbtReporter.problems.collect(problemToCompilationError))
   } catch {
     case compileFailed: CompileFailed =>
       toCompilationResult(compileFailed.problems.collect(problemToCompilationError))

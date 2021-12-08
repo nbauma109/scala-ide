@@ -15,7 +15,6 @@ import org.scalaide.util.internal.SettingConverterUtil
 import sbt.internal.inc.FreshCompilerCache
 import xsbti.Logger
 import xsbti.VirtualFile
-import xsbti.FileConverter
 import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileProgress
 import xsbti.compile.IncOptions
@@ -36,15 +35,14 @@ class SbtInputs(
   tempDir: File, // used to store classfiles between compilation runs to implement all-or-nothing semantics
   logger: Logger,
   addToClasspath: Seq[IPath] = Seq.empty,
-  srcOutputs: Seq[(IContainer, IContainer)] = Seq.empty,
-  converter: FileConverter) {
+  srcOutputs: Seq[(IContainer, IContainer)] = Seq.empty) {
 
   def cache = new FreshCompilerCache // May want to explore caching possibilities.
 
   private val allProjects = project +: project.transitiveDependencies.flatMap(ScalaPlugin().asScalaProject)
 
   def analysisMap(f0: VirtualFile): Optional[CompileAnalysis] = {
-    val f = converter.toPath(f0).toFile
+    val f = fileConverter.toPath(f0).toFile
     if (f.isFile)
       Optional.empty[CompileAnalysis]
     else {
@@ -61,14 +59,17 @@ class SbtInputs(
   def progress = Optional.ofNullable(scalaProgress)
 
   def incOptions: IncOptions = {
+    val classfileManagerType = TransactionalManagerType.create(tempDir, logger);
+    val recompileOnMacroDef = project.storage.getBoolean(
+        SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))
+
     import xsbti.compile.IncOptions._
     val base = of()
-    base.
-      withApiDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name))).
-      withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name)))
-      //TODO upgrade to zinc 1.6.0
-      //withClassfileManagerType(Optional.ofNullable(TransactionalManagerType.create(tempDir, logger))).
-      //withRecompileOnMacroDef(Optional.ofNullable(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))))
+    base
+      .withApiDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name)))
+      .withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name)))
+     .withClassfileManagerType(classfileManagerType)
+     .withRecompileOnMacroDef(recompileOnMacroDef)
   }
 
   def outputFolders = srcOutputs.map {

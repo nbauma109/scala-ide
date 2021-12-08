@@ -28,10 +28,10 @@ import org.scalaide.util.eclipse.FileUtils
 import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.Analysis
-import sbt.internal.inc.PlainVirtualFileConverter
 import sbt.util.InterfaceUtil.problem
 import xsbti.CompileFailed
 import xsbti.Logger
+import xsbti.VirtualFileRef
 import xsbti.compile.CompileProgress
 import xsbti.compile.analysis.SourceInfo
 
@@ -60,7 +60,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
 
   // this directory is used by Sbt to store classfiles between
   // compilation runs to implement all-or-nothing compilation
-  // sementics. Original files are copied over to tempDir and
+  // semantics. Original files are copied over to tempDir and
   // moved back in case of compilation errors.
   private val tempDir = project.underlying.getFolder(".tmpBin")
   private def tempDirFile = tempDir.getLocation().toFile()
@@ -140,9 +140,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
     logger.info(s"Running compiler using $scalaInstall")
     val progress = new SbtProgress
 
-    //TODO: upgrade to zink 1.6.0
-    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,
-      addToClasspath, srcOutputs, PlainVirtualFileConverter.converter)
+    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,addToClasspath, srcOutputs)
     val analysis =
       try
         Some(aggressiveCompile(inputs, sbtLogger))
@@ -164,13 +162,18 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
    * @note See discussion under https://github.com/sbt/sbt/issues/1372
    */
   private def createAdditionalMarkers(analysis: Analysis, compiledFiles: Set[IFile]): Unit = {
-    //TODO: upgrade to zinc 1.6.0
-    //for {
-    //  (file, info) <- analysis.infos.allInfos
-    //  resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(file.toURI())
-    //  // this file might have been deleted in the meantime
-    //  if resource.exists() && !compiledFiles(resource)
-    //} createMarkers(info)
+    for {
+      (file, info) <- analysis.infos.allInfos
+      resource <- findResources(file)
+      // this file might have been deleted in the meantime
+      if resource.exists() && !compiledFiles(resource)
+    } createMarkers(info)
+
+    def findResources(fileRef: VirtualFileRef): Array[IFile] = {
+      val uri = fileConverter.toPath(fileRef).toUri()
+      ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(uri)
+    }
+
   }
 
   /**

@@ -63,4 +63,5 @@ trait IScalaPlugin extends AbstractUIPlugin with HasLogger {
    * if no compilation unit is found.
    */
   def scalaCompilationUnit(input: IEditorInput): Option[ScalaCompilationUnit]
+
 }
