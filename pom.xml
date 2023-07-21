@@ -596,7 +596,7 @@
         <plugin>
           <groupId>org.scalastyle</groupId>
           <artifactId>scalastyle-maven-plugin</artifactId>
-          <version>0.3.2</version>
+          <version>1.0.0</version>
           <configuration>
             <inputEncoding>UTF-8</inputEncoding>
             <verbose>false</verbose>
