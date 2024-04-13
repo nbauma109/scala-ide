@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+mvn wrapper:wrapper -Dmaven=3.9.6
+alias mvn=./mvnw
+
 # run in sequences the different maven calls needed to fully build Scala IDE from scratch
 
 # not as good as the readlink version, but it is not working on os X
