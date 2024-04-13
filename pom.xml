@@ -21,8 +21,8 @@
     <encoding>UTF-8</encoding>
     <retryFlakyTests>true</retryFlakyTests>
     <!-- p2 repositories location -->
-    <repo.eclipse.2023.06>http://download.eclipse.org/releases/2023-06</repo.eclipse.2023.06>
-    <repo.ajdt.2023.06>http://download.eclipse.org/tools/ajdt/426/dev/update</repo.ajdt.2023.06>
+    <repo.eclipse.2024.03>http://download.eclipse.org/releases/2024-03</repo.eclipse.2024.03>
+    <repo.ajdt.2024.03>http://download.eclipse.org/tools/ajdt/426/dev/update</repo.ajdt.2024.03>
     <repo.equinox.launcher>http://download.scala-ide.org/plugins/equinox-weaving-launcher/releases/site</repo.equinox.launcher>
     <repo.scala-ide.root>http://download.scala-ide.org</repo.scala-ide.root>
     <repo.nebula>http://download.eclipse.org/nebula/releases/latest</repo.nebula>
@@ -110,11 +110,11 @@
     </profile>
 
     <profile>
-      <id>eclipse-2023-06</id>
+      <id>eclipse-2024-03</id>
       <properties>
-        <eclipse.codename>2023-06</eclipse.codename>
-        <repo.eclipse>${repo.eclipse.2023.06}</repo.eclipse>
-        <repo.ajdt>${repo.ajdt.2023.06}</repo.ajdt>
+        <eclipse.codename>2024-03</eclipse.codename>
+        <repo.eclipse>${repo.eclipse.2024.03}</repo.eclipse>
+        <repo.ajdt>${repo.ajdt.2024.03}</repo.ajdt>
         <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
         <weaving.hook.plugin.version>1.2.100.v20171221-2204</weaving.hook.plugin.version>
       </properties>
