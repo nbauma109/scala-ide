@@ -41,7 +41,7 @@
 	<dependency>
 	  <groupId>org.scala-refactoring</groupId>
 	  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
-	  <version>0.13.0</version>
+	  <version>${scala-refactoring.version}</version>
 	</dependency>
   </dependencies>
 
@@ -122,7 +122,7 @@
 				<artifactItem>
 				  <groupId>org.scala-refactoring</groupId>
 				  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
-				  <version>0.13.0</version>
+				  <version>${scala-refactoring.version}</version>
 				</artifactItem>
               </artifactItems>
             </configuration>

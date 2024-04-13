@@ -1,6 +1,9 @@
 **/.cache*
+**/*.class
 **/*.tmpBin
 target/
+/.settings/
+/.project
 org.scala-ide.sdt.core/META-INF/MANIFEST.MF
 org.scala-ide.sdt.debug/META-INF/MANIFEST.MF
 org.scala-ide.sdt.debug.expression/META-INF/MANIFEST.MF
