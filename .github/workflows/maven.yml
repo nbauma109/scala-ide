@@ -27,6 +27,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        maven-version: '3.9.6'
     - name: Build with Maven
       env:
         ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
