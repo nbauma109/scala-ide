@@ -28,4 +28,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      env:
+        ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
       run: ./build-all.sh
