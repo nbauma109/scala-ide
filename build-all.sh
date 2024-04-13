@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 mvn wrapper:wrapper -Dmaven=3.9.6
-alias mvn=./mvnw
 
 # run in sequences the different maven calls needed to fully build Scala IDE from scratch
 
@@ -19,34 +18,34 @@ else
   MVN_P2_ARGS="-Dtycho.localArtifacts=ignore $*"
 fi
 
-echo "Running with: mvn ${MVN_P2_ARGS}"
+echo "Running with: ./mvnw ${MVN_P2_ARGS}"
 
 # the parent project
 echo "Building parent project in $ROOT_DIR"
 cd ${ROOT_DIR}
-mvn ${MVN_ARGS}
+./mvnw ${MVN_ARGS}
 
 # set custom configuration files
 echo "Setting custom configuration files"
-mvn ${MVN_ARGS} -Pset-version-specific-files antrun:run
+./mvnw ${MVN_ARGS} -Pset-version-specific-files antrun:run
 
 
 echo "Building the toolchain"
 # the toolchain
 cd ${ROOT_DIR}/org.scala-ide.build-toolchain
-mvn ${MVN_ARGS}
+./mvnw ${MVN_ARGS}
 
 echo "Generating the local p2 repositories"
 # the locol p2 repos
 cd ${ROOT_DIR}/org.scala-ide.p2-toolchain
-mvn ${MVN_P2_ARGS}
+./mvnw ${MVN_P2_ARGS}
 
 # set the versions if required
 cd ${ROOT_DIR}
 if [ -n "${SET_VERSIONS}" ]
 then
   echo "setting versions"
-  mvn ${MVN_P2_ARGS} -Pset-versions exec:java
+  ./mvnw ${MVN_P2_ARGS} -Pset-versions exec:java
 else
   echo "Not running UpdateScalaIDEManifests."
 fi
@@ -54,5 +53,5 @@ fi
 # the plugins
 echo "Building plugins"
 cd ${ROOT_DIR}/org.scala-ide.sdt.build
-mvn ${MVN_P2_ARGS}
+./mvnw ${MVN_P2_ARGS}
 
