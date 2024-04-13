@@ -29,6 +29,23 @@
           <scope>system</scope>
           <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
+	    <!-- toolchain, Scala library -->
+	    <dependency>
+	      <groupId>org.scala-lang</groupId>
+	      <artifactId>scala-library</artifactId>
+	      <version>${scala212.version}</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.scala-lang</groupId>
+	      <artifactId>scala-reflect</artifactId>
+	      <version>${scala212.version}</version>
+	    </dependency>
+	    <!-- toolchain, Scala compiler -->
+	    <dependency>
+	      <groupId>org.scala-lang</groupId>
+	      <artifactId>scala-compiler</artifactId>
+	      <version>${scala212.version}</version>
+	    </dependency>
       </dependencies>
     </profile>
   </profiles>
@@ -45,6 +62,42 @@
           </sourceDirectories>
           <configLocation>../org.scala-ide.sdt.core/scala-ide-style-config.xml</configLocation>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <!-- copy the jar dependencies -->
+          <execution>
+            <id>copy</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <artifactItems>
+			    <!-- toolchain, Scala library -->
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-library</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-reflect</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+			    <!-- toolchain, Scala compiler -->
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-compiler</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

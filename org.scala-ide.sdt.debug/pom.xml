@@ -16,6 +16,33 @@
       <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
       <artifactId>concurrentlinkedhashmap-lru</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.scalariform</groupId>
+      <artifactId>scalariform_${scala.minor.version}</artifactId>
+      <version>${scalariform.version}</version>
+    </dependency>
+    <!-- toolchain, Scala library -->
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala212.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-reflect</artifactId>
+      <version>${scala212.version}</version>
+    </dependency>
+    <!-- toolchain, Scala compiler -->
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-compiler</artifactId>
+      <version>${scala212.version}</version>
+    </dependency>
+	<dependency>
+	  <groupId>org.scala-refactoring</groupId>
+	  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
+	  <version>0.13.0</version>
+	</dependency>
   </dependencies>
 
   <profiles>
@@ -65,12 +92,38 @@
               <goal>copy</goal>
             </goals>
             <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
               <artifactItems>
                 <artifactItem>
                   <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
                   <artifactId>concurrentlinkedhashmap-lru</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.scalariform</groupId>
+                  <artifactId>scalariform_${scala.minor.version}</artifactId>
+                </artifactItem>
+			    <!-- toolchain, Scala library -->
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-library</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-reflect</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+			    <!-- toolchain, Scala compiler -->
+			    <artifactItem>
+			      <groupId>org.scala-lang</groupId>
+			      <artifactId>scala-compiler</artifactId>
+			      <version>${scala212.version}</version>
+			    </artifactItem>
+				<artifactItem>
+				  <groupId>org.scala-refactoring</groupId>
+				  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
+				  <version>0.13.0</version>
+				</artifactItem>
               </artifactItems>
             </configuration>
           </execution>

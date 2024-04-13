@@ -6,8 +6,7 @@ Bundle-Version: 4.7.1.qualifier
 Bundle-Vendor: scala-ide.org
 Fragment-Host: org.scala-ide.sdt.debug.expression
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.scala-lang.scala-library,
- org.eclipse.equinox.weaving.aspectj,
+Require-Bundle: org.eclipse.equinox.weaving.aspectj,
  org.scala-ide.sdt.core,
  org.scala-ide.sdt.debug,
  org.junit

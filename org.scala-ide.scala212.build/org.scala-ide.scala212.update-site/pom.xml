@@ -8,6 +8,6 @@
     <version>4.7.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.scala-ide.scala212.update-site</artifactId>
-  <packaging>eclipse-update-site</packaging>
+  <packaging>eclipse-repository</packaging>
 
 </project>

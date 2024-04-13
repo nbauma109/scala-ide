@@ -9,7 +9,7 @@
     <relativePath>../org.scala-ide.sdt.build/pom.xml</relativePath>
   </parent>
   <artifactId>org.scala-ide.sdt.update-site</artifactId>
-  <packaging>eclipse-update-site</packaging>
+  <packaging>eclipse-repository</packaging>
 
   <build>
     <plugins>
