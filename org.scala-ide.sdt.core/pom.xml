@@ -232,11 +232,11 @@
                   <classifier>sources</classifier>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.scala-ide</groupId>
+                  <groupId>org.scala-sbt</groupId>
                   <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.scala-ide</groupId>
+                  <groupId>org.scala-sbt</groupId>
                   <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
                   <classifier>sources</classifier>
                 </artifactItem>
