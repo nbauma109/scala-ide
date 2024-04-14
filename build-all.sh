@@ -42,7 +42,7 @@ $MVN_DIR/mvnw ${MVN_ARGS}
 echo "Generating the local p2 repositories"
 # the local p2 repos
 cd ${ROOT_DIR}/org.scala-ide.p2-toolchain
-$MVN_DIR/mvnw ${MVN_P2_ARGS}
+$MVN_DIR/mvnw -X ${MVN_P2_ARGS}
 
 # set the versions if required
 cd ${ROOT_DIR}
@@ -57,5 +57,5 @@ fi
 # the plugins
 echo "Building plugins"
 cd ${ROOT_DIR}/org.scala-ide.sdt.build
-$MVN_DIR/mvnw -X ${MVN_P2_ARGS}
+$MVN_DIR/mvnw ${MVN_P2_ARGS}
 
