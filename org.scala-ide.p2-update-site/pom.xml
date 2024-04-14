@@ -27,7 +27,32 @@
     </dependency>
   </dependencies>
 
+  <build>
+	<plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+	      <dependency-resolution>
+	        <extraRequirements>
+	          <requirement>
+	            <type>eclipse-plugin</type>
+	            <id>org.junit</id>
+	            <versionRange>4.11.0</versionRange>
+	          </requirement>
+	        </extraRequirements>
+	      </dependency-resolution>
+        </configuration>
+      </plugin>
+	</plugins>
+  </build>
+
   <repositories>
+    <repository>
+        <id>eclipse-releases</id>
+        <url>http://download.eclipse.org/releases/2024-03/</url>
+        <layout>p2</layout>
+    </repository>
     <repository>
       <id>scala-ide.refactoring.repo</id>
       <name>Scala IDE refactoring repository</name>

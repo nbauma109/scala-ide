@@ -14,7 +14,7 @@ ROOT_DIR=${PWD}
 if [ -z "$*" ]
 then
   MVN_ARGS="-Pscala-2.12.x -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
-  MVN_P2_ARGS="-Dtycho.localArtifacts=ignore -Pscala-2.12.x -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean verify"
+  MVN_P2_ARGS="-Dtycho.localArtifacts=ignore -Pscala-2.12.x -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
 else
   MVN_ARGS="$*"
   MVN_P2_ARGS="-Dtycho.localArtifacts=ignore $*"
@@ -38,7 +38,7 @@ cd ${ROOT_DIR}/org.scala-ide.build-toolchain
 $MVN_DIR/mvnw ${MVN_ARGS}
 
 echo "Generating the local p2 repositories"
-# the locol p2 repos
+# the local p2 repos
 cd ${ROOT_DIR}/org.scala-ide.p2-toolchain
 $MVN_DIR/mvnw ${MVN_P2_ARGS}
 
@@ -55,5 +55,5 @@ fi
 # the plugins
 echo "Building plugins"
 cd ${ROOT_DIR}/org.scala-ide.sdt.build
-$MVN_DIR/mvnw ${MVN_P2_ARGS}
+$MVN_DIR/mvnw -X ${MVN_P2_ARGS}
 

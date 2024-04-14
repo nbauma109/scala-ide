@@ -162,14 +162,6 @@
 	</dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>bintray.com</id>
-      <name>bintray repo</name>
-      <url>https://dl.bintray.com/sbt/maven-releases/</url>
-    </repository>
-  </repositories>
-
   <build>
     <plugins>
       <plugin>
