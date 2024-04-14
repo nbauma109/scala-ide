@@ -38,7 +38,7 @@ public privileged aspect OutlineAspect {
         jelc.appendPackageFragmentRootLabel(root, JavaElementLabels.ROOT_QUALIFIED);
 
         if (JavaElementLabelComposer.getFlag(flags, JavaElementLabels.COLORIZE)) {
-          jelc.fBuffer.setStyle(offset, jelc.fBuffer.length() - offset, JavaElementLabelComposer.QUALIFIER_STYLE);
+//          jelc.fBuffer.setStyle(offset, jelc.fBuffer.length() - offset, JavaElementLabelComposer.QUALIFIER_STYLE);
         }
       }
     }
