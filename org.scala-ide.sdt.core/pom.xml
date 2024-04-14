@@ -68,7 +68,7 @@
       <version>${zinc.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>org.scala-sbt</groupId>
       <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
       <version>${zinc.version}</version>
     </dependency>
