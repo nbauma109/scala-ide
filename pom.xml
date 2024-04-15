@@ -40,7 +40,7 @@
     <scalariform.version>0.2.10</scalariform.version>
 
     <!-- plugin versions -->
-    <tycho.plugin.version>4.0.1</tycho.plugin.version>
+    <tycho.plugin.version>4.0.7</tycho.plugin.version>
     <scala.plugin.version>4.8.1</scala.plugin.version>
     <aspectj.plugin.version>1.14.0</aspectj.plugin.version>
     <aspectj.version>1.9.19</aspectj.version>
