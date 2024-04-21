@@ -2,6 +2,7 @@ package org.scalaide.core.internal.builder
 package zinc
 
 import java.io.File
+import java.nio.file.Paths
 import java.lang.ref.SoftReference
 import java.util.concurrent.atomic.AtomicReference
 
@@ -163,7 +164,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
   private def createAdditionalMarkers(analysis: Analysis, compiledFiles: Set[IFile]): Unit = {
     for {
       (file, info) <- analysis.infos.allInfos
-      resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(file.toURI())
+      resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(Paths.get(file.id).toUri)
       // this file might have been deleted in the meantime
       if resource.exists() && !compiledFiles(resource)
     } createMarkers(info)

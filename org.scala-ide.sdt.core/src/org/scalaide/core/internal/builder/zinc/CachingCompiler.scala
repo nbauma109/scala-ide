@@ -1,12 +1,15 @@
 package org.scalaide.core.internal.builder.zinc
 
 import java.io.File
+import java.util.Optional
 
 import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.Analysis
 import sbt.internal.inc.IncrementalCompilerImpl
 import sbt.internal.inc.MixedAnalyzingCompiler
+import sbt.internal.inc.PlainVirtualFileConverter
+import sbt.internal.inc.Stamps
 import sbt.util.InterfaceUtil.o2jo
 import xsbti.Logger
 import xsbti.Reporter
@@ -42,14 +45,16 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
       .map {
         case (a, s) => (Option(a), Option(s))
       }.getOrElse((Option(SbtUtils.readAnalysis(cacheFile)), None))
-    cacheAndReturnLastAnalysis(new IncrementalCompilerImpl().compile(comps.scalac, comps.javac, in.sources, in.classpath, in.output, in.cache,
+    val conv = PlainVirtualFileConverter.converter
+    val defaultStampReader = Stamps.timeWrapBinaryStamps(conv)
+    cacheAndReturnLastAnalysis(new IncrementalCompilerImpl().compile(comps.scalac, comps.javac, in.sources.map(_.toPath), in.classpath.map(_.toPath), in.output, Optional.empty(), Optional.empty(), in.cache,
       in.scalacOptions, in.javacOptions, o2jo(previousAnalysis), o2jo(previousSetup), lookup, sbtReporter, in.order,
-      skip = false, in.progress, in.incOptions, extra = Array(), log))
+      skip = false, in.progress, in.incOptions, Optional.empty(), extra = Array(), conveter = conv, defaultStampReader, log))
   }
 
   private def cacheAndReturnLastAnalysis(compilationResult: CompileResult): Analysis = {
     if (compilationResult.hasModified)
-      AnalysisStore.materializeLazy(MixedAnalyzingCompiler.staticCachedStore(cacheFile, true)).set(AnalysisContents.create(compilationResult.analysis, compilationResult.setup))
+      AnalysisStore.materializeLazy(MixedAnalyzingCompiler.staticCachedStore(cacheFile.toPath, true)).set(AnalysisContents.create(compilationResult.analysis, compilationResult.setup))
     compilationResult.analysis match {
       case a: Analysis => a
       case a => throw new IllegalStateException(s"object of type `Analysis` was expected but got `${a.getClass}`.")

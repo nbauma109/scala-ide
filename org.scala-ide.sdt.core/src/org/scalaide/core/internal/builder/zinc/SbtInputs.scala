@@ -14,6 +14,7 @@ import org.scalaide.util.internal.SettingConverterUtil
 
 import sbt.internal.inc.FreshCompilerCache
 import xsbti.Logger
+import xsbti.compile.ClassFileManagerType
 import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileProgress
 import xsbti.compile.IncOptions
@@ -58,11 +59,18 @@ class SbtInputs(
   def incOptions: IncOptions = {
     import xsbti.compile.IncOptions._
     val base = of()
+
+    // Wrap TransactionalManagerType to ClassFileManagerType if necessary
+    val transactionalManager = TransactionalManagerType.create(tempDir, logger)
+    val classFileManagerType: ClassFileManagerType = transactionalManager.asInstanceOf[ClassFileManagerType]
+    val recompileOnMacroDefSetting: java.lang.Boolean = 
+      project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))
+
     base.
       withApiDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name))).
       withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name))).
-      withClassfileManagerType(Optional.ofNullable(TransactionalManagerType.create(tempDir, logger))).
-      withRecompileOnMacroDef(Optional.ofNullable(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))))
+      withClassfileManagerType(Optional.ofNullable(classFileManagerType)).
+      withRecompileOnMacroDef(Optional.ofNullable(recompileOnMacroDefSetting))
   }
 
   def outputFolders = srcOutputs.map {

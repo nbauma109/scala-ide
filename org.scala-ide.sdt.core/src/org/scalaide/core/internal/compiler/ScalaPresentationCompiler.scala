@@ -80,10 +80,10 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
       val owner = original.owner
       // SI-7264 Force the info of owners, other than those with a type completer as its info.
       //         The condition prevents cycles and allows the `orElse` case below to kick in.
-      if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
+      if (!owner.rawInfo.isInstanceOf[TypeCompleter])
         owner.initialize
       original.companionSymbol orElse {
-        ctx.lookup(original.name.companionName, owner).suchThat(sym =>
+        ctx.lookup(original.name.companionName).suchThat(sym =>
           (original.isTerm || sym.hasModuleFlag) &&
           (sym isCoDefinedWith original)
         )

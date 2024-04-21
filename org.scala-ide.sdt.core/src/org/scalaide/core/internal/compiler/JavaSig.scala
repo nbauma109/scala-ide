@@ -49,6 +49,8 @@ trait JavaSig { pc: ScalaPresentationCompiler =>
    */
   class JavaSignature(symbol: Symbol) {
     import org.eclipse.jdt.core.Signature
+	import java.lang.reflect.Method
+    import scala.tools.nsc.transform.Erasure
 
     // see scala/scala commit e5ea3ab
     private val markClassUsed: Symbol => Unit = _ => ()
@@ -58,7 +60,11 @@ trait JavaSig { pc: ScalaPresentationCompiler =>
       pc.asyncExec {
         def needsJavaSig: Boolean = {
           // there is no need to generate the generic type information for local symbols
-          !symbol.isLocalToBlock && erasure.needsJavaSig(symbol.info, throwsArgs = Nil)
+          val throwsArgs = symbol.annotations flatMap ThrownException.unapply
+          val method: Method = classOf[Erasure].getDeclaredMethod("needsJavaSig", classOf[Symbol], classOf[Type], classOf[List[Annotation]])
+          method.setAccessible(true)
+          val javaSigNeeded: Boolean = method.invoke(erasure, symbol, symbol.info, throwsArgs).asInstanceOf[Boolean]
+          !symbol.isLocalToBlock && javaSigNeeded
         }
 
         if (needsJavaSig) {

@@ -1,5 +1,6 @@
 package org.scalaide.core.internal.project
 
+import java.nio.file.Paths
 import org.scalaide.core.IScalaProject
 import org.scalaide.core.IScalaPlugin
 import sbt.internal.inc.Analysis
@@ -20,7 +21,7 @@ trait SourcePathFinder {
       case (a: Analysis, sourceFolders) =>
         a.relations.definesClass(className)
           .flatMap { foundRelativeSrc =>
-            val path = foundRelativeSrc.getPath
+            val path = Paths.get(foundRelativeSrc.id).toString
             sourceFolders.collect {
               case sf if path.startsWith(sf) =>
                 path.substring(sf.length)
@@ -31,6 +32,7 @@ trait SourcePathFinder {
         files
     }.flatMap { _.headOption }
   }
+
 }
 
 object SourcePathFinder {

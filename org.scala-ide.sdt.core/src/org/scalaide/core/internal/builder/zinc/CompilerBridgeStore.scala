@@ -124,7 +124,7 @@ class CompilerBridgeStore(base: IPath, plugin: ScalaPlugin) extends HasLogger {
 
         val label = installation.version.unparse
         val raw = new RawCompiler(scalaInstanceForInstallation(installation), ClasspathOptionsUtil.auto, log)
-        AnalyzingCompiler.compileSources(List(compilerBridge.toFile), targetJar.toFile, List(zincInterface.toFile), label, raw, log)
+        AnalyzingCompiler.compileSources(List(compilerBridge.toFile.toPath), targetJar.toFile.toPath, List(zincInterface.toFile.toPath), label, raw, log)
 
         monitor.worked(1)
 

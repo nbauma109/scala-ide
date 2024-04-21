@@ -16,6 +16,8 @@ import org.scalaide.util.internal.SbtUtils
 
 import sbt.internal.inc.FreshCompilerCache
 import sbt.internal.inc.IncrementalCompilerImpl
+import sbt.internal.inc.PlainVirtualFileConverter
+import sbt.internal.inc.Stamps
 import xsbti.CompileFailed
 import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileOrder
@@ -79,9 +81,11 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
     def cache = new FreshCompilerCache
 
     sbtReporter.reset()
-    zincCompiler.compile(comps.scalac, comps.javac, Array(compiledSource), classpath, output, cache, scalacOpts,
+    val conv = PlainVirtualFileConverter.converter
+    val defaultStampReader = Stamps.timeWrapBinaryStamps(conv)
+    zincCompiler.compile(comps.scalac, comps.javac, Array(compiledSource.toPath), classpath.map(_.toPath), output, Optional.empty(), Optional.empty(), cache, scalacOpts,
       javaOptions = Array(), Optional.empty[CompileAnalysis], Optional.empty[MiniSetup], lookup, sbtReporter,
-      CompileOrder.ScalaThenJava, skip = false, Optional.empty[CompileProgress], incOptions, extra = Array(),
+      CompileOrder.ScalaThenJava, skip = false, Optional.empty[CompileProgress], incOptions, Optional.empty(), extra = Array(), conveter = conv, defaultStampReader,
       sbtLogger)
 
     toCompilationResult(sbtReporter.problems.collect(problemToCompilationError))

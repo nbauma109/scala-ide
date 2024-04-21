@@ -90,7 +90,7 @@ trait InterpreterConsoleView extends ViewPart {
     inputCommandField.setLayout(new FillLayout)
     inputCommandField.setAlwaysShowScrollBars(false)
 
-    interpreterPanel.setWeights(Array(3, 1))
+    interpreterPanel.setWeights(3, 1)
   }
 
   /**

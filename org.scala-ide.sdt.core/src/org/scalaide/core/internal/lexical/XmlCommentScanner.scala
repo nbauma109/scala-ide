@@ -7,6 +7,6 @@ import org.scalaide.core.lexical.AbstractScalaScanner
 
 class XmlCommentScanner(val preferenceStore: IPreferenceStore) extends RuleBasedScanner with AbstractScalaScanner {
 
-  setRules(Array(new MultiLineRule("<!--", "-->", getToken(XML_COMMENT))))
+  setRules(new MultiLineRule("<!--", "-->", getToken(XML_COMMENT)))
 
 }

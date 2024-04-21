@@ -7,6 +7,6 @@ import org.scalaide.core.lexical.AbstractScalaScanner
 
 class XmlPIScanner(val preferenceStore: IPreferenceStore) extends RuleBasedScanner with AbstractScalaScanner {
 
-  setRules(Array(new MultiLineRule("<?", "?>", getToken(XML_PI))))
+  setRules(new MultiLineRule("<?", "?>", getToken(XML_PI)))
 
 }

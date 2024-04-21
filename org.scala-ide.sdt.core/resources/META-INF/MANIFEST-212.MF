@@ -41,10 +41,6 @@ Require-Bundle: org.eclipse.core.expressions,
  org.scala-lang.scala-reflect;bundle-version="[2.12,2.13)",
  org.scala-lang.scala-compiler;bundle-version="[2.12,2.13)",
  org.scala-refactoring.library,
- org.scala-ide.zinc.library,
- org.scala-ide.zinc.compiler.bridge,
- org.scala-ide.scala210.jars,
- org.scala-ide.scala211.jars,
  scalariform,
  org.eclipse.ui.browser,
  org.eclipse.nebula.widgets.tablecombo,
@@ -194,6 +190,6 @@ Bundle-ClassPath: .,
  target/lib/io_2.12-@SBT_IO_VERSION@.jar,
  target/lib/sbinary_2.12-@SBINARY_VERSION@.jar,
  target/lib/scalap-@SCALA_VERSION@.jar,
- target/lib/scala-xml_2.12-@SCALAXML_VERSION@.jar
- 
-
+ target/lib/scala-xml_2.12-@SCALAXML_VERSION@.jar,
+ target/lib/org.scala-ide.zinc.library-@PROJECT_VERSION@.jar,
+ target/lib/org.scala-ide.zinc.compiler.bridge-@PROJECT_VERSION@.jar

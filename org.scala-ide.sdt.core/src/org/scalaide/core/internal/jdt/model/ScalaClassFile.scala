@@ -20,6 +20,7 @@ import org.eclipse.jdt.internal.core.JavaModelStatus
 import org.eclipse.jdt.internal.core.PackageFragment
 import org.eclipse.jdt.internal.core.util.MementoTokenizer
 import org.eclipse.jdt.internal.core.util.Util
+import org.eclipse.jdt.internal.compiler.env.IElementInfo
 import org.scalaide.core.compiler.ScalaCompilationProblem
 import org.scalaide.ui.ScalaImages
 
@@ -148,14 +149,14 @@ class ScalaClassFile(parent: PackageFragment, name: String, sourceFile: String)
   def closeBuffer0() = super.closeBuffer()
   def closing0(info: AnyRef) = super.closing(info)
   def createElementInfo0() = super.createElementInfo()
-  def generateInfos0(info: AnyRef, newElements: JHashMap[_, _], monitor: IProgressMonitor) =
+  def generateInfos0(info: IElementInfo, newElements: JHashMap[IJavaElement, IElementInfo], monitor: IProgressMonitor) =
     super.generateInfos(info, newElements, monitor)
   def getBufferManager0() = super.getBufferManager()
   def validateExistence0(underlying: IResource): IStatus = validateExistence(underlying)
   def hasBuffer0(): Boolean = super.hasBuffer()
-  def openBuffer0(pm: IProgressMonitor, info: Object) = super.openBuffer(pm, info)
+  def openBuffer0(pm: IProgressMonitor, info: IElementInfo) = super.openBuffer(pm, info)
   def resourceExists0(underlyingResource: IResource) = super.resourceExists(underlyingResource)
-  def openAncestors0(newElements: JHashMap[_, _], monitor: IProgressMonitor): Unit = { super.openAncestors(newElements, monitor) }
+  def openAncestors0(newElements: JHashMap[IJavaElement, IElementInfo], monitor: IProgressMonitor): Unit = { super.openAncestors(newElements, monitor) }
   def getHandleMementoDelimiter0() = super.getHandleMementoDelimiter()
   def isSourceElement0(): Boolean = super.isSourceElement()
   override def ignoreOptionalProblems(): Boolean = false

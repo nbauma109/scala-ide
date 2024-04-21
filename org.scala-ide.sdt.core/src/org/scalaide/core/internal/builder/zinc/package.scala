@@ -34,7 +34,7 @@ package object zinc {
         NoClass
 
     class DirectoryLocator(dir: File) extends DefinesClass {
-      override def apply(className: String): Boolean = Locate.classFile(dir, className).isFile
+      override def apply(className: String): Boolean = Locate.classFile(dir.toPath, className).toFile.isFile
     }
 
     class JarLocator(jar: File) extends DefinesClass {

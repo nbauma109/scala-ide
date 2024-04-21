@@ -398,6 +398,7 @@
                           <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
                           <filter token="SCALA_VERSION" value="${scala.version}"/>
                           <filter token="SCALAXML_VERSION" value="${scala212.scala-xml.version}"/>
+                          <filter token="PROJECT_VERSION" value="${project.version}"/>
                         </filterset>
                     </copy>
                     <copy file="${sdt.debug.dir}/resources/META-INF/MANIFEST-${version.suffix}.MF"
@@ -575,7 +576,7 @@
               <arg>-Yno-adapted-args</arg>
               <arg>-Ywarn-dead-code</arg>
               <arg>-Ywarn-unused-import</arg>
-              <arg>-Ywarn-unused:-params,-implicits,_</arg>
+              <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
             </args>
           </configuration>
         </plugin>

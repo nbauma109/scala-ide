@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.ITypeRoot
 import org.eclipse.jdt.core.WorkingCopyOwner
 import org.eclipse.jdt.core.dom.CompilationUnit
 import org.eclipse.jdt.internal.compiler.env
+import org.eclipse.jdt.internal.compiler.env.IElementInfo
 import org.eclipse.jdt.internal.core.BufferManager
 import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner
 import org.eclipse.jdt.internal.core.JavaElement
@@ -73,19 +74,19 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   override def codeSelect(cu : env.ICompilationUnit, offset : Int, length : Int, owner : WorkingCopyOwner) : Array[IJavaElement] =
     classFile.codeSelect(cu, offset, length, owner)
   override def createElementInfo() : AnyRef = classFile.createElementInfo0()
-  override def generateInfos(info : AnyRef, newElements : JHashMap[_, _], monitor : IProgressMonitor) =
+  override def generateInfos(info : IElementInfo, newElements : JHashMap[IJavaElement, IElementInfo], monitor : IProgressMonitor) =
     classFile.generateInfos0(info, newElements, monitor)
   override def getBufferFactory() : Suppress.DeprecatedWarning.IBufferFactory = Suppress.DeprecatedWarning.getBufferFactory(classFile)
   override def getBufferManager() : BufferManager = classFile.getBufferManager0()
   override def hasBuffer() : Boolean = classFile.hasBuffer0()
   override def isSourceElement() : Boolean = classFile.isSourceElement0()
-  override def openBuffer(pm : IProgressMonitor, info : Object) : IBuffer = classFile.openBuffer0(pm, info)
+  override def openBuffer(pm : IProgressMonitor, info : IElementInfo) : IBuffer = classFile.openBuffer0(pm, info)
   override def resource() : IResource = classFile.resource()
   override def resource(root : PackageFragmentRoot) : IResource = classFile.resource(root)
   override def resourceExists(underlyingResource : IResource) : Boolean = classFile.resourceExists0(underlyingResource)
   override def getPackageFragmentRoot() : PackageFragmentRoot = classFile.getPackageFragmentRoot()
   override def validateExistence(underlyingResource : IResource) : IStatus = classFile.validateExistence0(underlyingResource)
-  override def openAncestors(newElements : JHashMap[_, _], monitor : IProgressMonitor): Unit = { classFile.openAncestors0(newElements, monitor) }
+  override def openAncestors(newElements : JHashMap[IJavaElement, IElementInfo], monitor : IProgressMonitor): Unit = { classFile.openAncestors0(newElements, monitor) }
 
   override def exists() = classFile.exists()
   override def getAncestor(ancestorType : Int) : IJavaElement = classFile.getAncestor(ancestorType)

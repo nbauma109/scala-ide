@@ -775,7 +775,7 @@ trait ScalaStructureBuilder extends ScalaAnnotationHelper { pc: ScalaPresentatio
 
     def resolveDuplicates(handle: SourceRefElement): Unit = {
       while (newElements0.containsKey(handle)) {
-        handle.occurrenceCount += 1
+        handle.incOccurrenceCount
       }
     }
 
