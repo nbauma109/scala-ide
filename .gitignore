@@ -1,5 +1,6 @@
 **/.cache*
 **/*.class
+**/*.jar
 **/*.tmpBin
 target/
 /.settings/
@@ -20,3 +21,6 @@ org.scala-ide.zinc/org.scala-ide.zinc.source.feature/feature.xml
 .idea
 .metadata
 *~
+/mvnw
+/mvnw.cmd
+/.mvn/
