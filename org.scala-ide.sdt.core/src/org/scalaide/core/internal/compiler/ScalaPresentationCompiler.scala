@@ -80,10 +80,11 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
       val owner = original.owner
       // SI-7264 Force the info of owners, other than those with a type completer as its info.
       //         The condition prevents cycles and allows the `orElse` case below to kick in.
-      if (!owner.rawInfo.isInstanceOf[TypeCompleter])
+      if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
         owner.initialize
       original.companionSymbol orElse {
-        ctx.lookup(original.name.companionName).suchThat(sym =>
+        // potential issue here (see https://github.com/scala/scala/commit/dd0b8c6d6f1a740042b7c3bf6fce3b627035c24c)
+        ctx.lookupSymbol(original.name.companionName, _.owner == owner).symbol.suchThat(sym =>
           (original.isTerm || sym.hasModuleFlag) &&
           (sym isCoDefinedWith original)
         )
@@ -536,9 +537,6 @@ object ScalaPresentationCompiler {
       case '\n' | '\r' => ' '
       case c           => c
     }
-
-    override def echo(msg: String): Unit =
-      logger.debug(s"[$spcName]: $msg")
 
   }
 }

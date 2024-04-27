@@ -96,9 +96,6 @@
         <!-- configuration to be able to use maven bundle as osgi bundles -->
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <resolver>p2</resolver>
-        </configuration>
       </plugin>
       <plugin>
         <!-- tycho shouldn't try to process scala files -->
@@ -147,7 +144,6 @@
         <artifactId>tycho-packaging-plugin</artifactId>
         <configuration>
           <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm'-${buildNumber}'</format>
-          <archiveSite>true</archiveSite>
         </configuration>
       </plugin>
     </plugins>

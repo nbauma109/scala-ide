@@ -1,6 +1,6 @@
 package org.scalaide.core.internal.jdt.model
 
-import java.util.{ HashMap ⇒ JHashMap }
+import java.util.{ Map => JMap }
 
 import scala.tools.eclipse.contribution.weaving.jdt.IScalaSourceFile
 import scala.tools.nsc.interactive.Response
@@ -19,8 +19,7 @@ import org.eclipse.jdt.core.JavaModelException
 import org.eclipse.jdt.core.WorkingCopyOwner
 import org.eclipse.jdt.core.compiler.CharOperation
 import org.eclipse.jdt.core.compiler.IProblem
-import org.eclipse.jdt.core.dom.CompilationUnit
-import org.eclipse.jdt.internal.core.{ CompilationUnit ⇒ JDTCompilationUnit }
+import org.eclipse.jdt.internal.core.{ CompilationUnit => JDTCompilationUnit }
 import org.eclipse.jdt.internal.core.OpenableElementInfo
 import org.eclipse.jdt.internal.core.PackageFragment
 import org.eclipse.jdt.internal.core.util.HandleFactory
@@ -71,6 +70,8 @@ object ScalaSourceFile {
 class ScalaSourceFile(fragment: PackageFragment, elementName: String, workingCopyOwner: WorkingCopyOwner)
     extends JDTCompilationUnit(fragment, elementName, workingCopyOwner) with ScalaCompilationUnit with IScalaSourceFile {
 
+  override def getCompilationUnit: JDTCompilationUnit = super.getCompilationUnit.asInstanceOf[JDTCompilationUnit]
+
   override def getMainTypeName: Array[Char] =
     getElementName.substring(0, getElementName.length - ".scala".length).toCharArray()
 
@@ -105,7 +106,7 @@ class ScalaSourceFile(fragment: PackageFragment, elementName: String, workingCop
     astLevel: Int,
     reconcileFlags: Int,
     workingCopyOwner: WorkingCopyOwner,
-    monitor: IProgressMonitor): CompilationUnit = {
+    monitor: IProgressMonitor): org.eclipse.jdt.core.dom.CompilationUnit = {
     null
   }
 
@@ -113,8 +114,8 @@ class ScalaSourceFile(fragment: PackageFragment, elementName: String, workingCop
     astLevel: Int,
     resolveBindings: Boolean,
     reconcileFlags: Int,
-    problems: JHashMap[_, _],
-    monitor: IProgressMonitor): CompilationUnit = {
+    problems: JMap[String, Array[org.eclipse.jdt.core.compiler.CategorizedProblem]],
+    monitor: IProgressMonitor): org.eclipse.jdt.core.dom.CompilationUnit = {
 
     // don't rerun this expensive operation unless necessary
     if (!isConsistent()) {

@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.JavaCore
 import org.eclipse.jdt.core.JavaModelException
 import org.eclipse.jdt.core.WorkingCopyOwner
 import org.eclipse.jdt.internal.compiler.env
+import org.eclipse.jdt.internal.compiler.env.IElementInfo
 import org.eclipse.jdt.internal.core.BufferManager
 import org.eclipse.jdt.internal.core.CompilationUnitElementInfo
 import org.eclipse.jdt.internal.core.Openable
@@ -107,7 +108,7 @@ trait ScalaCompilationUnit extends Openable
     }
   }
 
-  override def buildStructure(info: OpenableElementInfo, pm: IProgressMonitor, newElements: JMap[_, _], underlyingResource: IResource): Boolean = {
+  override def buildStructure(info: OpenableElementInfo, pm: IProgressMonitor, newElements: JMap[IJavaElement, IElementInfo], underlyingResource: IResource): Boolean = {
     ensureBufferOpen(info, pm)
 
     scalaProject.presentationCompiler.internal { compiler =>

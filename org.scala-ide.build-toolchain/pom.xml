@@ -25,15 +25,6 @@
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
   </properties>
 
-  <!-- repository containing the sbt packages -->
-  <repositories>
-    <repository>
-      <id>bintray.com</id>
-      <name>bintray repo</name>
-      <url>https://dl.bintray.com/sbt/maven-releases/</url>
-    </repository>
-  </repositories>
-
   <profiles>
     <profile>
       <id>scala-2.12.x</id>

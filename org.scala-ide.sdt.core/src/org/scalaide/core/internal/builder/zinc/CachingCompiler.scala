@@ -38,8 +38,8 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
    */
   def compile(in: SbtInputs, comps: Compilers): Analysis = {
     val lookup = new DefaultPerClasspathEntryLookup {
-      override def analysis(classpathEntry: File) =
-        in.analysisMap(classpathEntry)
+      override def analysis(classpathEntry: xsbti.VirtualFile) =
+        in.analysisMap(PlainVirtualFileConverter.converter.toPath(classpathEntry).toFile)
     }
     val (previousAnalysis, previousSetup) = SbtUtils.readCache(cacheFile)
       .map {

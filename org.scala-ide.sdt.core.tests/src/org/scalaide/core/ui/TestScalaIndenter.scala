@@ -104,7 +104,7 @@ class TestScalaIndenter {
     preferenceProvider.put(ScalaIndenter.INDENT_SIZE, "2")
     preferenceProvider.put(ScalaIndenter.INDENT_WITH_TABS, "false")
 
-    val project = new JavaProject()
+    val project = new JavaProject(null, null)
 
     val indentStrategy = new TestScalaAutoIndentStrategy(IJavaPartitions.JAVA_PARTITIONING, project, null, preferenceProvider)
     indentStrategy.customizeDocumentCommand(document, command)

@@ -1,7 +1,5 @@
 package org.scalaide.core.internal.builder.zinc
 
-import java.io.File
-
 import scala.tools.eclipse.contribution.weaving.jdt.jcompiler.BuildManagerStore
 
 import org.eclipse.core.resources.IMarker
@@ -20,6 +18,8 @@ import xsbti.Reporter
 import xsbti.compile.IncToolOptions
 import xsbti.compile.JavaCompiler
 
+import sbt.internal.inc.PlainVirtualFileConverter
+
 /**
  * Eclipse Java compiler interface, used by the SBT builder.
  * This class forwards to the internal Eclipse Java compiler, using
@@ -29,7 +29,7 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
 
   override def project = p
 
-  override def run(sources: Array[File], unusedOptions: Array[String], unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+  override def run(sources: Array[xsbti.VirtualFile], unusedOptions: Array[String], compileOutput: xsbti.compile.Output, unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
     val scalaProject = IScalaPlugin().getScalaProject(project)
     val allSourceFiles = scalaProject.allSourceFiles()
     val depends = scalaProject.directDependencies
@@ -48,7 +48,7 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
         container.refreshLocal(IResource.DEPTH_INFINITE, null)
       }
 
-      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sources, project)
+      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sources.map(PlainVirtualFileConverter.converter.toPath(_).toFile), project)
       try {
         ProductExposer.showJavaCompilationProducts(project)
         scalaJavaBuilder.build(INCREMENTAL_BUILD, new java.util.HashMap(), monitor)

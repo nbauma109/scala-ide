@@ -1,6 +1,5 @@
 package org.scalaide.core.internal.jdt.model
 
-import java.util.{ HashMap => JHashMap }
 import java.util.{ Map => JMap }
 import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.IResource
@@ -31,6 +30,8 @@ import org.eclipse.jdt.internal.compiler.env.IElementInfo
 import org.eclipse.jdt.internal.core.BufferManager
 import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner
 import org.eclipse.jdt.internal.core.JavaElement
+import org.eclipse.jdt.internal.core.JavaModel
+import org.eclipse.jdt.internal.core.JavaProject
 import org.eclipse.jdt.internal.core.Openable
 import org.eclipse.jdt.internal.core.OpenableElementInfo
 import org.eclipse.jdt.internal.core.PackageFragmentRoot
@@ -43,7 +44,7 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   override def getAdapter[T](adapter : Class[T]): T = (classFile : IAdaptable).getAdapter(adapter)
 
   override def equals(o : Any) = classFile.equals(o)
-  override def hashCode() = classFile.hashCode()
+  override def calculateHashCode() = classFile.hashCode()
 
   def getFileName() : Array[Char] = classFile.getFileName()
   def getContents() : Array[Char] = classFile.getContents()
@@ -55,7 +56,7 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
     classFile.getHandleFromMemento(token, memento, owner)
 
   override def bufferChanged(e : BufferChangedEvent): Unit = { classFile.bufferChanged(e) }
-  override def buildStructure(info : OpenableElementInfo, pm : IProgressMonitor, newElements : JMap[_, _], underlyingResource : IResource) : Boolean =
+  override def buildStructure(info : OpenableElementInfo, pm : IProgressMonitor, newElements : JMap[IJavaElement, IElementInfo], underlyingResource : IResource) : Boolean =
     classFile.buildStructure(info, pm, newElements, underlyingResource)
   override def canBeRemovedFromCache() : Boolean = classFile.canBeRemovedFromCache()
   override def canBufferBeRemovedFromCache(buffer : IBuffer) : Boolean = classFile.canBufferBeRemovedFromCache(buffer)
@@ -73,8 +74,8 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   }
   override def codeSelect(cu : env.ICompilationUnit, offset : Int, length : Int, owner : WorkingCopyOwner) : Array[IJavaElement] =
     classFile.codeSelect(cu, offset, length, owner)
-  override def createElementInfo() : AnyRef = classFile.createElementInfo0()
-  override def generateInfos(info : IElementInfo, newElements : JHashMap[IJavaElement, IElementInfo], monitor : IProgressMonitor) =
+  override def createElementInfo() : OpenableElementInfo = classFile.createElementInfo0()
+  override def generateInfos(info : IElementInfo, newElements : JMap[IJavaElement, IElementInfo], monitor : IProgressMonitor) =
     classFile.generateInfos0(info, newElements, monitor)
   override def getBufferFactory() : Suppress.DeprecatedWarning.IBufferFactory = Suppress.DeprecatedWarning.getBufferFactory(classFile)
   override def getBufferManager() : BufferManager = classFile.getBufferManager0()
@@ -86,7 +87,7 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   override def resourceExists(underlyingResource : IResource) : Boolean = classFile.resourceExists0(underlyingResource)
   override def getPackageFragmentRoot() : PackageFragmentRoot = classFile.getPackageFragmentRoot()
   override def validateExistence(underlyingResource : IResource) : IStatus = classFile.validateExistence0(underlyingResource)
-  override def openAncestors(newElements : JHashMap[IJavaElement, IElementInfo], monitor : IProgressMonitor): Unit = { classFile.openAncestors0(newElements, monitor) }
+  override def openAncestors(newElements : JMap[IJavaElement, IElementInfo], monitor : IProgressMonitor): Unit = { classFile.openAncestors0(newElements, monitor) }
 
   override def exists() = classFile.exists()
   override def getAncestor(ancestorType : Int) : IJavaElement = classFile.getAncestor(ancestorType)
@@ -95,12 +96,12 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   override def getElementName() : String = classFile.getElementName()
   override def getElementType() : Int = classFile.getElementType()
   override def getHandleIdentifier() : String = classFile.getHandleIdentifier()
-  override def getJavaModel() : IJavaModel = classFile.getJavaModel()
-  override def getJavaProject() : IJavaProject = classFile.getJavaProject()
+  override def getJavaModel() : JavaModel = classFile.getJavaModel()
+  override def getJavaProject() : JavaProject = classFile.getJavaProject()
   override def getOpenable() : IOpenable = classFile.getOpenable()
-  override def getParent() : IJavaElement = classFile.getParent()
+  override def getParent() : JavaElement = classFile.getParent()
   override def getPath() : IPath = classFile.getPath()
-  override def getPrimaryElement() : IJavaElement = classFile.getPrimaryElement()
+  override def getPrimaryElement() : JavaElement = classFile.getPrimaryElement()
   override def getResource() : IResource = classFile.getResource()
   override def getSchedulingRule() : ISchedulingRule = classFile.getSchedulingRule()
   override def getUnderlyingResource() : IResource = classFile.getUnderlyingResource()

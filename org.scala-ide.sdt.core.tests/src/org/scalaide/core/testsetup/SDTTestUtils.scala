@@ -125,7 +125,7 @@ object SDTTestUtils extends HasLogger {
    *  wrapped by /**/, and the method returns matches for /*[0-9]+*/, as a sequence
    *  of pairs (offset, parsedNumber)
    */
-  def markersOf(source: Array[Char], prefix: String): Seq[(Int, Int)] = {
+  def markersOf(source: CharSequence, prefix: String): Seq[(Int, Int)] = {
     val regex = """\/\*%s([0-9]+)\*/""".format(prefix).r
     val buf = new mutable.ListBuffer[(Int, Int)]
     val it = regex.findAllIn(source)

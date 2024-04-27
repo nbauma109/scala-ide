@@ -259,7 +259,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
       }
     }
 
-    override def advance(current: Int, total: Int): Boolean =
+    override def advance(current: Int, total: Int, param3: String, param4: String): Boolean =
       if (monitor.isCanceled) {
         throw new OperationCanceledException
       } else {

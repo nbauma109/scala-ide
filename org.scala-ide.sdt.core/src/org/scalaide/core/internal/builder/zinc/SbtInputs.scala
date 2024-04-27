@@ -63,7 +63,7 @@ class SbtInputs(
     // Wrap TransactionalManagerType to ClassFileManagerType if necessary
     val transactionalManager = TransactionalManagerType.create(tempDir, logger)
     val classFileManagerType: ClassFileManagerType = transactionalManager.asInstanceOf[ClassFileManagerType]
-    val recompileOnMacroDefSetting: java.lang.Boolean = 
+    val recompileOnMacroDefSetting: java.lang.Boolean =
       project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))
 
     base.

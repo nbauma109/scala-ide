@@ -48,7 +48,7 @@ class ResidentCompiler private (project: IScalaProject, comps: Compilers, compil
   private val zincCompiler = new IncrementalCompilerImpl
   private val sbtReporter = new SbtBuildReporter(project)
   private val lookup = new DefaultPerClasspathEntryLookup {
-    override def definesClass(classpathEntry: File) =
+    override def definesClass(classpathEntry: xsbti.VirtualFile) =
       Locator.NoClass
   }
   private val classpath = libs ++ project.scalaClasspath.userCp.map(_.toFile) toArray

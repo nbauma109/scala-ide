@@ -40,9 +40,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
-          <resolver>p2</resolver>
           <pomDependencies>wrapAsBundle</pomDependencies>
-          <allowConflictingDependencies>true</allowConflictingDependencies>
         </configuration>
       </plugin>
     </plugins>

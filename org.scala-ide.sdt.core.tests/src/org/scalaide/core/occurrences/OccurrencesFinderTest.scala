@@ -24,7 +24,7 @@ class OccurrencesFinderTest {
       compiler.askLoadedTyped(src, false).get
     }
 
-    val contents = unit.getContents
+    val contents = new String(unit.getContents)
     val positions = SDTTestUtils.markersOf(contents, "<")
 
     println("checking %d positions".format(positions.size))

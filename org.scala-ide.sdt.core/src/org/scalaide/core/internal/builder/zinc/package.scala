@@ -63,7 +63,7 @@ package object zinc {
   }
 
   private[zinc] object unimplementedJavaCompiler extends JavaCompiler {
-    override def run(srcs: Array[File], opts: Array[String], incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
+    override def run(srcs: Array[xsbti.VirtualFile], opts: Array[String], compileOutput: xsbti.compile.Output, incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
       throw new NotImplementedError("expects to be not called")
   }
 

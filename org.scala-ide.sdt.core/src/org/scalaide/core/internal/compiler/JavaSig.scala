@@ -49,7 +49,7 @@ trait JavaSig { pc: ScalaPresentationCompiler =>
    */
   class JavaSignature(symbol: Symbol) {
     import org.eclipse.jdt.core.Signature
-	import java.lang.reflect.Method
+    import java.lang.reflect.Method
     import scala.tools.nsc.transform.Erasure
 
     // see scala/scala commit e5ea3ab
