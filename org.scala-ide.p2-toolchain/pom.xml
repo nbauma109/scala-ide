@@ -11,20 +11,11 @@
   <artifactId>org.scala-ide.p2-toolchain</artifactId>
   <description>The P2 Toolchain for Scala Eclipse plugins</description>
   <packaging>pom</packaging>
-  <version>4.7.1-SNAPSHOT</version>
-
-  <profiles>
-    <profile>
-      <id>scala-2.12.x</id>
-      <modules>
-        <module>../org.scala-ide.scala212.build</module>
-        <module>../org.scala-ide.p2-update-site</module>
-      </modules>
-    </profile>
-  </profiles>
 
   <modules>
     <module>../org.scala-ide.zinc</module>
+    <module>../org.scala-ide.scala212.build</module>
+    <module>../org.scala-ide.p2-update-site</module>
   </modules>
 
   <build>
@@ -39,9 +30,6 @@
         <!-- configuration to be able to use maven bundle as osgi bundles -->
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <pomDependencies>wrapAsBundle</pomDependencies>
-        </configuration>
       </plugin>
     </plugins>
   </build>

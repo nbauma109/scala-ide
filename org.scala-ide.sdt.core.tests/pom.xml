@@ -96,7 +96,6 @@
             <artifactId>tycho-surefire-plugin</artifactId>
             <configuration>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
-              <testSuite>${project.artifactId}</testSuite>
               <testClass>org.scalaide.core.leaks.MemoryLeaksTest</testClass>
             </configuration>
           </plugin>
@@ -143,7 +142,6 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <testSuite>${project.artifactId}</testSuite>
           <testClass>org.scalaide.TestsSuite</testClass>
         </configuration>
       </plugin>

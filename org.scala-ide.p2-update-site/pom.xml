@@ -12,7 +12,6 @@
   <artifactId>org.scala-ide.p2-update-site</artifactId>
   <description>The local p2 repo for scala-refactoring</description>
   <packaging>pom</packaging>
-  <version>4.7.1-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
@@ -32,19 +31,8 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-	      <dependency-resolution>
-	        <extraRequirements>
-	          <requirement>
-	            <type>eclipse-plugin</type>
-	            <id>org.junit</id>
-	            <versionRange>4.11.0</versionRange>
-	          </requirement>
-	        </extraRequirements>
-	      </dependency-resolution>
-        </configuration>
       </plugin>
-	</plugins>
+    </plugins>
   </build>
 
   <repositories>
@@ -64,8 +52,8 @@
   </repositories>
 
   <modules>
-    <module>org.scala-ide.p2-update-site.feature</module>
-    <module>org.scala-ide.p2-update-site.update-site</module>
+    <module>../org.scala-ide.p2-update-site.feature</module>
+    <module>../org.scala-ide.p2-update-site.update-site</module>
   </modules>
 
 </project>

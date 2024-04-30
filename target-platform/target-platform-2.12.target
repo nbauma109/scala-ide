@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="target-platform">
+  <locations>
+    <location includeDependencyDepth="none" includeSource="true"
+      missingManifest="generate" type="Maven">
+      <dependencies>
+        <dependency>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+          <version>2.12.19</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-compiler</artifactId>
+          <version>2.12.19</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-reflect</artifactId>
+          <version>2.12.19</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scala-refactoring</groupId>
+          <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
+          <version>0.13.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scalariform</groupId>
+          <artifactId>scalariform_2.12</artifactId>
+          <version>0.2.10</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scala-lang.modules</groupId>
+          <artifactId>scala-xml_2.12</artifactId>
+          <version>2.3.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/releases/2024-03"/>
+      <unit id="org.apache.ant" version="0.0.0"/>
+    </location>
+  </locations>
+</target>

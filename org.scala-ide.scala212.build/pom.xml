@@ -12,7 +12,6 @@
   <artifactId>org.scala-ide.scala212.build</artifactId>
   <description>The local p2 repo for Scala 2.12.x</description>
   <packaging>pom</packaging>
-  <version>4.7.1-SNAPSHOT</version>
 
   <dependencies>
     <!-- toolchain, Scala library -->
@@ -42,18 +41,6 @@
       <groupId>org.scala-lang.modules</groupId>
       <artifactId>scala-parser-combinators_${scala212.binary.version}</artifactId>
       <version>${scala212.scala-parser-combinators.version}</version>
-    </dependency>
-    <!-- scala 210 -->
-    <dependency>
-      <groupId>org.scala-ide</groupId>
-      <artifactId>org.scala-ide.scala210.jars</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <!-- scala 211 -->
-    <dependency>
-      <groupId>org.scala-ide</groupId>
-      <artifactId>org.scala-ide.scala211.jars</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
@@ -88,9 +75,9 @@
   </dependencies>
 
   <modules>
-    <module>org.scala-ide.scala212.feature</module>
-    <module>org.scala-ide.scala212.source.feature</module>
-    <module>org.scala-ide.scala212.update-site</module>
+    <module>../org.scala-ide.scala212.feature</module>
+    <module>../org.scala-ide.scala212.source.feature</module>
+    <module>../org.scala-ide.scala212.update-site</module>
   </modules>
 
 </project>

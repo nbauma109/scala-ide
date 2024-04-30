@@ -9,7 +9,6 @@
   </parent>
   <artifactId>org.scala-ide.sdt.build</artifactId>
   <packaging>pom</packaging>
-  <version>4.7.1-SNAPSHOT</version>
 
   <!-- scm configuration is required to extract the github hash-->
   <scm>
@@ -56,7 +55,7 @@
       <id>scala-refactoring</id>
       <name>Scala Refactoring p2 repository</name>
       <layout>p2</layout>
-      <url>file:${project.basedir}/../org.scala-ide.p2-update-site/org.scala-ide.p2-update-site.update-site/target/repository</url>
+      <url>file:${project.basedir}/../org.scala-ide.p2-update-site.update-site/target/repository</url>
     </repository>
     <repository>
       <id>equinox.launcher</id>
@@ -68,13 +67,13 @@
       <id>zinc</id>
       <name>local zinc update site</name>
       <layout>p2</layout>
-      <url>file:${project.basedir}/../org.scala-ide.zinc/org.scala-ide.zinc.update-site/target/repository</url>
+      <url>file:${project.basedir}/../org.scala-ide.zinc.update-site/target/repository</url>
     </repository>
     <repository>
       <id>scala${scala.short.version}</id>
       <name>Scala ${scala.short.version} library and jars</name>
       <layout>p2</layout>
-      <url>file:${project.basedir}/../org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.update-site/target/repository</url>
+      <url>file:${project.basedir}/../org.scala-ide.scala${scala.short.version}.update-site/target/repository</url>
     </repository>
     <repository>
       <id>eclipse.nebula</id>

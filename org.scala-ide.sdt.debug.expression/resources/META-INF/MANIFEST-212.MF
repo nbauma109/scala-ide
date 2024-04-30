@@ -18,7 +18,7 @@ Export-Package: org.scalaide.debug.internal.expression,
  org.scalaide.debug.internal.ui,
  org.scalaide.debug.internal.ui.actions,
  org.scalaide.debug.internal.ui.completion
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,

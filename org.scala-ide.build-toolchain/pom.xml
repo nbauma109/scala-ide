@@ -11,7 +11,6 @@
   <artifactId>org.scala-ide.build-toolchain</artifactId>
   <description>The Scala Toolchain for Scala Eclipse plugins</description>
   <packaging>pom</packaging>
-  <version>4.7.1-SNAPSHOT</version>
 
   <!-- scm configuration is required to extract the github hash-->
   <scm>
@@ -25,21 +24,10 @@
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>scala-2.12.x</id>
-      <modules>
-        <module>../org.scala-ide.scala210.jars</module>
-        <module>../org.scala-ide.scala211.jars</module>
-      </modules>
-    </profile>
-  </profiles>
-
   <modules>
     <module>../org.scala-ide.zinc.library</module>
     <module>../org.scala-ide.zinc.library.source</module>
     <module>../org.scala-ide.zinc.compiler.bridge</module>
     <module>../org.scala-ide.zinc.compiler.bridge.source</module>
-    <module>../org.scala-ide.zinc.compiler.bridge.source_2.10</module>
   </modules>
 </project>

@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.scala-ide.sdt.debug.expression.tests
 Bundle-Version: 4.7.1.qualifier
 Bundle-Vendor: scala-ide.org
 Fragment-Host: org.scala-ide.sdt.debug.expression
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.equinox.weaving.aspectj,
  org.scala-ide.sdt.core,
  org.scala-ide.sdt.debug,

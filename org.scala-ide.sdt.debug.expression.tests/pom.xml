@@ -60,7 +60,6 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <testSuite>${project.artifactId}</testSuite>
           <testClass>org.scalaide.debug.internal.expression.ExpressionEvaluatorTestSuite</testClass>
         </configuration>
       </plugin>

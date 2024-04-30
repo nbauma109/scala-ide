@@ -55,22 +55,15 @@
     <!-- tycho test related -->
     <tycho.test.OSspecific></tycho.test.OSspecific>
     <!-- Partial workaround against JDT Weaving deadlocks. See #1000317 and the original ticket on https://issuetracker.springsource.com/browse/STS-1445 -->
-    <tycho.test.weaving>-XX:+UnlockDiagnosticVMOptions -XX:+UnsyncloadClass -Dosgi.classloader.lock=classname</tycho.test.weaving>
-    <tycho.test.jvmArgs>-Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
+    <tycho.test.weaving>-XX:+UnlockDiagnosticVMOptions -Dosgi.classloader.lock=classname</tycho.test.weaving>
+    <tycho.test.addOpens>--add-opens java.base/java.lang=ALL-UNNAMED</tycho.test.addOpens>
+    <tycho.test.jvmArgs>${tycho.test.addOpens} -Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
 
     <!-- base versions -->
-    <!-- Scala 2.10.x -->
-    <scala210.version>2.10.7</scala210.version>
-    <!-- Scala 2.11.x -->
-    <scala211.version>2.11.12</scala211.version>
-    <scala211.binary.version>2.11</scala211.binary.version>
-    <scala211.scala-xml.version>1.0.5</scala211.scala-xml.version>
-    <scala211.scala-parser-combinators.version>1.0.4</scala211.scala-parser-combinators.version>
-    <scala211.scala-swing.version>1.0.2</scala211.scala-swing.version>
     <!-- Scala 2.12.x -->
     <scala212.version>2.12.19</scala212.version>
     <scala212.binary.version>2.12</scala212.binary.version>
-    <scala212.scala-xml.version>2.2.0</scala212.scala-xml.version>
+    <scala212.scala-xml.version>2.3.0</scala212.scala-xml.version>
     <scala212.scala-parser-combinators.version>1.0.7</scala212.scala-parser-combinators.version>
 
     <!-- dependencies repos, can be overwritten by profiles -->
@@ -88,7 +81,6 @@
 
     <!-- the repos containing the Scala dependencies -->
     <repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
-    <repo.typesafe>https://proxy-ch.typesafe.com:8082/artifactory/ide-${scala.minor.version}</repo.typesafe>
   </properties>
 
   <profiles>
@@ -96,16 +88,6 @@
       <id>retryFlakyTests</id>
       <properties>
         <retryFlakyTests>true</retryFlakyTests>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>scala-2.12.x</id>
-      <properties>
-        <scala.version>${scala212.version}</scala.version>
-        <scala.short.version>212</scala.short.version>
-        <scala.minor.version>2.12</scala.minor.version>
-        <version.suffix>212</version.suffix>
       </properties>
     </profile>
 
@@ -187,15 +169,6 @@
           </plugin>
         </plugins>
       </build>
-      <repositories>
-        <repository>
-          <!-- extra repository containing the build package -->
-          <id>typesafe-ide</id>
-          <name>Typesafe IDE repository</name>
-          <url>https://proxy-ch.typesafe.com:8082/artifactory/ide-2.11</url>
-          <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-      </repositories>
     </profile>
 
     <profile>
@@ -203,10 +176,6 @@
       <properties>
         <zinc.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.feature</zinc.feature.dir>
         <zinc.source.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
-        <scala210.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.feature</scala210.feature.dir>
-        <scala210.source.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.source.feature</scala210.source.feature.dir>
-        <scala211.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.feature</scala211.feature.dir>
-        <scala211.source.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.source.feature</scala211.source.feature.dir>
         <scala212.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.feature</scala212.feature.dir>
         <scala212.source.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.source.feature</scala212.source.feature.dir>
         <sdt.core.dir>org.scala-ide.sdt.core</sdt.core.dir>
@@ -266,74 +235,6 @@
                   <resources>
                     <resource>
                       <directory>${zinc.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala210-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala210-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.source.feature.dir}/resources</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
@@ -440,7 +341,9 @@
       <id>sonatype.release</id>
       <name>Sonatype maven release repository</name>
       <url>https://oss.sonatype.org/content/repositories/releases/</url>
-      <snapshots><enabled>false</enabled></snapshots>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>sonatype.snapshot</id>
@@ -528,6 +431,11 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho.plugin.version}</version>
+          <configuration>
+            <target>
+                <file>../target-platform/target-platform-${scala.minor.version}.target</file>
+            </target>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>

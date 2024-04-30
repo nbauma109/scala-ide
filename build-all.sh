@@ -15,8 +15,8 @@ ROOT_DIR=${PWD}
 
 if [ -z "$*" ]
 then
-  MVN_ARGS="-DbuildNumber=${BUILD_NUMBER} -Pscala-2.12.x -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
-  MVN_P2_ARGS="-DbuildNumber=${BUILD_NUMBER} -Dtycho.localArtifacts=ignore -Pscala-2.12.x -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
+  MVN_ARGS="-DbuildNumber=${BUILD_NUMBER} -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
+  MVN_P2_ARGS="-DbuildNumber=${BUILD_NUMBER} -Dtycho.localArtifacts=ignore -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
 else
   MVN_ARGS="-DbuildNumber=${BUILD_NUMBER} $*"
   MVN_P2_ARGS="-DbuildNumber=${BUILD_NUMBER} -Dtycho.localArtifacts=ignore $*"

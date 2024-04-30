@@ -43,6 +43,21 @@
 	  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
 	  <version>${scala-refactoring.version}</version>
 	</dependency>
+	<dependency>
+	  <groupId>org.scala-lang.modules</groupId>
+	  <artifactId>scala-xml_${scala.minor.version}</artifactId>
+	  <version>${scala212.scala-xml.version}</version>
+	</dependency>
+	<dependency>
+      <groupId>org.scala-ide</groupId>
+	  <artifactId>org.scala-ide.zinc.library</artifactId>
+	  <version>${project.version}</version>
+	</dependency>
+	<dependency>
+      <groupId>org.scala-ide</groupId>
+	  <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
+	  <version>${project.version}</version>
+	</dependency>
   </dependencies>
 
   <profiles>
@@ -123,6 +138,16 @@
 				  <groupId>org.scala-refactoring</groupId>
 				  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
 				  <version>${scala-refactoring.version}</version>
+				</artifactItem>
+				<artifactItem>
+			      <groupId>org.scala-ide</groupId>
+				  <artifactId>org.scala-ide.zinc.library</artifactId>
+				  <version>${project.version}</version>
+				</artifactItem>
+				<artifactItem>
+			      <groupId>org.scala-ide</groupId>
+				  <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
+				  <version>${project.version}</version>
 				</artifactItem>
               </artifactItems>
             </configuration>

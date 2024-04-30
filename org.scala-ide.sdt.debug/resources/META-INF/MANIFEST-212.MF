@@ -83,7 +83,7 @@ Export-Package: com.googlecode.concurrentlinkedhashmap,
  org.scalaide.debug.internal.launching,
  org.scalaide.debug.internal.model,
  org.scalaide.debug.internal.preferences
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ClassPath: target/lib/concurrentlinkedhashmap-lru-1.4.2.jar,
  .
 
