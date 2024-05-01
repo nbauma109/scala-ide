@@ -41,6 +41,24 @@
           <version>2.3.0</version>
           <type>jar</type>
         </dependency>
+        <dependency>
+          <groupId>org.scala-ide</groupId>
+          <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
+          <version>4.7.1-SNAPSHOT</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.scala-ide</groupId>
+          <artifactId>org.scala-ide.zinc.library</artifactId>
+          <version>4.7.1-SNAPSHOT</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.fusesource.jansi</groupId>
+          <artifactId>jansi</artifactId>
+          <version>2.4.1</version>
+          <type>jar</type>
+        </dependency>
       </dependencies>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
