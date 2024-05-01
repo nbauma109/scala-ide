@@ -258,8 +258,8 @@ trait SourceRefScalaElementInfo extends JavaElementInfo {
 
   def getDeclarationSourceStart0: Int = getDeclarationSourceStartMethod.invoke(this).asInstanceOf[Integer].intValue
   def getDeclarationSourceEnd0: Int = getDeclarationSourceEndMethod.invoke(this).asInstanceOf[Integer].intValue
-  def setSourceRangeStart0(start: Int): Unit = setSourceRangeStartMethod.invoke(this, new Integer(start))
-  def setSourceRangeEnd0(end: Int): Unit = setSourceRangeEndMethod.invoke(this, new Integer(end))
+  def setSourceRangeStart0(start: Int): Unit = setSourceRangeStartMethod.invoke(this, Integer.valueOf(start))
+  def setSourceRangeEnd0(end: Int): Unit = setSourceRangeEndMethod.invoke(this, Integer.valueOf(end))
 }
 
 trait ScalaMemberElementInfo extends SourceRefScalaElementInfo {
@@ -268,11 +268,11 @@ trait ScalaMemberElementInfo extends SourceRefScalaElementInfo {
 
   def addChild0(child: IJavaElement): Unit
 
-  def setFlags0(flags: Int) = setFlagsMethod.invoke(this, new Integer(flags))
+  def setFlags0(flags: Int) = setFlagsMethod.invoke(this, Integer.valueOf(flags))
   def getNameSourceStart0: Int = getNameSourceStartMethod.invoke(this).asInstanceOf[Integer].intValue
   def getNameSourceEnd0: Int = getNameSourceEndMethod.invoke(this).asInstanceOf[Integer].intValue
-  def setNameSourceStart0(start: Int) = setNameSourceStartMethod.invoke(this, new Integer(start))
-  def setNameSourceEnd0(end: Int) = setNameSourceEndMethod.invoke(this, new Integer(end))
+  def setNameSourceStart0(start: Int) = setNameSourceStartMethod.invoke(this, Integer.valueOf(start))
+  def setNameSourceEnd0(end: Int) = setNameSourceEndMethod.invoke(this, Integer.valueOf(end))
 }
 
 trait AuxChildrenElementInfo extends JavaElementInfo {

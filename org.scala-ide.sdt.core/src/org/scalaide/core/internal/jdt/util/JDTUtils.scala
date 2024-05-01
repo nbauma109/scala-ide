@@ -101,8 +101,8 @@ object SourceRefElementInfoUtils extends ReflectionUtils {
   private val setSourceRangeStartMethod = getDeclaredMethod(sreiClazz, "setSourceRangeStart", classOf[Int])
   private val setSourceRangeEndMethod = getDeclaredMethod(sreiClazz, "setSourceRangeEnd", classOf[Int])
 
-  def setSourceRangeStart(srei : AnyRef, pos : Int) = setSourceRangeStartMethod.invoke(srei, new Integer(pos))
-  def setSourceRangeEnd(srei : AnyRef, pos : Int) = setSourceRangeEndMethod.invoke(srei, new Integer(pos))
+  def setSourceRangeStart(srei : AnyRef, pos : Int) = setSourceRangeStartMethod.invoke(srei, Integer.valueOf(pos))
+  def setSourceRangeEnd(srei : AnyRef, pos : Int) = setSourceRangeEndMethod.invoke(srei, Integer.valueOf(pos))
 }
 
 object ImportContainerInfoUtils extends ReflectionUtils {
