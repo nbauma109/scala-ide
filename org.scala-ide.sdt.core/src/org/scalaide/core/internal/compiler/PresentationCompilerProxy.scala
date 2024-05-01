@@ -157,6 +157,7 @@ final class PresentationCompilerProxy(name: String, initializeSettings: () => Se
         pc
       } catch {
         case ex: MissingRequirementError =>
+          logger.error("!!!! ERROR !!!!", ex)
           eclipseLog.error(ex)
           null
         case ex @ FatalError(required) if required.startsWith("package scala does not have a member") =>
