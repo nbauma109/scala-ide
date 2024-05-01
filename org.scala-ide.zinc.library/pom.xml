@@ -36,6 +36,11 @@
       <version>${zinc.version}</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.swoval</groupId>
+      <artifactId>file-tree-views</artifactId>
+      <version>2.1.12</version>
+    </dependency>
   </dependencies>
 
   <build>
