@@ -2,8 +2,6 @@ package org.scalaide.ui.internal.preferences
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
 import scala.tools.nsc.Settings
 import scala.tools.nsc.settings.Final
 import scala.tools.nsc.settings.ScalaVersion
@@ -45,6 +43,8 @@ import org.eclipse.ui.dialogs.PropertyPage
 import org.scalaide.core.IScalaProjectEvent
 import org.scalaide.core.ScalaInstallationChange
 import org.scalaide.core.SdtConstants
+import org.scalaide.core.Publisher
+import org.scalaide.core.Subscriber
 import org.scalaide.core.internal.ScalaPlugin
 import org.scalaide.core.internal.builder.ProjectsCleanJob
 import org.scalaide.core.internal.compiler.ScalaPresentationCompiler

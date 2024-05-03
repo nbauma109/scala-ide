@@ -310,9 +310,24 @@ object ScalaInstallation {
 
   def scalaInstanceForInstallation(si: IScalaInstallation): ScalaInstance = {
     val store = ScalaPlugin().classLoaderStore
-    val scalaLoader: ClassLoader = store.getOrUpdate(si)(new URLClassLoader(si.allJars.map(_.classJar.toFile.toURI.toURL).toArray, ClassLoader.getSystemClassLoader))
 
-    new ScalaInstance(si.version.unparse, scalaLoader, si.library.classJar.toFile, si.compiler.classJar.toFile, si.extraJars.map(_.classJar.toFile).toArray, None)
+    // TODO: upgrade to zinc 1.6 It compiles bridge, but additional work is necessary to make sure it is correct
+    val scalaLoader: ClassLoader = store.getOrUpdate(si)(new URLClassLoader(si.allJars.map(_.classJar.toFile.toURI.toURL).toArray, ClassLoader.getSystemClassLoader))
+    val loaderCompilerOnly = new URLClassLoader(Array[java.net.URL](
+          si.compiler.classJar.toFile.toURI.toURL,
+          si.library.classJar.toFile.toURI.toURL),
+        ClassLoader.getSystemClassLoader)
+    val loaderLibraryOnly = new URLClassLoader(Array[java.net.URL](si.library.classJar.toFile.toURI.toURL), ClassLoader.getSystemClassLoader)
+
+    new ScalaInstance(
+      si.version.unparse,
+      scalaLoader,
+      scalaLoader,
+      loaderLibraryOnly,
+      Array[java.io.File](si.library.classJar.toFile),
+      Array[java.io.File](si.compiler.classJar.toFile),
+      si.extraJars.map(_.classJar.toFile).toArray,
+      None)
   }
 
   lazy val customInstallations: Set[LabeledScalaInstallation] = initialScalaInstallations.map(customize(_))(collection.breakOut)

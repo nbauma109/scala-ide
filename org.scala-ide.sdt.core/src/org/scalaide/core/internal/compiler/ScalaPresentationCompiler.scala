@@ -77,13 +77,28 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
     // TODO if this fix proves to eliminate the symptoms in the IDE, roll it back into the
     //      compiler.
     override def companionSymbolOf(original: Symbol, ctx: Context): Symbol = {
+
+      //TODO Absent in 2.12.15, copied from 2.12.6
+      def lookup(ctx0: Context, name: Name, expectedOwner: Symbol): Symbol = {
+        var res: Symbol = NoSymbol
+        var ctx = ctx0
+        while (res == NoSymbol && ctx.outer != ctx) {
+          val s = ctx.scope lookup name
+          if (s != NoSymbol && s.owner == expectedOwner)
+            res = s
+          else
+            ctx = ctx.outer
+        }
+        res
+      }
+
       val owner = original.owner
       // SI-7264 Force the info of owners, other than those with a type completer as its info.
       //         The condition prevents cycles and allows the `orElse` case below to kick in.
       if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
         owner.initialize
       original.companionSymbol orElse {
-        ctx.lookup(original.name.companionName, owner).suchThat(sym =>
+        lookup(ctx, original.name.companionName, owner).suchThat(sym =>
           (original.isTerm || sym.hasModuleFlag) &&
           (sym isCoDefinedWith original)
         )
@@ -536,9 +551,6 @@ object ScalaPresentationCompiler {
       case '\n' | '\r' => ' '
       case c           => c
     }
-
-    override def echo(msg: String): Unit =
-      logger.debug(s"[$spcName]: $msg")
 
   }
 }

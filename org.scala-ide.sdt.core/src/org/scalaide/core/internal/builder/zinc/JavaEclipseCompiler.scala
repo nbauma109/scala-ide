@@ -17,8 +17,10 @@ import org.scalaide.util.eclipse.FileUtils
 
 import xsbti.Logger
 import xsbti.Reporter
+import xsbti.VirtualFile
 import xsbti.compile.IncToolOptions
 import xsbti.compile.JavaCompiler
+import xsbti.compile.Output
 
 /**
  * Eclipse Java compiler interface, used by the SBT builder.
@@ -29,7 +31,9 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
 
   override def project = p
 
-  override def run(sources: Array[File], unusedOptions: Array[String], unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+  override def run(sources: Array[VirtualFile], unusedOptions: Array[String], unusedOutput: Output, unusedIncToolOptions: IncToolOptions, reporter: Reporter, unusedLog: Logger): Boolean = {
+    val sourceFiles = Array[File]()
+
     val scalaProject = IScalaPlugin().getScalaProject(project)
     val allSourceFiles = scalaProject.allSourceFiles()
     val depends = scalaProject.directDependencies
@@ -48,7 +52,7 @@ class JavaEclipseCompiler(p: IProject, monitor: SubMonitor) extends JavaCompiler
         container.refreshLocal(IResource.DEPTH_INFINITE, null)
       }
 
-      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sources, project)
+      BuildManagerStore.INSTANCE.setJavaSourceFilesToCompile(sourceFiles, project)
       try {
         ProductExposer.showJavaCompilationProducts(project)
         scalaJavaBuilder.build(INCREMENTAL_BUILD, new java.util.HashMap(), monitor)

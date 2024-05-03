@@ -1,6 +1,8 @@
 package org.scalaide.core.internal.builder.zinc
 
 import java.io.File
+import java.nio.file.Path
+import java.util.Optional
 
 import org.scalaide.util.internal.SbtUtils
 
@@ -10,6 +12,7 @@ import sbt.internal.inc.MixedAnalyzingCompiler
 import sbt.util.InterfaceUtil.o2jo
 import xsbti.Logger
 import xsbti.Reporter
+import xsbti.VirtualFile
 import xsbti.compile.AnalysisContents
 import xsbti.compile.CompileResult
 import xsbti.compile.JavaCompiler
@@ -35,21 +38,47 @@ class CachingCompiler private (cacheFile: File, sbtReporter: Reporter, log: Logg
    */
   def compile(in: SbtInputs, comps: Compilers): Analysis = {
     val lookup = new DefaultPerClasspathEntryLookup {
-      override def analysis(classpathEntry: File) =
+      override def analysis(classpathEntry: VirtualFile) =
         in.analysisMap(classpathEntry)
     }
     val (previousAnalysis, previousSetup) = SbtUtils.readCache(cacheFile)
       .map {
         case (a, s) => (Option(a), Option(s))
       }.getOrElse((Option(SbtUtils.readAnalysis(cacheFile)), None))
-    cacheAndReturnLastAnalysis(new IncrementalCompilerImpl().compile(comps.scalac, comps.javac, in.sources, in.classpath, in.output, in.cache,
-      in.scalacOptions, in.javacOptions, o2jo(previousAnalysis), o2jo(previousSetup), lookup, sbtReporter, in.order,
-      skip = false, in.progress, in.incOptions, extra = Array(), log))
+
+    // TODO: upgrade to zinc 1.6
+    val sources: Array[Path] = in.sources.map(_.toPath()).toArray
+    val classpath: Array[Path]= in.classpath.map(_.toPath()).toArray
+    val compilationResult = new IncrementalCompilerImpl().compile(
+      comps.scalac,
+      comps.javac,
+      sources,
+      classpath,
+      in.output,
+      Optional.empty[xsbti.compile.Output],
+      Optional.empty[xsbti.compile.AnalysisStore],
+      in.cache,
+      in.scalacOptions,
+      in.javacOptions,
+      o2jo[xsbti.compile.CompileAnalysis](previousAnalysis),
+      o2jo[xsbti.compile.MiniSetup](previousSetup),
+      lookup,
+      sbtReporter,
+      in.order,
+      false,
+      in.progress,
+      in.incOptions,
+      Optional.empty[Path],
+      Array[xsbti.T2[String, String]](),
+      fileConverter,
+      stamper,
+      log)
+    cacheAndReturnLastAnalysis(compilationResult)
   }
 
   private def cacheAndReturnLastAnalysis(compilationResult: CompileResult): Analysis = {
     if (compilationResult.hasModified)
-      AnalysisStore.materializeLazy(MixedAnalyzingCompiler.staticCachedStore(cacheFile, true)).set(AnalysisContents.create(compilationResult.analysis, compilationResult.setup))
+      AnalysisStore.materializeLazy(MixedAnalyzingCompiler.staticCachedStore(cacheFile.toPath, true)).set(AnalysisContents.create(compilationResult.analysis, compilationResult.setup))
     compilationResult.analysis match {
       case a: Analysis => a
       case a => throw new IllegalStateException(s"object of type `Analysis` was expected but got `${a.getClass}`.")

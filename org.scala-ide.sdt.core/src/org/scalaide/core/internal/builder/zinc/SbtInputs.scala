@@ -14,6 +14,7 @@ import org.scalaide.util.internal.SettingConverterUtil
 
 import sbt.internal.inc.FreshCompilerCache
 import xsbti.Logger
+import xsbti.VirtualFile
 import xsbti.compile.CompileAnalysis
 import xsbti.compile.CompileProgress
 import xsbti.compile.IncOptions
@@ -40,7 +41,8 @@ class SbtInputs(
 
   private val allProjects = project +: project.transitiveDependencies.flatMap(ScalaPlugin().asScalaProject)
 
-  def analysisMap(f: File): Optional[CompileAnalysis] =
+  def analysisMap(f0: VirtualFile): Optional[CompileAnalysis] = {
+    val f = fileConverter.toPath(f0).toFile
     if (f.isFile)
       Optional.empty[CompileAnalysis]
     else {
@@ -52,17 +54,22 @@ class SbtInputs(
         Optional.ofNullable(analysis)
       }.getOrElse(Optional.empty[CompileAnalysis])
     }
+  }
 
   def progress = Optional.ofNullable(scalaProgress)
 
   def incOptions: IncOptions = {
+    val classfileManagerType = TransactionalManagerType.create(tempDir, logger);
+    val recompileOnMacroDef = project.storage.getBoolean(
+        SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))
+
     import xsbti.compile.IncOptions._
     val base = of()
-    base.
-      withApiDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name))).
-      withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name))).
-      withClassfileManagerType(Optional.ofNullable(TransactionalManagerType.create(tempDir, logger))).
-      withRecompileOnMacroDef(Optional.ofNullable(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.recompileOnMacroDef.name))))
+    base
+      .withApiDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.apiDiff.name)))
+      .withRelationsDebug(project.storage.getBoolean(SettingConverterUtil.convertNameToProperty(preferences.ScalaPluginSettings.relationsDebug.name)))
+     .withClassfileManagerType(classfileManagerType)
+     .withRecompileOnMacroDef(recompileOnMacroDef)
   }
 
   def outputFolders = srcOutputs.map {

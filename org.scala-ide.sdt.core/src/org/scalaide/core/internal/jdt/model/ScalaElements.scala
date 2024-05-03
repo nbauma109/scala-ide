@@ -37,10 +37,13 @@ trait ScalaElement extends JavaElement with IScalaElement {
   def getImageDescriptor: ImageDescriptor = null
   def isVisible = true
 
-  override def getCompilationUnit() = {
+/*
+  TODO find out what has changed around here
+  override def getCompilationUnit(): ICompilationUnit = {
     val cu = super.getCompilationUnit()
     if (cu != null) cu else new CompilationUnitAdapter(getClassFile().asInstanceOf[ScalaClassFile])
   }
+*/
 
   override def getAncestor(ancestorType: Int): IJavaElement = {
     val ancestor = super.getAncestor(ancestorType)

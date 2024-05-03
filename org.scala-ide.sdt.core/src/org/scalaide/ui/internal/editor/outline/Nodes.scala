@@ -1,4 +1,6 @@
 package org.scalaide.ui.internal.editor.outline
+
+// TODO scala 2.13 import scala.collection.mutable.ArrayDeque
 import scala.collection.mutable.MutableList
 
 trait HasReturnType {
@@ -94,8 +96,11 @@ case class RootNode() extends ContainerNode(null) {
    * @return nodes with structural and content difference.
    */
   def updateAll(src: RootNode): (Iterable[Node], Iterable[Node]) = {
+    //TODO: scala 2.13 val toUpdate = new ArrayDeque[Node]
+    //val toRefresh = new ArrayDeque[Node]
     val toUpdate = new MutableList[Node]
     val toRefresh = new MutableList[Node]
+
     def visitContainer(cn: ContainerNode, cn1: ContainerNode): Unit = {
       var children = collection.immutable.ListMap[NodeKey, Node]()
       var needUpdate = false

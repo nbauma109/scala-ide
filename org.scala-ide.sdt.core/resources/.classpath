@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" output="target/classes" path="src"/>
+        <classpathentry exported="true" kind="lib" path="target/lib/json-io-@JSON_IO_VERSION@.jar" sourcepath="target/lib/json-io-@JSON_IO_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/miglayout-@MIGLAYOUT_VERSION@.jar" sourcepath="target/lib/miglayout-@MIGLAYOUT_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/log4j-@LOG4J_VERSION@.jar" sourcepath="target/lib/log4j-@LOG4J_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-core_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-core_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-classpath_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-classpath_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/compiler-interface-@ZINC_VERSION@.jar" sourcepath="target/lib/compiler-interface-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-compile-core_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-compile-core_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-persist_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-persist_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-apiinfo_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-apiinfo_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zinc-classfile_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/zinc-classfile_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/util-interface-@ZINC_VERSION@.jar" sourcepath="target/lib/util-interface-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/util-logging_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/util-logging_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/util-control_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/util-control_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/util-relation_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/util-relation_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/io_@SCALA_MINOR_VERSION@-@ZINC_VERSION@.jar" sourcepath="target/lib/io_@SCALA_MINOR_VERSION@-@ZINC_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/sbinary_@SCALA_MINOR_VERSION@-@SBINARY_VERSION@.jar" sourcepath="target/lib/sbinary_@SCALA_MINOR_VERSION@-@SBINARY_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/scalap-@SCALA_VERSION@.jar" sourcepath="target/lib/scalap-@SCALA_VERSION@-sources.jar"/>
+
+        <classpathentry kind="lib" path="target/lib/file-tree-views-@FILE_TREE_VIEWS_VERSION@.jar" sourcepath="target/lib/file-tree-views-@FILE_TREE_VIEWS_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/jna-platform-5.8.0.jar" sourcepath="target/lib/jna-platform-@JNA_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/jna-@JNA_VERSION@.jar" sourcepath="target/lib/jna-@JNA_VERSION@-sources.jar"/>
+        <classpathentry kind="lib" path="target/lib/zero-allocation-hashing-@ZERO_ALLOCATION_VERSION@.jar" sourcepath="target/lib/zero-allocation-hashing-@ZERO_ALLOCATION_VERSION@-sources.jar"/>
+
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

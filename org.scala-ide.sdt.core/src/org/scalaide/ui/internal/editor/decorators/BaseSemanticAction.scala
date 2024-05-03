@@ -134,7 +134,7 @@ abstract class BaseSemanticAction(
   protected def findAll(compiler: ScalaPresentationCompiler, scu: ScalaCompilationUnit, sourceFile: SourceFile): Map[Annotation, JFacePosition]
 
   //TODO monitor P_ACTIVATE to register/unregister update
-  //TODO monitor P_ACTIVATE to remove existings annotation (true => false) or update openning file (false => true)
+  //TODO monitor P_ACTIVATE to remove existing annotation (true => false) or update opening file (false => true)
   override def apply(scu: ScalaCompilationUnit): Unit = {
     scu.scalaProject.presentationCompiler.internal { compiler =>
 

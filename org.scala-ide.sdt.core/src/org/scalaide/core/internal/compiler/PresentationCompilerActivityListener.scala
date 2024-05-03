@@ -8,9 +8,9 @@ import java.util.TimerTask
 import org.eclipse.jface.util.IPropertyChangeListener
 import org.eclipse.jface.util.PropertyChangeEvent
 import org.scalaide.core.IScalaPlugin
+import org.scalaide.core.Subscriber
 import org.scalaide.logging.HasLogger
 import org.scalaide.ui.internal.preferences.ResourcesPreferences
-import scala.collection.mutable.Subscriber
 
 /**
  * Tracks activity of ScalaPresentationCompiler and shuts it down if it's unused sufficiently long

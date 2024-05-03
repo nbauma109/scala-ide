@@ -47,6 +47,7 @@
       <artifactId>json-io</artifactId>
       <version>${json-io.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>zinc_${scala.minor.version}</artifactId>
@@ -68,7 +69,7 @@
       <version>${zinc.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>org.scala-sbt</groupId>
       <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
       <version>${zinc.version}</version>
     </dependency>
@@ -90,33 +91,34 @@
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>util-interface</artifactId>
-      <version>${sbt-util.version}</version>
+      <version>${zinc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>util-logging_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
+      <version>${zinc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>util-control_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
+      <version>${zinc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>util-relation_${scala.minor.version}</artifactId>
-      <version>${sbt-util.version}</version>
+      <version>${zinc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>io_${scala.minor.version}</artifactId>
-      <version>${sbt-io.version}</version>
+      <version>${zinc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>sbinary_${scala.minor.version}</artifactId>
       <version>${sbinary.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scalap</artifactId>
@@ -128,15 +130,50 @@
         </exclusion>
       </exclusions>
     </dependency>
-  </dependencies>
 
-  <repositories>
-    <repository>
-      <id>bintray.com</id>
-      <name>bintray repo</name>
-      <url>https://dl.bintray.com/sbt/maven-releases/</url>
-    </repository>
-  </repositories>
+    <dependency>
+      <groupId>org.scala-ide</groupId>
+      <artifactId>org.scala-refactoring.library</artifactId>
+      <version>4.7.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-ide</groupId>
+      <artifactId>org.scala-ide.sdt.aspects</artifactId>
+      <version>4.7.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scalariform</groupId>
+      <artifactId>scalariform_${scala.minor.version}</artifactId>
+      <version>0.2.10</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>com.swoval</groupId>
+        <artifactId>file-tree-views</artifactId>
+        <version>2.1.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna-platform</artifactId>
+        <version>5.8.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>5.8.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>net.openhft</groupId>
+        <artifactId>zero-allocation-hashing</artifactId>
+        <version>0.10.1</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -146,14 +183,36 @@
         <executions>
           <!-- copy the jar dependencies -->
           <execution>
-            <id>copy</id>
+            <id>copy basic</id>
             <phase>initialize</phase>
             <goals>
               <goal>copy</goal>
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
+
               <artifactItems>
+
+                <artifactItem>
+                 <groupId>com.swoval</groupId>
+                 <artifactId>file-tree-views</artifactId>
+                </artifactItem>
+
+                <artifactItem>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna-platform</artifactId>
+                </artifactItem>
+
+                <artifactItem>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna</artifactId>
+                </artifactItem>
+
+                <artifactItem>
+                    <groupId>net.openhft</groupId>
+                    <artifactId>zero-allocation-hashing</artifactId>
+                </artifactItem>
+
                 <artifactItem>
                   <groupId>log4j</groupId>
                   <artifactId>log4j</artifactId>
@@ -208,11 +267,11 @@
                   <classifier>sources</classifier>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.scala-ide</groupId>
+                  <groupId>org.scala-sbt</groupId>
                   <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.scala-ide</groupId>
+                  <groupId>org.scala-sbt</groupId>
                   <artifactId>zinc-compile-core_${scala.minor.version}</artifactId>
                   <classifier>sources</classifier>
                 </artifactItem>

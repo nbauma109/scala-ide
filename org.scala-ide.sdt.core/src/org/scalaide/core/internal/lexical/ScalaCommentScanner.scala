@@ -46,7 +46,7 @@ class ScalaCommentScanner(
 
     wm.isCaseSensitive = isCaseSensitive
     addTaskTags(wm, taskTags, getToken(taskTagClass))
-    setRules(Array(cwr))
+    setRules(cwr)
     setDefaultReturnToken(getToken(syntaxClass))
 
     wm

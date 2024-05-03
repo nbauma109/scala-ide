@@ -18,6 +18,23 @@
   </scm>
 
   <modules>
+    <module>../org.scala-refactoring.library</module>
+    <module>../org.scala-ide.sdt.aspects</module>
+    <module>../org.scala-ide.sdt.core</module>
+    <module>../org.scala-ide.sdt.core.tests</module>
+    <module>../org.scala-ide.sdt.debug</module>
+    <module>../org.scala-ide.sdt.debug.tests</module>
+    <module>../org.scala-ide.sdt.debug.expression</module>
+    <module>../org.scala-ide.sdt.debug.expression.tests</module>
+    <module>../org.scala-ide.sdt.spy</module>
+    <module>../org.scala-ide.sdt.weaving.feature</module>
+    <module>../org.scala-ide.sdt.feature</module>
+    <module>../org.scala-ide.sdt.dev.feature</module>
+    <module>../org.scala-ide.sdt.source.feature</module>
+    <module>../org.scala-ide.sdt.update-site</module>
+  </modules>
+
+  <!--modules>
     <module>../org.scala-ide.sdt.aspects</module>
     <module>../org.scala-ide.sdt.core</module>
     <module>../org.scala-ide.sdt.core.tests</module>
@@ -31,7 +48,7 @@
     <module>../org.scala-ide.sdt.dev.feature</module>
     <module>../org.scala-ide.sdt.source.feature</module>
     <module>../org.scala-ide.sdt.update-site</module>
-  </modules>
+  </modules-->
 
   <repositories>
     <repository>
@@ -57,12 +74,6 @@
       <name>Scala Refactoring p2 repository</name>
       <layout>p2</layout>
       <url>file:../org.scala-ide.p2-update-site/org.scala-ide.p2-update-site.update-site/target/site</url>
-    </repository>
-    <repository>
-      <id>equinox.launcher</id>
-      <name>Equinox weaving launcher p2 repository</name>
-      <layout>p2</layout>
-      <url>${repo.equinox.launcher}</url>
     </repository>
     <repository>
       <id>zinc</id>
@@ -141,6 +152,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <!-- plugin used to extract the git hash and store it in ${buildNumber} -->
         <groupId>org.codehaus.mojo</groupId>
@@ -159,16 +171,18 @@
           <shortRevisionLength>7</shortRevisionLength>
         </configuration>
       </plugin>
+
       <plugin>
         <!-- create a better version number -->
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-packaging-plugin</artifactId>
         <configuration>
-          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm'-${buildNumber}'</format>
+          <format>'${version.tag}-${version.suffix}-'yyyyMMddHHmm</format>
           <archiveSite>true</archiveSite>
         </configuration>
       </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>

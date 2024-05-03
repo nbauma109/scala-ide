@@ -30,6 +30,8 @@ import org.eclipse.jdt.internal.compiler.env
 import org.eclipse.jdt.internal.core.BufferManager
 import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner
 import org.eclipse.jdt.internal.core.JavaElement
+import org.eclipse.jdt.internal.core.JavaModel
+import org.eclipse.jdt.internal.core.JavaProject
 import org.eclipse.jdt.internal.core.Openable
 import org.eclipse.jdt.internal.core.OpenableElementInfo
 import org.eclipse.jdt.internal.core.PackageFragmentRoot
@@ -94,12 +96,12 @@ class CompilationUnitAdapter(classFile : ScalaClassFile) extends Openable(classF
   override def getElementName() : String = classFile.getElementName()
   override def getElementType() : Int = classFile.getElementType()
   override def getHandleIdentifier() : String = classFile.getHandleIdentifier()
-  override def getJavaModel() : IJavaModel = classFile.getJavaModel()
-  override def getJavaProject() : IJavaProject = classFile.getJavaProject()
+  override def getJavaModel() : JavaModel = classFile.getJavaModel()
+  override def getJavaProject() : JavaProject = classFile.getJavaProject()
   override def getOpenable() : IOpenable = classFile.getOpenable()
-  override def getParent() : IJavaElement = classFile.getParent()
+  override def getParent() : JavaElement = classFile.getParent()
   override def getPath() : IPath = classFile.getPath()
-  override def getPrimaryElement() : IJavaElement = classFile.getPrimaryElement()
+  override def getPrimaryElement() : JavaElement = classFile.getPrimaryElement()
   override def getResource() : IResource = classFile.getResource()
   override def getSchedulingRule() : ISchedulingRule = classFile.getSchedulingRule()
   override def getUnderlyingResource() : IResource = classFile.getUnderlyingResource()

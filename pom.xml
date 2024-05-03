@@ -20,36 +20,37 @@
   <properties>
     <encoding>UTF-8</encoding>
     <retryFlakyTests>true</retryFlakyTests>
-    <!-- p2 repositories location -->
-    <repo.eclipse.neon>http://download.eclipse.org/releases/neon</repo.eclipse.neon>
-    <repo.ajdt.neon>http://download.eclipse.org/tools/ajdt/46/dev/update</repo.ajdt.neon>
-    <repo.eclipse.oxygen>http://download.eclipse.org/releases/oxygen</repo.eclipse.oxygen>
-    <repo.ajdt.oxygen>http://download.eclipse.org/tools/ajdt/47/dev/update</repo.ajdt.oxygen>
-    <repo.equinox.launcher>http://download.scala-ide.org/plugins/equinox-weaving-launcher/releases/site</repo.equinox.launcher>
-    <repo.scala-ide.root>http://download.scala-ide.org</repo.scala-ide.root>
-    <repo.nebula>http://download.eclipse.org/technology/nebula/snapshot</repo.nebula>
 
-    <!-- fixed versions -->
+    <!-- Eclipse p2 repositories location -->
+    <repo.eclipse.2021-12>http://download.eclipse.org/releases/2021-12</repo.eclipse.2021-12>
+    <repo.ajdt.2021-12>http://download.eclipse.org/tools/ajdt/410/dev/update</repo.ajdt.2021-12>
+    <repo.nebula>http://download.eclipse.org/nebula/releases/latest</repo.nebula>
+
+    <!-- general external libraries versions -->
     <miglayout.version>3.7.4</miglayout.version>
     <log4j.version>1.2.17</log4j.version>
     <json-io.version>4.1.6</json-io.version>
     <mockito.version>1.9.5</mockito.version>
-    <zinc.version>1.0.0</zinc.version>
-    <sbt-util.version>1.0.0</sbt-util.version>
-    <sbt-io.version>1.0.0</sbt-io.version>
-    <sbinary.version>0.4.4</sbinary.version>
+    <file-tree-views.version>2.1.7</file-tree-views.version>
+    <jna.version>5.8.0</jna.version>
+    <zero-allocation-hashing.version>0.10.1</zero-allocation-hashing.version>
+    
+    <!-- sbt related libraries versions -->
+    <zinc.version>1.6.0-M1</zinc.version>
+    <sbinary.version>0.5.1</sbinary.version>
     <scala-refactoring.version>0.14.0-SNAPSHOT</scala-refactoring.version>
     <scalariform.version>0.2.6</scalariform.version>
 
     <!-- plugin versions -->
-    <tycho.plugin.version>0.21.0</tycho.plugin.version>
-    <scala.plugin.version>3.2.0</scala.plugin.version>
-    <aspectj.plugin.version>1.8</aspectj.plugin.version>
-    <aspectj.version>1.8.7</aspectj.version>
+    <tycho.plugin.version>2.5.0</tycho.plugin.version>
+    <scala.plugin.version>4.5.4</scala.plugin.version>
+    <aspectj.plugin.version>1.11.1</aspectj.plugin.version>
+    <aspectj.version>1.9.8.RC2</aspectj.version>
     <maven-bundle.plugin.version>3.2.0</maven-bundle.plugin.version>
     <properties-maven.plugin.version>1.1.10</properties-maven.plugin.version>
-    <buildnumber-maven.plugin.version>1.1</buildnumber-maven.plugin.version>
+    <buildnumber-maven.plugin.version>1.4</buildnumber-maven.plugin.version>
     <maven-clean.plugin.version>2.5</maven-clean.plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
     <!-- Weaving plugin version -->
     <weaving.hook.plugin.version>Select an Eclipse profile</weaving.hook.plugin.version>
@@ -57,20 +58,18 @@
     <!-- tycho test related -->
     <tycho.test.OSspecific></tycho.test.OSspecific>
     <!-- Partial workaround against JDT Weaving deadlocks. See #1000317 and the original ticket on https://issuetracker.springsource.com/browse/STS-1445 -->
-    <tycho.test.weaving>-XX:+UnlockDiagnosticVMOptions -XX:+UnsyncloadClass -Dosgi.classloader.lock=classname</tycho.test.weaving>
+    <tycho.test.weaving>-XX:+UnlockDiagnosticVMOptions -Dosgi.classloader.lock=classname</tycho.test.weaving>
     <tycho.test.jvmArgs>-Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
 
-    <!-- base versions -->
-    <!-- Scala 2.10.x -->
-    <scala210.version>2.10.6</scala210.version>
-    <!-- Scala 2.11.x -->
-    <scala211.version>2.11.11</scala211.version>
-    <scala211.binary.version>2.11</scala211.binary.version>
-    <scala211.scala-xml.version>1.0.6</scala211.scala-xml.version>
-    <scala211.scala-parser-combinators.version>1.0.5</scala211.scala-parser-combinators.version>
-    <scala211.scala-swing.version>1.0.1</scala211.scala-swing.version>
+    <!-- Scala major versions -->
+    <!-- Scala 2.13.x -->
+    <scala213.version>2.13.7</scala213.version>
+    <scala213.binary.version>2.13</scala213.binary.version>
+    <scala213.scala-xml.version>1.0.6</scala213.scala-xml.version>
+    <scala213.scala-parser-combinators.version>1.0.6</scala213.scala-parser-combinators.version>
+
     <!-- Scala 2.12.x -->
-    <scala212.version>2.12.3</scala212.version>
+    <scala212.version>2.12.15</scala212.version>
     <scala212.binary.version>2.12</scala212.binary.version>
     <scala212.scala-xml.version>1.0.6</scala212.scala-xml.version>
     <scala212.scala-parser-combinators.version>1.0.6</scala212.scala-parser-combinators.version>
@@ -89,8 +88,8 @@
     <version.tag>local</version.tag>
 
     <!-- the repos containing the Scala dependencies -->
-    <repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
-    <repo.typesafe>https://proxy-ch.typesafe.com:8082/artifactory/ide-${scala.minor.version}</repo.typesafe>
+    <!--repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
+    <repo.typesafe>https://proxy-ch.typesafe.com:8082/artifactory/ide-${scala.minor.version}</repo.typesafe-->
   </properties>
 
   <profiles>
@@ -98,6 +97,16 @@
       <id>retryFlakyTests</id>
       <properties>
         <retryFlakyTests>true</retryFlakyTests>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>scala-2.13.x</id>
+      <properties>
+        <scala.version>${scala213.version}</scala.version>
+        <scala.short.version>213</scala.short.version>
+        <scala.minor.version>2.13</scala.minor.version>
+        <version.suffix>2_13</version.suffix>
       </properties>
     </profile>
 
@@ -112,13 +121,13 @@
     </profile>
 
     <profile>
-      <id>eclipse-oxygen</id>
+      <id>eclipse-2021-12</id>
       <properties>
-        <eclipse.codename>oxygen</eclipse.codename>
-        <repo.eclipse>${repo.eclipse.oxygen}</repo.eclipse>
-        <repo.ajdt>${repo.ajdt.oxygen}</repo.ajdt>
-        <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
-        <weaving.hook.plugin.version>1.2.0.v20160929-1449</weaving.hook.plugin.version>
+        <eclipse.codename>2021-12</eclipse.codename>
+        <repo.eclipse>${repo.eclipse.2021-12}</repo.eclipse>
+        <jdt.core.version.range>[3.28.0,4.0.0)</jdt.core.version.range>
+        <repo.ajdt>${repo.ajdt.2021-12}</repo.ajdt>
+        <weaving.hook.plugin.version>1.3.100.v20211021-1418</weaving.hook.plugin.version>
       </properties>
     </profile>
 
@@ -155,60 +164,11 @@
     </profile>
 
     <profile>
-      <!-- pull the data needed to add the version numbers to the manifests -->
-      <id>set-versions</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.scala-ide</groupId>
-          <artifactId>build-tools_2.11</artifactId>
-          <version>0.5.1</version>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>copy.reflect</id>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <classpathScope>compile</classpathScope>
-              <mainClass>org.scalaide.buildtools.UpdateScalaIDEManifests</mainClass>
-              <arguments>
-                <argument>${scala.version}</argument>
-                <argument>${settings.localRepository}</argument>
-              </arguments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-      <repositories>
-        <repository>
-          <!-- extra repository containing the build package -->
-          <id>typesafe-ide</id>
-          <name>Typesafe IDE repository</name>
-          <url>https://proxy-ch.typesafe.com:8082/artifactory/ide-2.11</url>
-          <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-      </repositories>
-    </profile>
-
-    <profile>
+      <!-- Set versions of the bundles, libraries etc in various resources like MANIFEST.FM, feature.xml and so on -->
       <id>set-version-specific-files</id>
       <properties>
         <zinc.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.feature</zinc.feature.dir>
         <zinc.source.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
-        <scala210.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.feature</scala210.feature.dir>
-        <scala210.source.feature.dir>org.scala-ide.scala210.build/org.scala-ide.scala210.source.feature</scala210.source.feature.dir>
-        <scala211.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.feature</scala211.feature.dir>
-        <scala211.source.feature.dir>org.scala-ide.scala211.build/org.scala-ide.scala211.source.feature</scala211.source.feature.dir>
         <scala212.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.feature</scala212.feature.dir>
         <scala212.source.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.source.feature</scala212.source.feature.dir>
         <sdt.core.dir>org.scala-ide.sdt.core</sdt.core.dir>
@@ -275,74 +235,6 @@
                 </configuration>
               </execution>
               <execution>
-                <id>copy-resources-scala210-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala210-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala210.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala210.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-resources-scala211-source-feature</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${scala211.source.feature.dir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${scala211.source.feature.dir}/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <overwrite>true</overwrite>
-                </configuration>
-              </execution>
-              <execution>
                 <id>copy-resources-scala212-feature</id>
                 <phase>validate</phase>
                 <goals>
@@ -396,10 +288,13 @@
                           <filter token="JSON_IO_VERSION" value="${json-io.version}"/>
                           <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
                           <filter token="ZINC_VERSION" value="${zinc.version}"/>
-                          <filter token="SBT_UTIL_VERSION" value="${sbt-util.version}"/>
-                          <filter token="SBT_IO_VERSION" value="${sbt-io.version}"/>
                           <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
                           <filter token="SCALA_VERSION" value="${scala.version}"/>
+                          <filter token="SCALA_MINOR_VERSION" value="${scala.minor.version}"/>
+                          <filter token="SCALA_IDE_VERSION" value="${version}"/>
+                          <filter token="FILE_TREE_VIEWS_VERSION" value="${file-tree-views.version}"/>
+                          <filter token="JNA_VERSION" value="${jna.version}"/>
+                          <filter token="ZERO_ALLOCATION_VERSION" value="${zero-allocation-hashing.version}"/>
                         </filterset>
                     </copy>
                     <copy file="${sdt.debug.dir}/resources/META-INF/MANIFEST-${version.suffix}.MF"
@@ -419,6 +314,25 @@
                     <copy file="${sdt.update-site.dir}/resources/site-${version.suffix}.xml"
                         tofile="${sdt.update-site.dir}/site.xml"
                         overwrite="true" />
+
+                    <copy file="${sdt.core.dir}/resources/.classpath"
+                        tofile="${sdt.core.dir}/.classpath"
+                        overwrite="true">
+                        <filterset>
+                          <filter token="MIGLAYOUT_VERSION" value="${miglayout.version}"/>
+                          <filter token="LOG4J_VERSION" value="${log4j.version}"/>
+                          <filter token="JSON_IO_VERSION" value="${json-io.version}"/>
+                          <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
+                          <filter token="ZINC_VERSION" value="${zinc.version}"/>
+                          <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
+                          <filter token="SCALA_VERSION" value="${scala.version}"/>
+                          <filter token="SCALA_MINOR_VERSION" value="${scala.minor.version}"/>
+                          <filter token="SCALA_IDE_VERSION" value="${version}"/>
+                          <filter token="FILE_TREE_VIEWS_VERSION" value="${file-tree-views.version}"/>
+                          <filter token="JNA_VERSION" value="${jna.version}"/>
+                          <filter token="ZERO_ALLOCATION_VERSION" value="${zero-allocation-hashing.version}"/>
+                        </filterset>
+                    </copy>
                   </target>
                 </configuration>
                 <goals>
@@ -494,6 +408,7 @@
     <pluginManagement>
       <!-- define the version of all used plugins, and some default configuration -->
       <plugins>
+
         <!-- osgi bundle builder -->
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -505,12 +420,14 @@
             <manifestLocation>${project.build.directory}/META-INF</manifestLocation>
           </configuration>
         </plugin>
+
         <!-- set property value from file -->
         <plugin>
           <groupId>org.kuali.maven.plugins</groupId>
           <artifactId>properties-maven-plugin</artifactId>
           <version>${properties-maven.plugin.version}</version>
         </plugin>
+
         <!-- tycho plugins -->
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -547,9 +464,10 @@
           <artifactId>tycho-versions-plugin</artifactId>
           <version>${tycho.plugin.version}</version>
         </plugin>
+
         <!-- aspectJ support -->
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
+          <groupId>com.github.m50d</groupId>
           <artifactId>aspectj-maven-plugin</artifactId>
           <version>${aspectj.plugin.version}</version>
           <dependencies>
@@ -560,12 +478,13 @@
             </dependency>
           </dependencies>
         </plugin>
+
         <!-- scala compiler -->
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>scala-maven-plugin</artifactId>
           <version>${scala.plugin.version}</version>
-          <configuration>
+          <!--configuration>
             <args>
               <arg>-feature</arg>
               <arg>-unchecked</arg>
@@ -573,25 +492,28 @@
               <arg>-language:_</arg>
               <arg>-Xlint</arg>
               <arg>-Xfuture</arg>
-              <!-- <arg>-Xfatal-warnings</arg> -->
+              <arg>-Xfatal-warnings</arg> >
               <arg>-Yno-adapted-args</arg>
               <arg>-Ywarn-dead-code</arg>
               <arg>-Ywarn-unused-import</arg>
-              <arg>-Ywarn-unused:-params,-implicits,_</arg>
+              <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
             </args>
-          </configuration>
+          </configuration-->
         </plugin>
+
         <!-- git hash extractor -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>buildnumber-maven-plugin</artifactId>
           <version>${buildnumber-maven.plugin.version}</version>
         </plugin>
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>${maven-clean.plugin.version}</version>
         </plugin>
+
         <!-- Scalastyle -->
         <plugin>
           <groupId>org.scalastyle</groupId>

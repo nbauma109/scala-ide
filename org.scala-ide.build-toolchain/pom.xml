@@ -26,13 +26,13 @@
   </properties>
 
   <!-- repository containing the sbt packages -->
-  <repositories>
+  <!--repositories>
     <repository>
       <id>bintray.com</id>
       <name>bintray repo</name>
       <url>https://dl.bintray.com/sbt/maven-releases/</url>
     </repository>
-  </repositories>
+  </repositories-->
 
   <build>
     <plugins>
@@ -57,21 +57,10 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>scala-2.12.x</id>
-      <modules>
-        <module>../org.scala-ide.scala210.jars</module>
-        <module>../org.scala-ide.scala211.jars</module>
-      </modules>
-    </profile>
-  </profiles>
-
   <modules>
     <module>../org.scala-ide.zinc.library</module>
     <module>../org.scala-ide.zinc.library.source</module>
     <module>../org.scala-ide.zinc.compiler.bridge</module>
     <module>../org.scala-ide.zinc.compiler.bridge.source</module>
-    <module>../org.scala-ide.zinc.compiler.bridge.source_2.10</module>
   </modules>
 </project>

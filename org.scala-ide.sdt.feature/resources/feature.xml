@@ -61,9 +61,9 @@ SUCH DAMAGE.
          id="org.scala-ide.sdt.weaving.feature"
          version="0.0.0"/>
 
-   <includes
+   <!--includes
          id="org.scala-ide.zinc.feature"
-         version="0.0.0"/>
+         version="0.0.0"/-->
 
    <includes
          id="org.scala-ide.scala${scala.short.version}.feature"

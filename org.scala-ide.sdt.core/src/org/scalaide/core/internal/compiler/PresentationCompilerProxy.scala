@@ -8,7 +8,7 @@ import scala.reflect.internal.FatalError
 import org.scalaide.core.compiler._
 import org.scalaide.core.compiler.IScalaPresentationCompiler
 import org.scalaide.core.compiler.InteractiveCompilationUnit
-import scala.collection.mutable.Publisher
+import org.scalaide.core.Publisher
 
 /** Holds a reference to a 'live' presentation compiler and manages its lifecycle.
   *

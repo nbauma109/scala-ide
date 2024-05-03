@@ -1,6 +1,5 @@
 package org.scalaide.ui.internal.reconciliation
 
-import scala.collection.mutable.Subscriber
 
 import org.eclipse.jface.text.ITextViewer
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy
@@ -11,6 +10,8 @@ import org.eclipse.swt.widgets.Control
 import org.eclipse.ui.IPartService
 import org.eclipse.ui.IWorkbenchPart
 import org.eclipse.ui.texteditor.ITextEditor
+
+import org.scalaide.core.Subscriber
 import org.scalaide.core.compiler.IPresentationCompilerProxy
 import org.scalaide.core.internal.compiler.PresentationCompilerActivity
 import org.scalaide.core.internal.compiler.PresentationCompilerProxy

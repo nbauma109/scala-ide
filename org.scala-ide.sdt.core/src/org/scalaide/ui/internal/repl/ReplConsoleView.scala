@@ -36,10 +36,10 @@ import org.scalaide.core.internal.repl.EclipseRepl.Exec
 import org.scalaide.core.internal.repl.EclipseRepl
 import org.scalaide.util.ui.DisplayThread
 import org.scalaide.core.internal.project.ScalaInstallation.platformInstallation
-import scala.collection.mutable.Subscriber
-import scala.collection.mutable.Publisher
 import org.scalaide.core.BuildSuccess
 import org.scalaide.core.IScalaProjectEvent
+import org.scalaide.core.Subscriber
+import org.scalaide.core.Publisher
 import org.scalaide.core.internal.compiler.ScalaPresentationCompiler
 
 class ReplConsoleView extends ViewPart with InterpreterConsoleView {

@@ -128,7 +128,7 @@ object SDTTestUtils extends HasLogger {
   def markersOf(source: Array[Char], prefix: String): Seq[(Int, Int)] = {
     val regex = """\/\*%s([0-9]+)\*/""".format(prefix).r
     val buf = new mutable.ListBuffer[(Int, Int)]
-    val it = regex.findAllIn(source)
+    val it = regex.findAllIn(new String(source))
     for (m <- it) {
       buf += ((it.start, it.group(1).toInt))
     }

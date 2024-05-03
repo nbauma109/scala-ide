@@ -7,15 +7,14 @@ import scala.tools.refactoring.implementations
 import scala.tools.refactoring.implementations.OrganizeImports.ImportsStrategy
 import scala.tools.refactoring.implementations.OrganizeImports.OrganizeImportsConfig
 import scala.util.Properties
-
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.jdt.core.IJavaElement
 import org.eclipse.jdt.core.compiler.IProblem
 import org.eclipse.jdt.core.search.IJavaSearchConstants
 import org.eclipse.jdt.core.search.SearchEngine
 import org.eclipse.jdt.core.search.TypeNameMatch
+import org.eclipse.jdt.core.manipulation.TypeNameMatchCollector
 import org.eclipse.jdt.internal.corext.util.QualifiedTypeNameHistory
-import org.eclipse.jdt.internal.corext.util.TypeNameMatchCollector
 import org.eclipse.jdt.internal.ui.actions.ActionMessages
 import org.eclipse.jdt.internal.ui.dialogs.MultiElementListSelectionDialog
 import org.eclipse.jdt.internal.ui.util.TypeNameMatchLabelProvider
@@ -30,7 +29,7 @@ import org.scalaide.util.eclipse.EditorUtils
 import org.scalaide.util.internal.eclipse.TextEditUtils
 
 /**
- * The Scala implemention of Organize Imports.
+ * The Scala implementation of Organize Imports.
  *
  * Organize Imports can work in two different modes, depending on whether there are
  * errors in the source file:
@@ -111,8 +110,6 @@ class OrganizeImports extends RefactoringExecutorWithoutWizard {
 
       /**
        * Creates the change objects that are needed to add the imports to the source file.
-       *
-       * @return A list of changes or an empty list if the source file cannot be obtained.
        */
       def createChanges(scalaSourceFile: ScalaSourceFile, imports: Iterable[TypeNameMatch], pm: IProgressMonitor) = {
         scalaSourceFile.withSourceFile { (sourceFile, compiler) =>

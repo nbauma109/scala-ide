@@ -1,5 +1,6 @@
 package org.scalaide.core.internal.builder
 
+import java.nio.file.Files
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -9,17 +10,27 @@ import org.scalaide.core.internal.ScalaPlugin
 
 import sbt.internal.inc.AnalyzingCompiler
 import sbt.internal.inc.Locate
-import sbt.internal.inc.classpath.ClasspathUtilities
+import sbt.internal.inc.PlainVirtualFileConverter
+import sbt.internal.inc.Stamps
+import sbt.internal.inc.classpath.ClasspathUtil
+
 import xsbti.Logger
 import xsbti.Reporter
+import xsbti.VirtualFile
+import xsbti.FileConverter
+
 import xsbti.compile.ClasspathOptions
 import xsbti.compile.CompilerBridgeProvider
 import xsbti.compile.DefinesClass
 import xsbti.compile.IncToolOptions
 import xsbti.compile.JavaCompiler
 import xsbti.compile.ScalaInstance
+import xsbti.compile.Output
 
 package object zinc {
+  lazy val fileConverter: FileConverter = PlainVirtualFileConverter.converter
+  lazy val stamper = Stamps.timeWrapBinaryStamps(fileConverter)
+
   private[zinc] object Locator {
     val NoClass = new DefinesClass {
       override def apply(className: String) = false
@@ -28,13 +39,15 @@ package object zinc {
     def apply(f: File): DefinesClass =
       if (f.isDirectory)
         new DirectoryLocator(f)
-      else if (f.exists && ClasspathUtilities.isArchive(f))
+      else if (f.exists && ClasspathUtil.isArchive(f.toPath()))
         new JarLocator(f)
       else
         NoClass
 
     class DirectoryLocator(dir: File) extends DefinesClass {
-      override def apply(className: String): Boolean = Locate.classFile(dir, className).isFile
+      override def apply(className: String): Boolean = {
+        Files.isRegularFile(Locate.classFile(dir.toPath, className))
+      }
     }
 
     class JarLocator(jar: File) extends DefinesClass {
@@ -63,7 +76,7 @@ package object zinc {
   }
 
   private[zinc] object unimplementedJavaCompiler extends JavaCompiler {
-    override def run(srcs: Array[File], opts: Array[String], incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
+    override def run(srcs: Array[VirtualFile], opts: Array[String], output: Output, incOpts: IncToolOptions, reporter: Reporter, logger: Logger) =
       throw new NotImplementedError("expects to be not called")
   }
 

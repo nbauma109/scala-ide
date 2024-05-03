@@ -31,6 +31,7 @@ import sbt.internal.inc.Analysis
 import sbt.util.InterfaceUtil.problem
 import xsbti.CompileFailed
 import xsbti.Logger
+import xsbti.VirtualFileRef
 import xsbti.compile.CompileProgress
 import xsbti.compile.analysis.SourceInfo
 
@@ -59,7 +60,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
 
   // this directory is used by Sbt to store classfiles between
   // compilation runs to implement all-or-nothing compilation
-  // sementics. Original files are copied over to tempDir and
+  // semantics. Original files are copied over to tempDir and
   // moved back in case of compilation errors.
   private val tempDir = project.underlying.getFolder(".tmpBin")
   private def tempDirFile = tempDir.getLocation().toFile()
@@ -138,8 +139,8 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
     val scalaInstall = findInstallation(project)
     logger.info(s"Running compiler using $scalaInstall")
     val progress = new SbtProgress
-    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,
-      addToClasspath, srcOutputs)
+
+    val inputs = new SbtInputs(scalaInstall, sources, project, monitor, progress, tempDirFile, sbtLogger,addToClasspath, srcOutputs)
     val analysis =
       try
         Some(aggressiveCompile(inputs, sbtLogger))
@@ -163,10 +164,16 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
   private def createAdditionalMarkers(analysis: Analysis, compiledFiles: Set[IFile]): Unit = {
     for {
       (file, info) <- analysis.infos.allInfos
-      resource <- ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(file.toURI())
+      resource <- findResources(file)
       // this file might have been deleted in the meantime
       if resource.exists() && !compiledFiles(resource)
     } createMarkers(info)
+
+    def findResources(fileRef: VirtualFileRef): Array[IFile] = {
+      val uri = fileConverter.toPath(fileRef).toUri()
+      ResourcesPlugin.getWorkspace.getRoot.findFilesForLocationURI(uri)
+    }
+
   }
 
   /**
@@ -258,7 +265,7 @@ class EclipseSbtBuildManager(val project: IScalaProject, settings: Settings, ana
       }
     }
 
-    override def advance(current: Int, total: Int): Boolean =
+    override def advance(current: Int, total: Int, prevPhase: String , nextPhase: String ): Boolean =
       if (monitor.isCanceled) {
         throw new OperationCanceledException
       } else {

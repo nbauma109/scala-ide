@@ -5,7 +5,6 @@ import java.io.IOException
 
 import scala.annotation.tailrec
 import scala.collection.immutable
-import scala.collection.mutable.Publisher
 import scala.tools.nsc.Settings
 import scala.util.control.NonFatal
 
@@ -41,6 +40,7 @@ import org.scalaide.core.BuildSuccess
 import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.IScalaProject
 import org.scalaide.core.IScalaProjectEvent
+import org.scalaide.core.Publisher
 import org.scalaide.core.SdtConstants
 import org.scalaide.core.compiler.IScalaPresentationCompiler
 import org.scalaide.core.internal.builder.EclipseBuildManager
