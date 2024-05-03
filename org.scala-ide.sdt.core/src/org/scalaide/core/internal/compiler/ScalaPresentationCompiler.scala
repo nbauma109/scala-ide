@@ -83,8 +83,7 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
       if (!owner.rawInfo.isInstanceOf[TypeCompleter]) // Modified
         owner.initialize
       original.companionSymbol orElse {
-        // potential issue here (see https://github.com/scala/scala/commit/dd0b8c6d6f1a740042b7c3bf6fce3b627035c24c)
-        ctx.lookupSymbol(original.name.companionName, _.owner == owner).symbol.suchThat(sym =>
+        ctx.lookupSibling(original, original.name.companionName).suchThat(sym =>
           (original.isTerm || sym.hasModuleFlag) &&
           (sym isCoDefinedWith original)
         )
