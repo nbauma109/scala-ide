@@ -11,6 +11,14 @@
   <artifactId>org.scala-ide.sdt.debug.expression</artifactId>
   <packaging>eclipse-plugin</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+  </dependencies>
+
   <profiles>
     <profile>
       <!-- Except on MAC OS X, the tools.jar library containing JDI is not available by default.

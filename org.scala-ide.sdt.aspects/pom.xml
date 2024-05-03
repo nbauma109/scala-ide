@@ -57,14 +57,15 @@
         <!-- compile the aspect files -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
+        <version>${aspectj.plugin.version}</version>
         <executions>
           <execution>
             <phase>process-sources</phase>
             <id>compile</id>
             <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
-              <complianceLevel>1.5</complianceLevel>
+              <source>1.8</source>
+              <target>1.8</target>
+              <complianceLevel>1.8</complianceLevel>
               <aspectDirectory>src</aspectDirectory>
               <Xlint>ignore</Xlint>
               <deprecation>true</deprecation>

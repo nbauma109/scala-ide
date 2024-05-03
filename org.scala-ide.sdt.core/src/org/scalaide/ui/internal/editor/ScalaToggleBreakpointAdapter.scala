@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StructuredSelection
 import org.eclipse.ui.IEditorInput
 import org.eclipse.ui.texteditor.ITextEditor
 import org.eclipse.ui.IWorkbenchPart
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.jdt.model.ScalaSourceTypeElement
 import org.scalaide.logging.HasLogger
@@ -209,4 +210,9 @@ object ScalaToggleBreakpointAdapterUtils extends ReflectionUtils {
     else
       createQualifiedTypeNameMethod.invoke(tba, tpe).asInstanceOf[String]
   }
+
+   def getTextEditor(part: IWorkbenchPart): ITextEditor = {
+     val x = part.asInstanceOf[ITextEditor];
+     if (x != null) x else part.getAdapter(classOf[ITextEditor])
+   }
 }

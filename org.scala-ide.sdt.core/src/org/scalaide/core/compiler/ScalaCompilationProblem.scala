@@ -5,7 +5,7 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblem
 /** A Scala error or warning.
  *
  *  @param fileName   The corresponding file name
- *  @param severity   One of org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.{Error, Warning, Ignore}
+ *  @param severityLevel One of org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.{Error, Warning, Ignore}
  *  @param message    The error message emitted by the compiler
  *  @param start      The starting offset of where this problem is located
  *  @param end        The end offset of this problem
