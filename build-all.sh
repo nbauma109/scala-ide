@@ -2,7 +2,7 @@
 
 BUILD_NUMBER=$(git rev-parse --short HEAD)
 
-mvn wrapper:wrapper -Dmaven=3.9.6
+mvn wrapper:wrapper -Dmaven=3.9.6 --no-transfer-progress
 
 # run in sequences the different maven calls needed to fully build Scala IDE from scratch
 
