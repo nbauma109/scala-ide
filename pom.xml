@@ -36,7 +36,7 @@
     <zinc.version>1.9.6</zinc.version>
     <sbt-util.version>1.9.9</sbt-util.version>
     <sbt-io.version>1.9.9</sbt-io.version>
-    <jna-platform.version>5.1.0</jna-platform.version>
+    <jna-platform.version>5.14.0</jna-platform.version>
     <sbinary.version>0.5.2</sbinary.version>
     <scala-refactoring.version>0.14.0-SNAPSHOT</scala-refactoring.version>
     <scalariform.version>0.2.6</scalariform.version>
