@@ -36,5 +36,5 @@ jobs:
     - name: Build with Maven
       env:
         ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
-        SCALA_IDE_COMPILE_CLASSPATH: "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/8.0.402-6/x64/jre/lib/*.jar"
+        SCALA_IDE_COMPILE_CLASSPATH: "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/8.0.402-6/x64/jre/lib/rt.jar:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/8.0.402-6/x64/lib/tools.jar"
       run: ./build-all.sh
