@@ -1,7 +1,6 @@
 package org.scalaide.core
 package internal.compiler
 
-import java.io.File
 import org.scalaide.logging.HasLogger
 import scala.tools.nsc.Settings
 import scala.reflect.internal.MissingRequirementError
@@ -153,7 +152,7 @@ final class PresentationCompilerProxy(name: String, initializeSettings: () => Se
     pcLock.synchronized {
       try {
         val compilerSettings = initializeSettings()
-        compilerSettings.classpath.value = System.getProperty("scala.ide.compile.classpath").split(File.pathSeparator);
+        compilerSettings.classpath.value = System.getProperty("scala.ide.compile.classpath");
         val pc = new ScalaPresentationCompiler(name, compilerSettings)
         logger.debug(pc.settings.userSetSettings.toSeq.sortBy(_.name.toLowerCase).mkString(s"Presentation compiler settings for $name:\n  ", "\n  ", ""))
         publish(Start)
