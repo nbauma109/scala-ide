@@ -48,7 +48,7 @@
     <aspectj.version>1.9.25</aspectj.version>
     <maven-bundle.plugin.version>5.1.9</maven-bundle.plugin.version>
     <properties-maven.plugin.version>2.0.1</properties-maven.plugin.version>
-    <maven-clean.plugin.version>3.4.0</maven-clean.plugin.version>
+    <maven-clean.plugin.version>3.5.0</maven-clean.plugin.version>
 
     <!-- Weaving plugin version -->
     <weaving.hook.plugin.version>Select an Eclipse profile</weaving.hook.plugin.version>
