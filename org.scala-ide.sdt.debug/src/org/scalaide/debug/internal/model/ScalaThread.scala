@@ -266,7 +266,7 @@ abstract class ScalaThread private (target: ScalaDebugTarget, val threadRef: Thr
       stackFrames.getAndSet(threadRef.frames.asScala.zipWithIndex.map {
         case (frame, index) =>
           ScalaStackFrame(this, frame, index, sourcePath)
-      }(collection.breakOut))
+      }.toList)
       suspended.getAndSet(true)
       fireSuspendEvent(eventDetail)
     }

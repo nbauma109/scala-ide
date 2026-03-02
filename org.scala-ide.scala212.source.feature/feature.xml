@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.scala-ide.scala212.source.feature"
-      label="Scala 2.12.19 sources"
-      version="4.7.1.qualifier"
-      provider-name="scala-ide.org">
+      label="Scala 2.12.21 sources"
+      version="5.0.0.qualifier"
+      provider-name="nbauma109">
 
-   <description url="http://scala-ide.org">
-     Sources for Scala 2.12.19 library, compiler and associated jars.
+   <description url="https://nbauma109.github.io/scala-ide">
+     Sources for Scala 2.12.21 library, compiler and associated jars.
    </description>
 
    <copyright url="http://scala-lang.org/downloads/">
@@ -53,7 +53,7 @@ SUCH DAMAGE.
    </license>
 
    <url>
-      <update label="Scala IDE for Eclipse update site" url="http://download.scala-ide.org/update-current"/>
+      <update label="Scala IDE for Eclipse update site" url="https://nbauma109.github.io/scala-ide/update-current"/>
    </url>
 
    <plugin

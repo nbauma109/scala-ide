@@ -3,8 +3,6 @@
  */
 package org.scalaide.debug.internal.hcr
 
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -60,7 +58,7 @@ private object HotCodeReplaceTest {
    * Checks whether we got exactly one message and it's of type HCRSucceeded.
    * Otherwise, when checking whether HCR succeeded, the test fails with an appropriate message.
    */
-  final class TestHcrSuccessListener extends Subscriber[HCRResult, Publisher[HCRResult]] {
+  final class TestHcrSuccessListener {
 
     private var onlyOneSuccessReceived: Try[Boolean] = Success(false)
 
@@ -71,7 +69,7 @@ private object HotCodeReplaceTest {
         throw new IllegalStateException("Unexpected message(s). Check the chained exception(s) for more information.", e)
     }
 
-    override def notify(publisher: Publisher[HCRResult], event: HCRResult): Unit = event match {
+    def onHcrResult(event: HCRResult): Unit = event match {
       case msg: HCRSucceeded => handleSuccess(msg)
       case msg => handleWrongTypeOfMessage(msg)
     }
@@ -220,8 +218,9 @@ class HotCodeReplaceTest
     val hcrFinishedTimeoutMillis = 20000
 
     val hcrEventsSubscriber = new TestHcrSuccessListener
-    val hcrEventsPublisher = session.debugTarget.subordinate.asInstanceOf[Publisher[HCRResult]]
-    hcrEventsPublisher.subscribe(hcrEventsSubscriber)
+    val hcrEventsPublisher = session.debugTarget.subordinate
+    val hcrEventsCallback: HCRResult => Unit = hcrEventsSubscriber.onHcrResult _
+    hcrEventsPublisher.subscribe(hcrEventsCallback)
 
     def isExpectedEvent(e: DebugEvent) =
         e.getKind == DebugEvent.CHANGE && e.getDetail == DebugEvent.CONTENT
@@ -247,7 +246,7 @@ class HotCodeReplaceTest
           testSessionIsSuspended
       }
     } finally {
-      hcrEventsPublisher.removeSubscription(hcrEventsSubscriber)
+      hcrEventsPublisher.removeSubscription(hcrEventsCallback)
       ScalaDebugTestSession.removeDebugEventListener(debugEventListener)
     }
   }

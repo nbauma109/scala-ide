@@ -1,6 +1,7 @@
 package org.scalaide.core.ui.completion
 
 import org.junit.Test
+import org.scalaide.core.IScalaPlugin
 
 object AccessibilityTests extends CompletionTests
 class AccessibilityTests {
@@ -71,27 +72,29 @@ class AccessibilityTests {
   }
 
   @Test
-  def noAccessToPrivateInSubclass() = {
-    val pkgName = "noAccessToPrivateInSubclass"
-    mkTestObj(pkgName, additionInPackage = """
-      class AccessibilityChecks extends Foo {
-        def someTests: Unit = {
-          this.secr^
+  def noAccessToPrivateInSubclass(): Unit = {
+    if (IScalaPlugin().shortScalaVersion != "2.13") {
+      val pkgName = "noAccessToPrivateInSubclass"
+      mkTestObj(pkgName, additionInPackage = """
+        class AccessibilityChecks extends Foo {
+          def someTests: Unit = {
+            this.secr^
+          }
         }
-      }
-    """) becomes
-    mkTestObj(pkgName, additionInPackage = """
-      class AccessibilityChecks extends Foo {
-        def someTests: Unit = {
-          this.secretProtected()^
+      """) becomes
+      mkTestObj(pkgName, additionInPackage = """
+        class AccessibilityChecks extends Foo {
+          def someTests: Unit = {
+            this.secretProtected()^
+          }
         }
-      }
-    """) after Completion(
-      completionToApply = "secretProtected(): Unit",
-      expectedCompletions = Seq(
-        "secretProtected(): Unit",
-        "secretProtectedInPackage(): Unit",
-        "secretPublic(): Unit"))
+      """) after Completion(
+        completionToApply = "secretProtected(): Unit",
+        expectedCompletions = Seq(
+          "secretProtected(): Unit",
+          "secretProtectedInPackage(): Unit",
+          "secretPublic(): Unit"))
+    }
   }
 
   @Test

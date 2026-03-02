@@ -32,7 +32,7 @@ object ChangeCaseProposal {
   def createProposals(icu: InteractiveCompilationUnit, offset: Int, length: Int, wrongName: String): List[ChangeCaseProposal] = {
     def membersAtRange(start: Int, end: Int): List[String] = {
       val memberNames = icu.withSourceFile { (srcFile, compiler) =>
-        compiler asyncExec {
+        compiler.asyncExec {
           val length = end - start
 
           /*
@@ -48,7 +48,7 @@ object ChangeCaseProposal {
           val typedTree = typer.typed(tree)
           val tpe = typedTree.tpe.resultType.underlying
           if (tpe.isError) Nil else tpe.members.map(_.nameString).toList.distinct
-        } getOption()
+        }.getOption()
       }
 
       memberNames.flatten.getOrElse(Nil)
@@ -64,7 +64,7 @@ object ChangeCaseProposal {
         compiler.asyncExec {
           val completed = compiler.askScopeCompletion(new RangePosition(srcFile, offset, offset, offset))
           completed.getOrElse(Nil)().map(_.sym.nameString).distinct
-        } getOption()
+        }.getOption()
       }
       memberNames.flatten.getOrElse(Nil)
     }

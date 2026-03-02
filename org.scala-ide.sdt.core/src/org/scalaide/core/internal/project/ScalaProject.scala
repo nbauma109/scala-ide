@@ -5,7 +5,7 @@ import java.io.IOException
 
 import scala.annotation.tailrec
 import scala.collection.immutable
-import scala.collection.mutable.Publisher
+import org.scalaide.util.internal.collection.Publisher
 import scala.tools.nsc.Settings
 import scala.util.control.NonFatal
 
@@ -497,7 +497,12 @@ class ScalaProject private(val underlying: IProject) extends ClasspathManagement
   private def setupCompilerClasspath(settings: Settings): Unit = {
     val scalaCp = scalaClasspath // don't need to recompute it each time we use it
 
-    settings.javabootclasspath.value = scalaCp.jdkPaths.map(_.toOSString).mkString(pathSeparator)
+    val jdkEntries = scalaCp.jdkPaths.map(_.toOSString)
+    val javaBootClasspath = jdkEntries.mkString(pathSeparator)
+    // On Java 9+ there is no rt.jar. In that case let scalac use its default JDK discovery.
+    val hasLegacyRtJar = jdkEntries.exists(entry => entry.endsWith("/rt.jar") || entry.endsWith("\\rt.jar"))
+    if (javaBootClasspath.nonEmpty && hasLegacyRtJar)
+      settings.javabootclasspath.value = javaBootClasspath
     // extdirs are already included in Platform JDK paths
     // here we disable Scala's default that would pick up the running JVM extdir, resulting in
     // a mix of classes from the running JVM and configured JDK

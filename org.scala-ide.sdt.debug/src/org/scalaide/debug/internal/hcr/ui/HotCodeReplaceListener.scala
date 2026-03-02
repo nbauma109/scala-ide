@@ -4,9 +4,6 @@
 package org.scalaide.debug.internal.hcr
 package ui
 
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
-
 import org.eclipse.jface.dialogs.MessageDialog
 import org.scalaide.debug.internal.preferences.HotCodeReplacePreferences
 import org.scalaide.util.eclipse.SWTUtils
@@ -20,9 +17,9 @@ import ScalaHotCodeReplaceManager.HCRSucceeded
 /**
  * Informs user when there's something wrong related to HCR.
  */
-private[internal] object HotCodeReplaceListener extends Subscriber[HCRResult, Publisher[HCRResult]] {
+private[internal] object HotCodeReplaceListener {
 
-  override def notify(publisher: Publisher[HCRResult], event: HCRResult): Unit = event match {
+  def onHcrResult(event: HCRResult): Unit = event match {
     case HCRSucceeded(_) => // nothing to do
     case HCRNotSupported(launchName) =>
       if (HotCodeReplacePreferences.notifyAboutUnsupportedHcr)

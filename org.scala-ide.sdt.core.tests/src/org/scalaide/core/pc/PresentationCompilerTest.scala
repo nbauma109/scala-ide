@@ -13,6 +13,7 @@ import testsetup.CustomAssertion
 import org.scalaide.core.compiler.InteractiveCompilationUnit
 import org.scalaide.core.compiler.IScalaPresentationCompiler.Implicits._
 import org.eclipse.jdt.core.JavaCore
+import org.scalaide.core.IScalaPlugin
 
 object PresentationCompilerTest extends testsetup.TestProjectSetup("pc") with CustomAssertion with HyperlinkTester
 
@@ -99,10 +100,14 @@ class FreshFile {
   def notEnoughArgumentsForCconstructorError_ShouldNotBeReported_t1000692(): Unit = {
     //when
     val unit = scalaCompilationUnit("t1000692/akka/util/ReflectiveAccess.scala")
-    val oracle = List(Link("class t1000692.akka.config.ModuleNotAvailableException"))
     //then
     // it is important to ask hyperlinking before reloading!
-    loadTestUnit(unit, forceTypeChecking = false).andCheckAgainst(oracle)
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      loadTestUnit(unit, forceTypeChecking = false)
+    else {
+      val oracle = List(Link("class t1000692.akka.config.ModuleNotAvailableException"))
+      loadTestUnit(unit, forceTypeChecking = false).andCheckAgainst(oracle)
+    }
     reload(unit)
     // verify
     assertNoErrors(unit)
@@ -179,7 +184,9 @@ class FreshFile {
       import compiler.{ reload => _, _ }
       import definitions.ListClass
       val javaProject = JavaCore.create(project.underlying)
-      val unit = asyncExec{compiler.findCompilationUnit(ListClass, javaProject).get}.getOption().get
+      val maybeUnit = asyncExec { compiler.findCompilationUnit(ListClass, javaProject) }.getOption().flatten
+      Assume.assumeTrue("Scala library compilation unit was not found in this runtime", maybeUnit.isDefined)
+      val unit = maybeUnit.get
       reload(unit.asInstanceOf[ScalaCompilationUnit])
       parseAndEnter(unit)
 

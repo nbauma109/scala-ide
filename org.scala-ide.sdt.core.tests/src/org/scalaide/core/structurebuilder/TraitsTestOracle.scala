@@ -43,7 +43,7 @@ C1.scala [in traits [in src [in simple-structure-builder]]]
     class InnerC
       int x
       int x()
-      InnerC(traits.C<T>, int)
+      InnerC(int)
     class T
     java.lang.Object T
     class U
@@ -81,5 +81,5 @@ T1.scala [in traits [in src [in simple-structure-builder]]]
       Inner()
     class InnerWithGenericParams
       scala.collection.immutable.List xs
-      InnerWithGenericParams(traits.T1, scala.collection.immutable.List<java.lang.Object>)"""
+      InnerWithGenericParams(scala.collection.immutable.List<java.lang.Object>)"""
 }

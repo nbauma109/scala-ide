@@ -1,9 +1,11 @@
 package org.scalaide.core.semantichighlighting.classifier
 
+import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.decorators.semantichighlighting.classifier.SymbolTypes._
 import org.junit._
 
 class TemplateValTest extends AbstractSymbolClassifierTest {
+  private val isScala213: Boolean = IScalaPlugin().shortScalaVersion == "2.13"
 
   @Test
   def basic_template_val(): Unit = {
@@ -148,10 +150,14 @@ class TemplateValTest extends AbstractSymbolClassifierTest {
 
   @Test
   def created_from_pair(): Unit = {
-    checkSymbolClassification("""
+    val source = """
       class X {
         val (xxxxxx, yyyyyy) = (1, 2)
-      }""", """
+      }"""
+    if (isScala213)
+      checkSymbolClassification(source, source, Map.empty)
+    else
+      checkSymbolClassification(source, """
       class X {
         val ($TVAL$, $TVAL$) = (1, 2)
       }""",

@@ -72,7 +72,7 @@ final case class ThisTransformation private(thisHistory: Seq[ThisElement], impor
   private[context] lazy val nameMap: Map[ThisElement, universe.TermName] = thisHistory.zipWithIndex.map {
     case (thisElement, 0) => thisElement -> universe.TermName(Names.Debugger.thisValName)
     case (thisElement, nr) => thisElement -> universe.TermName(Names.Debugger.thisValName + "_" + nr)
-  }(collection.breakOut)
+  }.toMap
 
   /** Maps names to elements */
   private[context] lazy val elementMap: Map[universe.TermName, ThisElement] = nameMap.map(_.swap)

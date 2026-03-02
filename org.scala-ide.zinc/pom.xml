@@ -3,9 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.scala-ide</groupId>
+    <groupId>io.github.nbauma109</groupId>
     <artifactId>org.scala-ide.p2-toolchain</artifactId>
-    <version>4.7.1-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <relativePath>../org.scala-ide.p2-toolchain/pom.xml</relativePath>
   </parent>
 
@@ -16,22 +16,22 @@
   <dependencies>
     <!-- toolchain, Scala library -->
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
       <artifactId>org.scala-ide.zinc.library</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
       <artifactId>org.scala-ide.zinc.library.source</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
       <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
       <artifactId>org.scala-ide.zinc.compiler.bridge.source</artifactId>
       <version>${project.version}</version>
     </dependency>

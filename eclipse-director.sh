@@ -82,7 +82,7 @@ function install()
         trunk/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] )
             echo "Looking for a specific nightly.."
             repo_date=`echo $1 | cut -d \/ -f 2`
-            find_latest_build "http://download.scala-ide.org/builds/nightly-$branch-trunk" $repo_date
+            find_latest_build "https://nbauma109.github.io/scala-ide/builds/nightly-$branch-trunk" $repo_date
             ;;
 
         2.9.x )
@@ -91,7 +91,7 @@ function install()
 
         2.9.x/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] )
             repo_date=`echo $1 | cut -d \/ -f 2`
-            find_latest_build "http://download.scala-ide.org/builds/nightly-$branch-29x" $repo_date
+            find_latest_build "https://nbauma109.github.io/scala-ide/builds/nightly-$branch-29x" $repo_date
             ;;
 
         * )

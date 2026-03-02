@@ -1,61 +1,80 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-BUILD_NUMBER=$(git rev-parse --short HEAD)
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MVNW="${ROOT_DIR}/mvnw"
+BUILD_NUMBER="${BUILD_NUMBER:-$(git -C "${ROOT_DIR}" rev-parse --short HEAD)}"
+SCALA_STREAMS="${SCALA_STREAMS:-scala-2.12 scala-2.13}"
 
-mvn wrapper:wrapper -Dmaven=3.9.6 --no-transfer-progress
-
-# run in sequences the different maven calls needed to fully build Scala IDE from scratch
-
-# not as good as the readlink version, but it is not working on os X
-ROOT_DIR=$(dirname $0)
-MVN_DIR=`pwd`
-$MVN_DIR/mvnw --version
-cd ${ROOT_DIR}
-ROOT_DIR=${PWD}
-
-if [ -z "$*" ]
-then
-  MVN_ARGS="-DbuildNumber=${BUILD_NUMBER} -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
-  MVN_P2_ARGS="-DbuildNumber=${BUILD_NUMBER} -Dtycho.localArtifacts=ignore -Peclipse-2024-03 $ADDITIONAL_MVN_OPTS clean install"
-else
-  MVN_ARGS="-DbuildNumber=${BUILD_NUMBER} $*"
-  MVN_P2_ARGS="-DbuildNumber=${BUILD_NUMBER} -Dtycho.localArtifacts=ignore $*"
+if [[ ! -x "${MVNW}" ]]; then
+  chmod +x "${MVNW}"
 fi
 
-echo "Running with: mvnw ${MVN_P2_ARGS}"
-
-# the parent project
-echo "Building parent project in $ROOT_DIR"
-cd ${ROOT_DIR}
-$MVN_DIR/mvnw ${MVN_ARGS}
-
-# set custom configuration files
-echo "Setting custom configuration files"
-$MVN_DIR/mvnw ${MVN_ARGS} -Pset-version-specific-files antrun:run
-
-
-echo "Building the toolchain"
-# the toolchain
-cd ${ROOT_DIR}/org.scala-ide.build-toolchain
-$MVN_DIR/mvnw ${MVN_ARGS}
-
-echo "Generating the local p2 repositories"
-# the local p2 repos
-cd ${ROOT_DIR}/org.scala-ide.p2-toolchain
-$MVN_DIR/mvnw ${MVN_P2_ARGS}
-
-# set the versions if required
-cd ${ROOT_DIR}
-if [ -n "${SET_VERSIONS}" ]
-then
-  echo "setting versions"
-  $MVN_DIR/mvnw ${MVN_P2_ARGS} -Pset-versions exec:java
+if [[ $# -eq 0 ]]; then
+  GOALS=(clean install)
 else
-  echo "Not running UpdateScalaIDEManifests."
+  GOALS=("$@")
 fi
 
-# the plugins
-echo "Building plugins"
-cd ${ROOT_DIR}/org.scala-ide.sdt.build
-$MVN_DIR/mvnw ${MVN_P2_ARGS} -Dscala.ide.compile.classpath=${SCALA_IDE_COMPILE_CLASSPATH}
+run_mvn() {
+  local dir="$1"
+  shift
+  echo "==> (${dir}) ./mvnw $*"
+  (cd "${dir}" && "${MVNW}" "$@")
+}
 
+run_stream() {
+  local stream_profile="$1"
+  local stream_label="$2"
+  local common_opts=(-DbuildNumber="${BUILD_NUMBER}" -Peclipse-2024-03 "-P${stream_profile}")
+  if [[ -n "${ADDITIONAL_MVN_OPTS:-}" ]]; then
+    local -a extra_opts
+    read -r -a extra_opts <<< "${ADDITIONAL_MVN_OPTS}"
+    common_opts+=("${extra_opts[@]}")
+  fi
+  local p2_opts=("${common_opts[@]}")
+  local sdt_opts=("${common_opts[@]}")
+
+  if [[ -n "${SCALA_IDE_COMPILE_CLASSPATH:-}" ]]; then
+    sdt_opts+=("-Dscala.ide.compile.classpath=${SCALA_IDE_COMPILE_CLASSPATH}")
+  fi
+
+  echo
+  echo "==================================================================="
+  echo "Building Scala stream ${stream_label} (${stream_profile})"
+  echo "==================================================================="
+
+  run_mvn "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
+  run_mvn "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
+  run_mvn "${ROOT_DIR}/org.scala-ide.build-toolchain" "${common_opts[@]}" "${GOALS[@]}"
+  run_mvn "${ROOT_DIR}/org.scala-ide.p2-toolchain" "${p2_opts[@]}" "${GOALS[@]}"
+
+  if [[ -n "${SET_VERSIONS:-}" ]]; then
+    run_mvn "${ROOT_DIR}" "${p2_opts[@]}" -Pset-versions exec:java
+  fi
+
+  run_mvn "${ROOT_DIR}/org.scala-ide.sdt.build" "${sdt_opts[@]}" "${GOALS[@]}"
+}
+
+echo "Tycho builds require JDK 17 or newer."
+echo "JAVA_HOME=${JAVA_HOME:-<unset>}"
+echo "BUILD_NUMBER=${BUILD_NUMBER}"
+echo "STREAMS=${SCALA_STREAMS}"
+echo "GOALS=${GOALS[*]}"
+if [[ -n "${SCALA_IDE_COMPILE_CLASSPATH:-}" ]]; then
+  echo "SCALA_IDE_COMPILE_CLASSPATH is set."
+else
+  echo "SCALA_IDE_COMPILE_CLASSPATH is not set."
+fi
+"${MVNW}" --version
+
+for stream in ${SCALA_STREAMS}; do
+  case "${stream}" in
+    scala-2.12) run_stream "scala-2.12" "2.12.21" ;;
+    scala-2.13) run_stream "scala-2.13" "2.13.18" ;;
+    *)
+      echo "Unknown stream profile: ${stream}"
+      exit 1
+      ;;
+  esac
+done

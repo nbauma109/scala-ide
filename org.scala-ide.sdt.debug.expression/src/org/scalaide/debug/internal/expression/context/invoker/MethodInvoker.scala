@@ -63,7 +63,7 @@ trait MethodInvoker extends HasLogger {
    */
   protected final def argumentTypesLoaded(method: Method, context: => JdiContext): Seq[Type] = {
     Try(method.argumentTypes()) match {
-      case Success(types) => types.asScala
+      case Success(types) => types.asScala.toSeq
       case Failure(cnl: ClassNotLoadedException) =>
         context.loadClass(cnl.className)
         argumentTypesLoaded(method, context)
@@ -118,15 +118,15 @@ trait BaseMethodInvoker extends MethodInvoker {
    * Generates arguments for given call - transform boxed primitives to unboxed ones if needed
    */
   protected final def generateArguments(method: Method): Seq[Value] =
-    generateArguments(method.argumentTypes.asScala, methodArgs(method))
+    generateArguments(method.argumentTypes.asScala.toSeq, methodArgs(method))
 
   protected final def generateArgumentsRight(method: Method): Seq[Value] =
-    generateArguments(method.argumentTypes.asScala.reverse, methodArgs(method).reverse).reverse
+    generateArguments(method.argumentTypes.asScala.toSeq.reverse, methodArgs(method).reverse).reverse
 
   // search for all visible methods
   protected def allMethods: Seq[Method] =
     // both visibleMethods and allMethods calls are required to maintain proper order of methods
-    (referenceType.visibleMethods.asScala ++ referenceType.allMethods.asScala).filter(_.name == methodName)
+    (referenceType.visibleMethods.asScala ++ referenceType.allMethods.asScala).filter(_.name == methodName).toSeq
 
   // found methods
   protected def matching: Seq[Method] = allMethods.filter(matchesSignature)

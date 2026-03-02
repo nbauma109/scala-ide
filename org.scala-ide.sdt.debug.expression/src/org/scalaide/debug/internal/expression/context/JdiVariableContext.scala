@@ -39,7 +39,7 @@ private[context] trait JdiVariableContext
   override def implementValue(name: TermName): Option[String] = transformationContext.implementValue(name)
 
   override final def localVariablesNames(): Set[String] =
-    currentFrame().visibleVariables.asScala.map(_.name)(collection.breakOut)
+    currentFrame().visibleVariables.asScala.iterator.map(_.name).toSet
 
   private def tryFindObjectReferenceSignatureForLambda(current: StackFrame) = {
     current.visibleVariables.asScala.collectFirst {

@@ -70,10 +70,10 @@ class ScalaCompletions extends HasLogger {
       compiler.asyncExec {
         for (completion <- completions) {
           val completionProposal = completion match {
-            case compiler.TypeMember(sym, tpe, true, inherited, viaView) if completionFilter(sym, viaView, Some(inherited)) =>
-              Some(compiler.mkCompletionProposal(matchName, start, sym, tpe, inherited, viaView, contextType, icu.scalaProject))
-            case compiler.ScopeMember(sym, tpe, true, _) if completionFilter(sym) =>
-              Some(compiler.mkCompletionProposal(matchName, start, sym, tpe, false, compiler.NoSymbol, contextType, icu.scalaProject))
+            case tm: compiler.TypeMember if tm.accessible && completionFilter(tm.sym, tm.viaView, Some(tm.inherited)) =>
+              Some(compiler.mkCompletionProposal(matchName, start, tm.sym, tm.tpe, tm.inherited, tm.viaView, contextType, icu.scalaProject))
+            case sm: compiler.ScopeMember if sm.accessible && completionFilter(sm.sym) =>
+              Some(compiler.mkCompletionProposal(matchName, start, sm.sym, sm.tpe, false, compiler.NoSymbol, contextType, icu.scalaProject))
             case _ => None
           }
 

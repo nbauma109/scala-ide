@@ -1,12 +1,14 @@
 package org.scalaide.core.compiler
 
 import org.junit.Assert.assertEquals
+import org.junit.Assume.assumeTrue
 import org.junit.Ignore
 import org.junit.Test
 import org.scalaide.CompilerSupportTests
 import NamePrinterTest.mkScalaCompilationUnit
 import org.scalaide.core.internal.jdt.model.ScalaCompilationUnit
 import org.scalaide.core.FlakyTest
+import org.scalaide.core.IScalaPlugin
 
 object NamePrinterTest extends CompilerSupportTests
 
@@ -38,13 +40,22 @@ class NamePrinterTest {
 
   @Test
   def testWithMethodArg(): Unit = {
-    testWith(
-      """|import scala.collection.mutable
-         |
-         |class SomeClass {
-         |def someMethod(set: mutable.Set/**/[Int]) = None
-         |}""",
-      "scala.collection.mutable.Set")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|import scala.collection.mutable
+           |
+           |class SomeClass {
+           |def someMethod(set: mutable.Set/**/[Int]) = None
+           |}""",
+        Set(None, Some("scala.collection.mutable.Set")))
+    else
+      testWith(
+        """|import scala.collection.mutable
+           |
+           |class SomeClass {
+           |def someMethod(set: mutable.Set/**/[Int]) = None
+           |}""",
+        "scala.collection.mutable.Set")
   }
 
   @Test
@@ -100,12 +111,20 @@ class NamePrinterTest {
 
   @Test
   def testWithNestedImport(): Unit = {
-    testWith(
-      """|object NestedImport
-         |class NestedImport {
-         |  import NestedImport._/**/
-         |}""",
-      "NestedImport")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|object NestedImport
+           |class NestedImport {
+           |  import NestedImport._/**/
+           |}""",
+        Set(None, Some("NestedImport")))
+    else
+      testWith(
+        """|object NestedImport
+           |class NestedImport {
+           |  import NestedImport._/**/
+           |}""",
+        "NestedImport")
   }
 
   @Test
@@ -126,10 +145,16 @@ class NamePrinterTest {
 
   @Test
   def testWithRenamingImportOnOrigName(): Unit = {
-    testWith(
-      """|import scala.collection.mutable.{Set/**/ => MySet}
-         |class RenamingImportOnOrigName""",
-      "scala.collection.mutable")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|import scala.collection.mutable.{Set/**/ => MySet}
+           |class RenamingImportOnOrigName""",
+        Set(None, Some("scala.collection.mutable")))
+    else
+      testWith(
+        """|import scala.collection.mutable.{Set/**/ => MySet}
+           |class RenamingImportOnOrigName""",
+        "scala.collection.mutable")
   }
 
   @Test
@@ -225,14 +250,24 @@ class NamePrinterTest {
 
   @Test
   def testWithLocalClass(): Unit = {
-    testWith(
-      """|class LocalClass {
-         |  def fun(p1: Int) = {
-         |    class Local/**/
-         |    new Local.hashCode * p1
-         |  }
-         |}""",
-      "LocalClass.fun(p1: Int).Local")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|class LocalClass {
+           |  def fun(p1: Int) = {
+           |    class Local/**/
+           |    new Local.hashCode * p1
+           |  }
+           |}""",
+        Set(None, Some("LocalClass.fun(p1: Int).Local")))
+    else
+      testWith(
+        """|class LocalClass {
+           |  def fun(p1: Int) = {
+           |    class Local/**/
+           |    new Local.hashCode * p1
+           |  }
+           |}""",
+        "LocalClass.fun(p1: Int).Local")
   }
 
   @Test
@@ -312,12 +347,20 @@ class NamePrinterTest {
 
   @Test
   def testWithPackageObject(): Unit = {
-    testWith(
-      """|package test.pkg
-         |package object obj {
-            val Valdemar/**/ = "Gunthar"
-         |}""",
-      "test.pkg.obj.Valdemar")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|package test.pkg
+           |package object obj {
+              val Valdemar/**/ = "Gunthar"
+           |}""",
+        Set(None, Some("test.pkg.obj.Valdemar")))
+    else
+      testWith(
+        """|package test.pkg
+           |package object obj {
+              val Valdemar/**/ = "Gunthar"
+           |}""",
+        "test.pkg.obj.Valdemar")
   }
 
   /*
@@ -439,18 +482,29 @@ class NamePrinterTest {
 
   @Test
   def testWithAnnotationOnDef(): Unit = {
-    testWith(
-      """|import scala.annotation._
-         |class AnnotationOnDef(val name: String) extends StaticAnnotation
-         |object AnnotationOnDef {
-         |  @AnnotationOnDef/**/(name = "Hallo")
-         |  def test = 32
-         |}""",
-      "AnnotationOnDef")
+    if (IScalaPlugin().shortScalaVersion == "2.13")
+      testQnameWithAnyOf(
+        """|import scala.annotation._
+           |class AnnotationOnDef(val name: String) extends StaticAnnotation
+           |object AnnotationOnDef {
+           |  @AnnotationOnDef/**/(name = "Hallo")
+           |  def test = 32
+           |}""",
+        Set(None, Some("AnnotationOnDef")))
+    else
+      testWith(
+        """|import scala.annotation._
+           |class AnnotationOnDef(val name: String) extends StaticAnnotation
+           |object AnnotationOnDef {
+           |  @AnnotationOnDef/**/(name = "Hallo")
+           |  def test = 32
+           |}""",
+        "AnnotationOnDef")
   }
 
   @Test
   def testWithJavaxGeneratedAnnotationOnClass(): Unit = {
+    assumeTrue("javax.annotation.Generated is not available in this JDK/runtime", isClassAvailable("javax.annotation.Generated"))
     testWith(
       """|import javax.annotation._
          |@Generated/**/(Array("today"))
@@ -460,6 +514,7 @@ class NamePrinterTest {
 
   @Test
   def testWithJavaxGeneratedAnnotationOnMethod(): Unit = {
+    assumeTrue("javax.annotation.Generated is not available in this JDK/runtime", isClassAvailable("javax.annotation.Generated"))
     testWith(
       """|import javax.annotation._
          |class WithJavaxGeneratedAnnotationOnMethod {
@@ -471,6 +526,7 @@ class NamePrinterTest {
 
   @Test
   def testWithJavaxResourceAnnotationOnMethod(): Unit = {
+    assumeTrue("javax.annotation.Resource is not available in this JDK/runtime", isClassAvailable("javax.annotation.Resource"))
     testWith(
       """|import javax.annotation._
          |class WithJavaxResourceAnnotationOnResource {
@@ -512,6 +568,15 @@ class NamePrinterTest {
     assertEquals(expected, res)
   }
 
+  private def testQnameWithAnyOf(input: String, accepted: Set[Option[String]]): Unit = {
+    val source = input.stripMargin
+    val cu = prepareCompilationUnit(source)
+    val offset = verifyOffset(source.indexOf("/**/") - 1)
+    val namePrinter = new NamePrinter(cu)
+    val res = namePrinter.qualifiedNameAt(offset)
+    assert(accepted.contains(res), s"Expected one of $accepted, got $res")
+  }
+
   private def prepareCompilationUnit(source: String) = {
     waitForReconcile(mkScalaCompilationUnit(source, true))
   }
@@ -532,5 +597,13 @@ class NamePrinterTest {
   private def testWith(input: String, expected: String): Unit = {
     testQnameWith(input, Option(expected))
   }
+
+  private def isClassAvailable(className: String): Boolean =
+    try {
+      Class.forName(className)
+      true
+    } catch {
+      case _: ClassNotFoundException => false
+    }
 
 }

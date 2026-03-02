@@ -4,9 +4,9 @@
 
 Scala IDE provides advanced editing and debugging support for the development of pure Scala and mixed Scala-Java applications inside Eclipse
 
-Scala IDE is Open Source and available under the [Scala License](https://github.com/scala-ide/scala-ide/blob/master/LICENSE).
+Scala IDE is Open Source and available under the [Scala License](https://github.com/nbauma109/scala-ide/blob/master/LICENSE).
 
-Learn more at http://scala-ide.org.
+Learn more at https://nbauma109.github.io/scala-ide.
 
 ## Report A Bug
 
@@ -14,8 +14,8 @@ File a ticket in our [issue tracker](http://scala-ide-portfolio.assembla.com/spa
 
 ## How To Build
 
-Read [Building the Scala IDE](http://scala-ide.org/docs/dev/building/building.html).
+Read [Building the Scala IDE](https://nbauma109.github.io/scala-ide/docs/dev/building/building.html).
 
 ## Contributing
 
-Read [Contributing to Scala IDE](https://github.com/scala-ide/scala-ide/blob/master/CONTRIBUTING.md).
+Read [Contributing to Scala IDE](https://github.com/nbauma109/scala-ide/blob/master/CONTRIBUTING.md).

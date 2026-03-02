@@ -87,7 +87,7 @@ class GlobalRename extends RefactoringExecutorWithWizard {
 
       refactoring.global.asyncExec {
         refactoring.doesNameCollide(name, selectedSymbol)
-      } getOption() map {
+      }.getOption() map {
         case Nil => ()
         case collisions =>
           val names = collisions map (s => s.fullName) mkString ", "

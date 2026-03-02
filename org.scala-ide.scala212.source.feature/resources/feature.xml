@@ -2,10 +2,10 @@
 <feature
       id="org.scala-ide.scala212.source.feature"
       label="Scala ${scala212.version} sources"
-      version="4.7.1.qualifier"
-      provider-name="scala-ide.org">
+      version="5.0.0.qualifier"
+      provider-name="nbauma109">
 
-   <description url="http://scala-ide.org">
+   <description url="https://nbauma109.github.io/scala-ide">
      Sources for Scala ${scala212.version} library, compiler and associated jars.
    </description>
 
@@ -53,7 +53,7 @@ SUCH DAMAGE.
    </license>
 
    <url>
-      <update label="Scala IDE for Eclipse update site" url="http://download.scala-ide.org/update-current"/>
+      <update label="Scala IDE for Eclipse update site" url="https://nbauma109.github.io/scala-ide/update-current"/>
    </url>
 
    <plugin

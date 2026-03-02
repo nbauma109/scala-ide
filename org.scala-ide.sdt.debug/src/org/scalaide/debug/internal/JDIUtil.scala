@@ -17,7 +17,7 @@ object JDIUtil {
     import scala.collection.JavaConverters._
 
     try {
-      method.allLineLocations.asScala.map(_.lineNumber)
+      method.allLineLocations.asScala.iterator.map(_.lineNumber).toList
     } catch {
       case _: AbsentInformationException =>
         Nil
@@ -29,14 +29,14 @@ object JDIUtil {
    */
   def referenceTypeToLocations(referenceType: ReferenceType): Seq[Location] = {
     import scala.collection.JavaConverters._
-    referenceType.methods.asScala.flatMap(
+    referenceType.methods.asScala.iterator.flatMap(
       method =>
         try {
-          method.allLineLocations.asScala
+          method.allLineLocations.asScala.iterator
         } catch {
           case _: AbsentInformationException =>
-            Nil
-        })
+            Iterator.empty
+        }).toList
   }
 
   import scala.util.control.Exception

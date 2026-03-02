@@ -28,13 +28,19 @@ class AbstractSymbolClassifierTest {
   }
 
   protected def checkSymbolClassification(source: String, locationTemplate: String, regionTagToSymbolType: Map[String, SymbolType]): Unit = {
-    checkSymbolInfoClassification(source, locationTemplate, regionTagToSymbolType.mapValues(symbolType => SymbolInfo(symbolType, Nil, deprecated = false, inInterpolatedString = false)))
+    val regionTagToSymbolInfo = regionTagToSymbolType.iterator.map {
+      case (regionTag, symbolType) =>
+        regionTag -> SymbolInfo(symbolType, Nil, deprecated = false, inInterpolatedString = false)
+    }.toMap
+    checkSymbolInfoClassification(source, locationTemplate, regionTagToSymbolInfo)
   }
 
   protected def checkSymbolInfoClassification(source: String, locationTemplate: String, regionTagToSymbolInfo: Map[String, SymbolInfo], delimiter: Char = '$'): Unit = {
     val expectedRegionToSymbolNameMap: Map[IRegion, String] = RegionParser.delimitedRegions(locationTemplate, delimiter)
     val expectedRegionsAndSymbols: List[(IRegion, SymbolInfo)] =
-      expectedRegionToSymbolNameMap.mapValues(regionTagToSymbolInfo).toList sortBy regionOffset
+      expectedRegionToSymbolNameMap.iterator.map {
+        case (region, tag) => region -> regionTagToSymbolInfo(tag)
+      }.toList sortBy regionOffset
     val actualRegionsAndSymbols: List[(IRegion, SymbolInfo)] =
       classifySymbols(source, expectedRegionToSymbolNameMap.keySet).map{case (region, symbolInfo) => (region, symbolInfo.copy(regions = Nil))}.sortBy(regionOffset).distinct
     if (expectedRegionsAndSymbols != actualRegionsAndSymbols) {

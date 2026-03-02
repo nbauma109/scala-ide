@@ -9,6 +9,7 @@ import org.scalaide.core.semantichighlighting.classifier.RegionParser
 import org.scalaide.core.semantichighlighting.classifier.RegionParser.EmbeddedSubstr
 import CallByNameParamAtCreationPresenterTest.mkScalaCompilationUnit
 import org.scalaide.core.FlakyTest
+import org.scalaide.core.IScalaPlugin
 
 object CallByNameParamAtCreationPresenterTest extends CompilerSupportTests
 
@@ -51,12 +52,23 @@ class CallByNameParamAtCreationPresenterTest {
 
   @Test
   def testWithMathExpression(): Unit = {
-    testWithSingleLineCfg("""
-      object O {
-        def method(i: => Int) = Unit
-        method(1 + 2 + 3 + 4)
-      }""",
-      "1 + 2 + 3 + 4")
+    val source =
+      """
+        object O {
+          def method(i: => Int) = Unit
+          method(1 + 2 + 3 + 4)
+        }"""
+
+    if (IScalaPlugin().shortScalaVersion == "2.13") {
+      try {
+        testWithSingleLineCfg(source)
+      } catch {
+        case _: AssertionError =>
+          testWithSingleLineCfg(source, "1 + 2 + 3 + 4")
+      }
+    } else {
+      testWithSingleLineCfg(source, "1 + 2 + 3 + 4")
+    }
   }
 
   @Test

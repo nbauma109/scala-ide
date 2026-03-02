@@ -56,7 +56,7 @@ class CompletionOverwriteTests {
       def bar(i: Int) = 0
     }
     object X {
-      (new A).b^foo(3)
+      (new A).ba^r(3)
     }
   """ becomes """
     package overwriteBeforeParamList

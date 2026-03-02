@@ -173,7 +173,7 @@ trait FullProjectIndex extends HasLogger {
         project.presentationCompiler { compiler =>
           compiler.asyncExec {
             refactoring.CompilationUnitIndex(tree)
-          } getOption()
+          }.getOption()
         }.flatten.toList
       }
     } else Nil

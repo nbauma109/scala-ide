@@ -5,7 +5,7 @@ package org.scalaide.debug.internal.hcr
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import scala.collection.mutable.Publisher
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
@@ -29,10 +29,10 @@ import ScalaHotCodeReplaceManager.HCRSucceeded
 
 private[internal] object ScalaHotCodeReplaceManager {
 
-  private[hcr] sealed trait HCRResult
-  private[hcr] case class HCRSucceeded(launchName: String) extends HCRResult
-  private[hcr] case class HCRNotSupported(launchName: String) extends HCRResult
-  private[hcr] case class HCRFailed(launchName: String) extends HCRResult
+  private[internal] sealed trait HCRResult
+  private[internal] case class HCRSucceeded(launchName: String) extends HCRResult
+  private[internal] case class HCRNotSupported(launchName: String) extends HCRResult
+  private[internal] case class HCRFailed(launchName: String) extends HCRResult
 
   def create(hcrExecutor: HotCodeReplaceExecutor): Option[ScalaHotCodeReplaceManager] = {
     if (HotCodeReplacePreferences.hcrEnabled)
@@ -121,11 +121,28 @@ class ScalaHotCodeReplaceManager private (hcrExecutor: HotCodeReplaceExecutor) e
   }
 }
 
-private[internal] trait HotCodeReplaceExecutor extends Publisher[HCRResult] with HasLogger {
+private[internal] trait HotCodeReplaceExecutor extends HasLogger {
   import scala.collection.JavaConverters._
   import scala.concurrent.ExecutionContext.Implicits.global
 
   protected val debugTarget: ScalaDebugTarget
+  private val listeners: ListBuffer[HCRResult => Unit] = ListBuffer.empty
+
+  def subscribe(listener: HCRResult => Unit): Unit = listeners.synchronized {
+    listeners += listener
+  }
+
+  def removeSubscriptions(): Unit = listeners.synchronized {
+    listeners.clear()
+  }
+
+  def removeSubscription(listener: HCRResult => Unit): Unit = listeners.synchronized {
+    listeners -= listener
+  }
+
+  protected def publish(event: HCRResult): Unit = listeners.synchronized {
+    listeners.foreach(listener => listener(event))
+  }
 
   /**
    * If VM supports HCR, it replaces classes already loaded to VM using new class file versions.
@@ -205,11 +222,11 @@ private[internal] trait HotCodeReplaceExecutor extends Publisher[HCRResult] with
   private def isLoadedToVM(changedClass: ClassFileResource) = !classesByName(changedClass.fullyQualifiedName).isEmpty()
 
   private def getTypesToBytes(changedClasses: Seq[ClassFileResource]): Map[ReferenceType, Array[Byte]] =
-    changedClasses.flatMap { changedClass =>
-      val classes: Seq[ReferenceType] = classesByName(changedClass.fullyQualifiedName).asScala
+    changedClasses.iterator.flatMap { changedClass =>
+      val classes: Seq[ReferenceType] = classesByName(changedClass.fullyQualifiedName).asScala.toList
       val bytes = org.eclipse.jdt.internal.core.util.Util.getResourceContentsAsByteArray(changedClass.classFile)
       classes.map(_ -> bytes)
-    }(collection.breakOut)
+    }.toMap
 
   private def classesByName(name: String) = debugTarget.virtualMachine.classesByName(name)
 

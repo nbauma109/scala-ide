@@ -145,7 +145,7 @@ class JUnit4TestFinder extends ITestFinder with ISearchMethods with HasLogger {
       val req = new PotentialTestFilesCollector(pm)
       engine.search(scope, req, TEST_PATTERN.pattern, pm)
       pm.done()
-      req.files
+      req.files.toList
     }
   }
 

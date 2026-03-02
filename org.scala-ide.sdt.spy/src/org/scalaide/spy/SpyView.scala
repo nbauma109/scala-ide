@@ -20,7 +20,6 @@ import org.scalaide.ui.editor.InteractiveCompilationUnitEditor
 import org.scalaide.core.compiler.InteractiveCompilationUnit
 import org.scalaide.core.compiler.IScalaPresentationCompiler
 import org.scalaide.core.compiler.IScalaPresentationCompiler.Implicits._
-import org.scalaide.util.internal.Suppress
 
 class SpyView extends ViewPart with HasLogger {
   private var textArea: Text = _
@@ -127,13 +126,13 @@ class SpyView extends ViewPart with HasLogger {
 
                 // inlined `treeBrowser.browse` because we don't want to block waiting for the frame to
                 // the frame to close
-                val tm = new ASTTreeModel(tree)
+                val tm = new ASTTreeModel(tree.asInstanceOf[ProgramTree])
 
                 val frame = new BrowserFrame()
                 frame.setTreeModel(tm)
 
-                // throw-away lock, since we don't need to wait for the frame
-                frame.createFrame(new Suppress.DeprecatedWarning.Lock())
+                // `createFrame` takes different lock types between Scala streams.
+                createFrameWithStreamCompatibleLock(frame)
               case Right(ex) =>
                 eclipseLog.warn("Could not retrieve typed tree", ex)
             }
@@ -143,6 +142,26 @@ class SpyView extends ViewPart with HasLogger {
     }
 
     browseAction.setImageDescriptor(Images.TREE_ICON_DESCRIPTOR)
+  }
+
+  private def createFrameWithStreamCompatibleLock(frame: AnyRef): Unit = {
+    val createFrameMethods = frame.getClass.getMethods.filter { method =>
+      method.getName == "createFrame" && method.getParameterCount == 1
+    }
+
+    val method = createFrameMethods.headOption.getOrElse(
+      throw new IllegalStateException("TreeBrowser#createFrame with one argument was not found"))
+    val lockClass = method.getParameterTypes.head
+    val lockArg: AnyRef =
+      if (lockClass.getName == "scala.concurrent.Lock") {
+        lockClass.getDeclaredConstructor().newInstance().asInstanceOf[AnyRef]
+      } else if (lockClass == classOf[java.util.concurrent.CountDownLatch]) {
+        new java.util.concurrent.CountDownLatch(1)
+      } else {
+        throw new IllegalStateException(s"Unsupported TreeBrowser lock type: ${lockClass.getName}")
+      }
+
+    method.invoke(frame, lockArg)
   }
 }
 

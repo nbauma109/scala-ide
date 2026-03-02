@@ -3,9 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.scala-ide</groupId>
+    <groupId>io.github.nbauma109</groupId>
     <artifactId>org.scala-ide.sdt.build</artifactId>
-    <version>4.7.1-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <relativePath>../org.scala-ide.sdt.build/pom.xml</relativePath>
   </parent>
   <artifactId>org.scala-ide.sdt.debug</artifactId>
@@ -25,36 +25,36 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>${scala212.version}</version>
+      <version>${scala.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-reflect</artifactId>
-      <version>${scala212.version}</version>
+      <version>${scala.version}</version>
     </dependency>
     <!-- toolchain, Scala compiler -->
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
-      <version>${scala212.version}</version>
+      <version>${scala.version}</version>
     </dependency>
 	<dependency>
-	  <groupId>org.scala-refactoring</groupId>
-	  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
+	  <groupId>io.github.nbauma109</groupId>
+	  <artifactId>org.scala-refactoring.library_${scala-refactoring.artifact.suffix}</artifactId>
 	  <version>${scala-refactoring.version}</version>
 	</dependency>
 	<dependency>
 	  <groupId>org.scala-lang.modules</groupId>
 	  <artifactId>scala-xml_${scala.minor.version}</artifactId>
-	  <version>${scala212.scala-xml.version}</version>
+	  <version>${scala.scala-xml.version}</version>
 	</dependency>
 	<dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
 	  <artifactId>org.scala-ide.zinc.library</artifactId>
 	  <version>${project.version}</version>
 	</dependency>
 	<dependency>
-      <groupId>org.scala-ide</groupId>
+      <groupId>io.github.nbauma109</groupId>
 	  <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
 	  <version>${project.version}</version>
 	</dependency>
@@ -92,7 +92,7 @@
           <sourceDirectories>
             <dir>src</dir>
           </sourceDirectories>
-          <configLocation>../org.scala-ide.sdt.core/scala-ide-style-config.xml</configLocation>
+          <configLocation>${project.basedir}/../org.scala-ide.sdt.core/scala-ide-style-config.xml</configLocation>
         </configuration>
       </plugin>
       <plugin>
@@ -121,31 +121,31 @@
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-library</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-reflect</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
 			    <!-- toolchain, Scala compiler -->
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-compiler</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
 				<artifactItem>
-				  <groupId>org.scala-refactoring</groupId>
-				  <artifactId>org.scala-refactoring.library_2.12.2</artifactId>
+				  <groupId>io.github.nbauma109</groupId>
+				  <artifactId>org.scala-refactoring.library_${scala-refactoring.artifact.suffix}</artifactId>
 				  <version>${scala-refactoring.version}</version>
 				</artifactItem>
 				<artifactItem>
-			      <groupId>org.scala-ide</groupId>
+			      <groupId>io.github.nbauma109</groupId>
 				  <artifactId>org.scala-ide.zinc.library</artifactId>
 				  <version>${project.version}</version>
 				</artifactItem>
 				<artifactItem>
-			      <groupId>org.scala-ide</groupId>
+			      <groupId>io.github.nbauma109</groupId>
 				  <artifactId>org.scala-ide.zinc.compiler.bridge</artifactId>
 				  <version>${project.version}</version>
 				</artifactItem>

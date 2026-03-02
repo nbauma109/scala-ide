@@ -466,7 +466,7 @@ private[model] object ScalaDebugTargetSubordinate {
   import scala.concurrent.ExecutionContext.Implicits.global
   def apply(threadStartRequest: ThreadStartRequest, threadDeathRequest: ThreadDeathRequest, debugTarget: ScalaDebugTarget): ScalaDebugTargetSubordinate = {
     val subordinate = new ScalaDebugTargetSubordinate(threadStartRequest, threadDeathRequest, debugTarget)
-    if (!IScalaPlugin().headlessMode) subordinate.subscribe(HotCodeReplaceListener)
+    if (!IScalaPlugin().headlessMode) subordinate.subscribe(HotCodeReplaceListener.onHcrResult _)
     subordinate
   }
 }

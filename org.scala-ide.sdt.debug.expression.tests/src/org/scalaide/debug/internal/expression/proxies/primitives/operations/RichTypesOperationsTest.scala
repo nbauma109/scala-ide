@@ -86,10 +86,14 @@ class RichTypesOperationsTest extends BaseIntegrationTest(RichTypesOperationsTes
 
   @Test
   def testRangeOperationsOnFractional(): Unit = {
-    eval("(double to double2 by 1).mkString", (double to double2 by 1).mkString, Java.String)
-    eval("double.to(double2, 0.5).mkString", double.to(double2, 0.5).mkString, Java.String)
-    eval("(double until double2 by 1).mkString", (double until double2 by 1).mkString, Java.String)
-    eval("double.until(double2, 0.5).mkString", double.until(double2, 0.5).mkString, Java.String)
+    eval("(BigDecimal(double) to BigDecimal(double2) by BigDecimal(1)).mkString",
+      (BigDecimal(double) to BigDecimal(double2) by BigDecimal(1)).mkString, Java.String)
+    eval("(BigDecimal(double) to BigDecimal(double2) by BigDecimal(0.5)).mkString",
+      (BigDecimal(double) to BigDecimal(double2) by BigDecimal(0.5)).mkString, Java.String)
+    eval("(BigDecimal(double) until BigDecimal(double2) by BigDecimal(1)).mkString",
+      (BigDecimal(double) until BigDecimal(double2) by BigDecimal(1)).mkString, Java.String)
+    eval("(BigDecimal(double) until BigDecimal(double2) by BigDecimal(0.5)).mkString",
+      (BigDecimal(double) until BigDecimal(double2) by BigDecimal(0.5)).mkString, Java.String)
   }
 
   @Test

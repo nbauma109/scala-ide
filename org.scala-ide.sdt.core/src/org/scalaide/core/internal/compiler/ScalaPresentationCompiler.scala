@@ -51,6 +51,10 @@ import scalariform.lexer.ScalaLexerException
 import org.scalaide.core.completion.ProposalRelevanceCalculator
 import java.util.concurrent.atomic.AtomicLong
 
+private[compiler] trait ScaladocModeCompat {
+  def forScaladoc: Boolean = true
+}
+
 class ScalaPresentationCompiler(private[compiler] val name: String, _settings: Settings)
   extends Global(_settings, new ScalaPresentationCompiler.PresentationReporter(name), name)
   with ScaladocGlobalCompatibilityTrait
@@ -61,6 +65,7 @@ class ScalaPresentationCompiler(private[compiler] val name: String, _settings: S
   with ScalaJavaMapper
   with JavaSig
   with LocateSymbol
+  with ScaladocModeCompat
   with CompilerApiExtensions
   with IScalaPresentationCompiler
   with HasLogger

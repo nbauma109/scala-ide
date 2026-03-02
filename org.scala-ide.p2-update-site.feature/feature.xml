@@ -2,11 +2,11 @@
 <feature
       id="org.scala-ide.p2-update-site.feature"
       label="Scala IDE Refactoring"
-      version="4.7.1.qualifier"
-      provider-name="scala-ide.org"
+      version="5.0.0.qualifier"
+      provider-name="nbauma109"
       plugin="org.scala-refactoring.library">
 
-   <description url="http://scala-ide.org">
+   <description url="https://nbauma109.github.io/scala-ide">
      scala-refactoring integration in Scala IDE
    </description>
 

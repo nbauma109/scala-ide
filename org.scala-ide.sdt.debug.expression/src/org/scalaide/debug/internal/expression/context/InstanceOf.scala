@@ -67,11 +67,15 @@ private[context] trait InstanceOf {
       typeName == Scala.Array(scalaComponentType)
     case interface: InterfaceType =>
       val parents: Set[String] = (interface +: interface.subinterfaces.asScala)
-        .map(_.name)(collection.breakOut)
+        .iterator
+        .map(_.name)
+        .toSet
       parents.contains(typeName)
     case clazz: ClassType =>
       val parents: Set[String] = ((clazz +: clazz.allInterfaces.asScala) ++ superclasses(clazz))
-        .map(_.name)(collection.breakOut)
+        .iterator
+        .map(_.name)
+        .toSet
       parents.contains(typeName)
   }
 

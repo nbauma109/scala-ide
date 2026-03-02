@@ -371,7 +371,7 @@ object FormatterPreferencePage {
 
   val ImportExportDialogPath = "formatter.importExportDialogPath"
 
-  val ScalariformDocUrl = "https://github.com/scala-ide/scalariform#preferences"
+  val ScalariformDocUrl = "https://github.com/nbauma109/scalariform#preferences"
 
   val SpacesPreviewText = """import a.{b, c, d}
 

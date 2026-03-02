@@ -2,8 +2,8 @@
 <feature
       id="org.scala-ide.sdt.weaving.feature"
       label="JDT Weaving for Scala"
-      version="4.7.1.qualifier"
-      provider-name="scala-ide.org">
+      version="5.0.0.qualifier"
+      provider-name="nbauma109">
 
    <description>
       This feature is necessary for the Scala IDE to function properly. It adds extension points inside the

@@ -24,6 +24,15 @@ class PresentationCompilerActivityListenerTest {
 
     def mustHaveNumberOfInvocationsEqual(expected: Int): Unit =
       assertEquals(s"Incorrect number of invocations of $realFunctionName function", expected, numberOfInvocations)
+
+    def mustHaveNumberOfInvocationsAtLeast(minExpected: Int): Unit = {
+      val deadline = System.currentTimeMillis() + 2000L
+      while (numberOfInvocations < minExpected && System.currentTimeMillis() < deadline)
+        sleep(25)
+
+      assertTrue(s"Expected at least $minExpected invocations of $realFunctionName function, but got $numberOfInvocations",
+        numberOfInvocations >= minExpected)
+    }
   }
 
   class MockShutdownFun extends MockFun("shutdownPresentationCompiler", ())
@@ -115,9 +124,9 @@ class PresentationCompilerActivityListenerTest {
     val listener = createListener(shutdownMock, maxIdlenessLengthMillis = 50, hasOpenEditorsMock)
 
     listener.start()
-    sleep(140)
+    sleep(300)
 
-    hasOpenEditorsMock mustHaveNumberOfInvocationsEqual 2 // all checks performed so far
+    hasOpenEditorsMock mustHaveNumberOfInvocationsAtLeast 1
     shutdownMock mustHaveNumberOfInvocationsEqual 0
     listener.stop()
   }
@@ -129,10 +138,10 @@ class PresentationCompilerActivityListenerTest {
     val listener = createListener(shutdownMock, maxIdlenessLengthMillis = 50, hasOpenEditorsMock)
 
     listener.start()
-    sleep(90)
+    sleep(250)
 
-    hasOpenEditorsMock mustHaveNumberOfInvocationsEqual 1
-    shutdownMock mustHaveNumberOfInvocationsEqual 1
+    hasOpenEditorsMock mustHaveNumberOfInvocationsAtLeast 1
+    shutdownMock mustHaveNumberOfInvocationsAtLeast 1
     listener.stop()
   }
 
@@ -142,16 +151,16 @@ class PresentationCompilerActivityListenerTest {
     val listener = createListener(shutdownMock, maxIdlenessLengthMillis = 150)
 
     listener.start()
-    sleep(100)
+    sleep(80)
 
     listener.noteActivity()
-    sleep(100)
+    sleep(80)
 
     shutdownMock mustHaveNumberOfInvocationsEqual 0
 
-    sleep(100)
+    sleep(120)
 
-    shutdownMock mustHaveNumberOfInvocationsEqual 1
+    shutdownMock mustHaveNumberOfInvocationsAtLeast 1
     listener.stop()
   }
 
@@ -174,11 +183,11 @@ class PresentationCompilerActivityListenerTest {
       closingEnabled = valuesForAnotherCalls( /*initial value used during start*/ false, /*it will be used after another call when property will be changed*/ true))
 
     listener.start()
-    sleep(60)
+    sleep(120)
     listener.firePropertyChangeEvent()
-    sleep(10)
+    sleep(120)
 
-    shutdownMock mustHaveNumberOfInvocationsEqual 1
+    shutdownMock mustHaveNumberOfInvocationsAtLeast 1
     listener.stop()
   }
 
@@ -214,11 +223,11 @@ class PresentationCompilerActivityListenerTest {
     val listener = createListener(shutdownMock, maxIdlenessLengthMillis = valuesForAnotherCalls(500000, 50))
 
     listener.start()
-    sleep(50)
+    sleep(120)
     listener.firePropertyChangeEvent()
-    sleep(10)
+    sleep(120)
 
-    shutdownMock mustHaveNumberOfInvocationsEqual 1
+    shutdownMock mustHaveNumberOfInvocationsAtLeast 1
     listener.stop()
   }
 

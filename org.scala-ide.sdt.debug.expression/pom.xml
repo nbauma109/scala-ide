@@ -3,9 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.scala-ide</groupId>
+    <groupId>io.github.nbauma109</groupId>
     <artifactId>org.scala-ide.sdt.build</artifactId>
-    <version>4.7.1-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <relativePath>../org.scala-ide.sdt.build/pom.xml</relativePath>
   </parent>
   <artifactId>org.scala-ide.sdt.debug.expression</artifactId>
@@ -41,18 +41,18 @@
 	    <dependency>
 	      <groupId>org.scala-lang</groupId>
 	      <artifactId>scala-library</artifactId>
-	      <version>${scala212.version}</version>
+	      <version>${scala.version}</version>
 	    </dependency>
 	    <dependency>
 	      <groupId>org.scala-lang</groupId>
 	      <artifactId>scala-reflect</artifactId>
-	      <version>${scala212.version}</version>
+	      <version>${scala.version}</version>
 	    </dependency>
 	    <!-- toolchain, Scala compiler -->
 	    <dependency>
 	      <groupId>org.scala-lang</groupId>
 	      <artifactId>scala-compiler</artifactId>
-	      <version>${scala212.version}</version>
+	      <version>${scala.version}</version>
 	    </dependency>
       </dependencies>
     </profile>
@@ -68,7 +68,7 @@
           <sourceDirectories>
             <dir>src</dir>
           </sourceDirectories>
-          <configLocation>../org.scala-ide.sdt.core/scala-ide-style-config.xml</configLocation>
+          <configLocation>${project.basedir}/../org.scala-ide.sdt.core/scala-ide-style-config.xml</configLocation>
         </configuration>
       </plugin>
       <plugin>
@@ -89,18 +89,18 @@
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-library</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-reflect</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
 			    <!-- toolchain, Scala compiler -->
 			    <artifactItem>
 			      <groupId>org.scala-lang</groupId>
 			      <artifactId>scala-compiler</artifactId>
-			      <version>${scala212.version}</version>
+			      <version>${scala.version}</version>
 			    </artifactItem>
               </artifactItems>
             </configuration>

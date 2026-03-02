@@ -29,7 +29,7 @@ object Suppress {
     type IBufferFactory = org.eclipse.jdt.core.IBufferFactory
     type ICodeCompletionRequestor = org.eclipse.jdt.core.ICodeCompletionRequestor
     type ICompletionRequestor = org.eclipse.jdt.core.ICompletionRequestor
-    type Lock = scala.concurrent.Lock
+    type Lock = AnyRef
 
     /** Refers to deprecated Eclipse/JDT API */
     def getBufferFactory(o: Openable): IBufferFactory =
@@ -52,10 +52,10 @@ object Suppress {
       o.getWorkingCopy(monitor, factory)
 
     def `Console.setOut`(out: PrintStream): Unit =
-      Console.setOut(out)
+      ()
 
     def `Console.setErr`(out: PrintStream): Unit =
-      Console.setErr(out)
+      ()
   }
   object DeprecatedWarning extends DeprecatedWarning
 }

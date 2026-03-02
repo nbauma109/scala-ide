@@ -142,13 +142,41 @@ object EclipseRepl
     def interpreter(i: Init): Interpreter
   }
 
+  private def createInterpreter(settings: Settings): scala.tools.nsc.interpreter.IMain = {
+    val iMainClass = classOf[scala.tools.nsc.interpreter.IMain]
+    try {
+      iMainClass.getConstructor(classOf[Settings]).newInstance(settings)
+    } catch {
+      case _: NoSuchMethodException =>
+        val replReporterClass = Class.forName("scala.tools.nsc.interpreter.shell.ReplReporterImpl")
+        val reporter = replReporterClass
+          .getConstructor(classOf[Settings])
+          .newInstance(settings)
+          .asInstanceOf[scala.tools.nsc.interpreter.ReplReporter]
+        iMainClass
+          .getConstructor(classOf[Settings], classOf[scala.tools.nsc.interpreter.ReplReporter])
+          .newInstance(settings, reporter)
+    }
+  }
+
+  private def initializeInterpreter(intp: scala.tools.nsc.interpreter.IMain): Unit = {
+    try {
+      intp.getClass.getMethod("initializeSynchronous").invoke(intp)
+      ()
+    } catch {
+      case _: NoSuchMethodException =>
+        intp.getClass.getMethod("initializeCompiler").invoke(intp)
+        ()
+    }
+  }
+
   /** Returns instances of the Scala Interpreter. */
   object DefaultBuilder extends Builder
   {
     def interpreter(i: Init) = new Interpreter
     {
-      val intp = new scala.tools.nsc.interpreter.IMain(i)
-      intp.initializeSynchronous()
+      val intp = createInterpreter(i)
+      initializeInterpreter(intp)
 
       def interpret(e: Exec) = {
         val r = intp.interpret(e)

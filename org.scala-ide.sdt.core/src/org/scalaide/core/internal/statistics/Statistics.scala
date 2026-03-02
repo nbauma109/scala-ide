@@ -51,13 +51,13 @@ class Statistics extends AnyRef with HasLogger {
     ScalaIdeDataStore.validate(ScalaIdeDataStore.statisticsLocation) { file ⇒
       val stats = read(file)
       firstStat = stats.firstStat
-      cache = stats.featureData.map(stat ⇒ stat.feature → stat)(collection.breakOut)
+      cache = stats.featureData.map(stat ⇒ stat.feature → stat).toMap
     }
   }
 
   private def writeStats(): Unit = {
     if (firstStat == NoStat) firstStat = System.currentTimeMillis
-    val stats = StatData(firstStat, cache.map(_._2)(collection.breakOut))
+    val stats = StatData(firstStat, cache.values.toArray)
 
     ScalaIdeDataStore.validate(ScalaIdeDataStore.statisticsLocation) { file ⇒
       write(file, stats)

@@ -146,6 +146,21 @@ trait UnboundValuesSupport {
     private def isLocalVar(termName: TermName): Boolean =
       localVariablesNames.contains(termName.encodedName.toString)
 
+    private def namedArgName(tree: Tree): Option[Name] = {
+      val prefix = tree.productPrefix
+      val isNamedArg = prefix == "AssignOrNamedArg" || prefix == "NamedArg"
+      if (!isNamedArg) None
+      else tree match {
+        case Assign(Ident(name), _) => Some(name)
+        case _ if tree.productArity > 0 =>
+          tree.productElement(0) match {
+            case Ident(name) => Some(name)
+            case _ => None
+          }
+        case _ => None
+      }
+    }
+
     /**
      * Collects unbound names in tree.
      * Keeps track of all name bindings in order to collect unbound names.
@@ -158,36 +173,41 @@ trait UnboundValuesSupport {
           if (isLocalVar(name)) nameManager.registerUnboundName(name, tree, isLocal = true)
           super.traverse(value)
 
-        // all identifiers
-        case Ident(name: TermName) if !scopeManager.insideImport =>
-          nameManager.registerUnboundName(name, tree, isLocal = false)
-
-        // like: case ala: Ala =>
-        case CaseDef(Bind(name, _), _, _) =>
-          nameManager.registerNameBinding(name, tree)
-          super.traverse(tree)
-
         // named args like: foo(ala = "ola")
-        case AssignOrNamedArg(Ident(name), _) =>
-          nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
-          super.traverse(tree)
+        case _ =>
+          namedArgName(tree) match {
+            case Some(name) =>
+              nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
+              super.traverse(tree)
+            case None =>
+              tree match {
+                // like: case ala: Ala =>
+                case CaseDef(Bind(name, _), _, _) =>
+                  nameManager.registerNameBinding(name, tree)
+                  super.traverse(tree)
 
-        // for binding in pattern matching like: ala @ Ala(name)
-        // and, apparently, for values in for-comprehension
-        case Bind(name, _) =>
-          nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
-          super.traverse(tree)
+                // for binding in pattern matching like: ala @ Ala(name)
+                // and, apparently, for values in for-comprehension
+                case Bind(name, _) =>
+                  nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
+                  super.traverse(tree)
 
-        // value definition like: val ala = "Ala"
-        case ValDef(_, name, _, impl) =>
-          nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
-          super.traverse(impl)
+                // value definition like: val ala = "Ala"
+                case ValDef(_, name, _, impl) =>
+                  nameManager.registerNameBinding(name, scopeManager.findCurrentScopeTree())
+                  super.traverse(impl)
 
-        //typed expression like x: Int
-        case Typed(impl, _) =>
-          super.traverse(impl)
+                //typed expression like x: Int
+                case Typed(impl, _) =>
+                  super.traverse(impl)
 
-        case _ => super.traverse(tree)
+                // all identifiers
+                case Ident(name: TermName) if !scopeManager.insideImport =>
+                  nameManager.registerUnboundName(name, tree, isLocal = false)
+
+                case _ => super.traverse(tree)
+              }
+          }
       }
       scopeManager.popTree()
     }

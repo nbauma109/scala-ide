@@ -1,9 +1,11 @@
 package org.scalaide.core.semantichighlighting.classifier
 
+import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.decorators.semantichighlighting.classifier.SymbolTypes._
 import org.junit._
 
 class LocalValTest extends AbstractSymbolClassifierTest {
+  private val isScala213: Boolean = IScalaPlugin().shortScalaVersion == "2.13"
 
   @Test
   def basic_decl(): Unit = {
@@ -76,20 +78,29 @@ class LocalValTest extends AbstractSymbolClassifierTest {
 
   @Test
   def pair_pattern(): Unit = {
-    checkSymbolClassification("""
+    val source = """
       object A {
         {
            val (xxxxx, yyyyy) = (1, 2)
            xxxxx * yyyyy
         }
-      }""", """
+      }"""
+    if (isScala213)
+      checkSymbolClassification(source, """
+      object A {
+        {
+           val (xxxxx, yyyyy) = (1, 2)
+           $LV1$ * $LV2$
+        }
+      }""", Map("LV1" -> LocalVal, "LV2" -> LocalVal))
+    else
+      checkSymbolClassification(source, """
       object A {
         {
            val ($LV1$, $LV2$) = (1, 2)
            $LV2$ * $LV2$
         }
-      }""",
-      Map("LV1" -> LocalVal, "LV2" -> LocalVal))
+      }""", Map("LV1" -> LocalVal, "LV2" -> LocalVal))
   }
 
   @Test

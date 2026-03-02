@@ -60,12 +60,12 @@ case class ExtendedContext(currentFrame: StackFrame)
     }
     currentTransformation.map {
       transformation =>
-        val nestedMethodsImplementations = for {
+        val nestedMethodsImplementations: Seq[NestedMethodImplementation] = for {
           thisEntry <- transformation.thisHistory
           candidateMethod <- thisEntry.referenceType.methods().asScala if isCandidate(candidateMethod)
         } yield NestedMethodImplementation(transformation.nameMap(thisEntry),
             candidateMethod.name(),
-            candidateMethod.arguments().asScala.map(_.name()))
+            candidateMethod.arguments().asScala.iterator.map(_.name()).toSeq)
 
         nestedMethodsImplementations match {
           case Seq(onlyCandidate) =>

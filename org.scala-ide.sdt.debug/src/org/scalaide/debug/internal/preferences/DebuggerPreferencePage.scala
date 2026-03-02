@@ -19,7 +19,7 @@ class DebuggerPreferencePage extends FieldEditorPreferencePage(FieldEditorPrefer
 
   setPreferenceStore(ScalaDebugPlugin.plugin.getPreferenceStore)
 
-  private val groups = scala.collection.mutable.MutableList[Group]()
+  private val groups = scala.collection.mutable.ListBuffer[Group]()
 
   override def createFieldEditors(): Unit = {
     createFiltersSection()

@@ -186,14 +186,14 @@ trait AnonymousFunctionSupport[+Tpe <: TypecheckRelation]
 
   /** Search for names that are from outside of given tree - must be closure parameters */
   protected final def getClosureParamsNames(body: Tree, vparams: List[ValDef]): Set[TermName] = {
-    val vparamsName: Set[TermName] = vparams.map(_.name)(collection.breakOut)
+    val vparamsName: Set[TermName] = vparams.iterator.map(_.name).toSet
 
     new VariableProxyTraverser(body).findUnboundVariables().map(_.name) -- vparamsName
   }
 
   /** Search for names (with types) that are from outside of given tree - must be closure parameters */
   protected final def getClosureParamsNamesAndType(body: Tree, vparams: List[ValDef]): Map[TermName, String] = {
-    val vparamsName: Set[TermName] = vparams.map(_.name)(collection.breakOut)
+    val vparamsName: Set[TermName] = vparams.iterator.map(_.name).toSet
     new VariableProxyTraverser(body, tree => TypeNames.fromTree(tree))
       .findUnboundValues().filterNot {
       case (variable, _) => vparamsName.contains(variable.name)
@@ -257,7 +257,7 @@ trait AnonymousFunctionSupport[+Tpe <: TypecheckRelation]
 
     typesContext.createNewType(jvmClassName, classCode, closuresParams.values.toSeq)
 
-    val closureParamTrees: List[Tree] = closuresParams.map { case (name, _) => Ident(name) }(collection.breakOut)
+    val closureParamTrees: List[Tree] = closuresParams.iterator.map { case (name, _) => Ident(name) }.toList
 
     lambdaProxy(jvmClassName, closureParamTrees)
   }

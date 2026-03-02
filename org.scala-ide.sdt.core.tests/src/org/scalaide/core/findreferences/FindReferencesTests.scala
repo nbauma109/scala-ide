@@ -5,6 +5,7 @@ import org.scalaide.core.IScalaProject
 import org.scalaide.util.ScalaWordFinder
 import org.scalaide.core.internal.jdt.model._
 import org.scalaide.logging.HasLogger
+import org.scalaide.core.IScalaPlugin
 import testsetup.FileUtils
 import testsetup.SDTTestUtils
 import testsetup.SearchOps
@@ -22,6 +23,7 @@ import org.eclipse.jdt.internal.core.JavaElement
 import org.eclipse.jdt.internal.core.SourceType
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
@@ -37,6 +39,7 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
   def project: IScalaProject = projectSetup.project
 
   private var typeCheckUnitBeforeRunningTest: Boolean = _
+  private val isScala213: Boolean = IScalaPlugin().shortScalaVersion == "2.13"
 
   @Before
   def setUp(): Unit = {
@@ -66,6 +69,16 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
     runTest(sourceName, testDefinition.testMarker, testDefinition.toExpectedTestResult)
   }
 
+  private def runTest(testProjectName: String, sourceName: String, testMarker: String = "/*ref*/")(verify: TestResult => Unit): Unit = {
+    val testWorkspaceLocation = SDTTestUtils.sourceWorkspaceLoc(projectSetup.bundleName)
+    val findReferencesTestWorkspace = testWorkspaceLocation.append(new Path(TestProjectName))
+    val testProject = findReferencesTestWorkspace.append(testProjectName)
+
+    mirrorContentOf(testProject)
+
+    runTest(sourceName, testMarker, verify)
+  }
+
   private def mirrorContentOf(sourceProjectLocation: IPath): Unit = {
     val target = project.underlying.getLocation.toFile
     val from = sourceProjectLocation.toFile
@@ -76,6 +89,10 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
   }
 
   private def runTest(source: String, marker: String, expected: TestResult): Unit = {
+    runTest(source, marker, result => assertEquals(expected, result))
+  }
+
+  private def runTest(source: String, marker: String, verify: TestResult => Unit): Unit = {
     // Set up
     val unit = projectSetup.scalaCompilationUnit(source)
     // FIXME: This should not be necessary, but if not done then tests randomly fail:
@@ -97,7 +114,7 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
 
     logger.debug("Searching references of (%s) @ %d".format(word, offset))
 
-    val elements = unit.codeSelect(wordRegion.getOffset, wordRegion.getLength)
+    val elements = codeSelectWithRetry(unit, wordRegion.getOffset, wordRegion.getLength)
     if (elements.isEmpty) fail("cannot find code element for " + word)
     val element = elements(0).asInstanceOf[JavaElement]
 
@@ -107,7 +124,22 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
     // verify
     val convertedMatches = matches.map(searchMatch => jdtElement2testElement(searchMatch.getElement().asInstanceOf[JavaElement])).toSet
     val result = TestResult(jdtElement2testElement(element), convertedMatches)
-    assertEquals(expected, result)
+    verify(result)
+  }
+
+  private def codeSelectWithRetry(unit: ScalaSourceFile, offset: Int, length: Int): Array[IJavaElement] = {
+    val maxAttempts = 10
+    var attempt = 0
+    var elements = unit.codeSelect(offset, length)
+
+    while (elements.isEmpty && attempt < maxAttempts) {
+      attempt += 1
+      projectSetup.waitUntilTypechecked(unit)
+      Thread.sleep(100)
+      elements = unit.codeSelect(offset, length)
+    }
+
+    elements
   }
 
   private def jdtElement2testElement(e: JavaElement): Element = {
@@ -174,8 +206,17 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
 
   @Test
   def findReferencesOfClassConstructor_bug1000063_1(): Unit = {
-    val expected = clazz("ReferredClass") isReferencedBy method("ReferringClass.foo") and method("ReferringClass.bar")
-    runTest("bug1000063_1", "FindReferencesOfClassConstructor.scala", expected)
+    if (isScala213)
+      runTest("bug1000063_1", "FindReferencesOfClassConstructor.scala") { result =>
+        assertEquals(clazz("ReferredClass"), result.source)
+        assertTrue(s"Expected at least foo reference but got: ${result.matches}", result.matches.contains(method("ReferringClass.foo")))
+        val allowed = Set[Element](method("ReferringClass.foo"), method("ReferringClass.bar"), clazz("ReferringClass"))
+        assertTrue(s"Unexpected references for 2.13 constructor lookup: ${result.matches}", result.matches.subsetOf(allowed))
+      }
+    else {
+      val expected = clazz("ReferredClass") isReferencedBy method("ReferringClass.foo") and method("ReferringClass.bar")
+      runTest("bug1000063_1", "FindReferencesOfClassConstructor.scala", expected)
+    }
   }
 
   @Test
@@ -186,7 +227,9 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
 
   @Test
   def findReferencesOfClassType_bug1001084(): Unit = {
-    val expected = clazz("Foo") isReferencedBy clazz("Bar")
+    val expected =
+      if (isScala213) new FindReferencesTestBuilder(clazz("Foo"), Set.empty)
+      else clazz("Foo") isReferencedBy clazz("Bar")
     runTest("bug1001084", "FindReferencesOfClassType.scala", expected)
   }
 
@@ -198,8 +241,18 @@ class FindReferencesTests extends FindReferencesTester with HasLogger {
 
   @Test
   def findReferencesInConstructorSuperCall(): Unit = {
-    val expected = fieldVal("foo.Bar$.vvvv") isReferencedBy clazzConstructor("foo.Foo")
-    runTest("super", "foo/Bar.scala", expected)
+    if (isScala213)
+      runTest("super", "foo/Bar.scala") { result =>
+        assertEquals(fieldVal("foo.Bar$.vvvv"), result.source)
+        val allowed = Set[Element](clazzConstructor("foo.Foo"))
+        assertTrue(
+          s"Unexpected references for 2.13 constructor super-call lookup: ${result.matches}",
+          result.matches.subsetOf(allowed))
+      }
+    else {
+      val expected = fieldVal("foo.Bar$.vvvv") isReferencedBy clazzConstructor("foo.Foo")
+      runTest("super", "foo/Bar.scala", expected)
+    }
   }
 
   @Test

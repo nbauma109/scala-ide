@@ -91,7 +91,7 @@ object CallByNameParamAtCreationPresenter extends HasLogger {
         }
 
         def toText(arg: compiler.Tree): String = {
-          sourceFile.content.view(arg.pos.start, arg.pos.end).mkString("")
+          sourceFile.content.slice(arg.pos.start, arg.pos.end).mkString("")
         }
 
         def toAnnotation(txt: String): Annotation = {

@@ -130,25 +130,30 @@ object SimpleContentProposalProvider extends HasLogger {
   }
 
   private def getAccessibleVariablesProposals(stackFrame: StackFrame): Seq[IContentProposal] =
-    stackFrame.visibleVariables().asScala.map { variable =>
-      val typeName = variable.typeName()
-      (variable.name(), s"${variable.name()}: ${javaNameToScalaName(typeName)}")
-    }.groupBy { case (content, _) => content }
-      .map {
-        case (_, proposals) =>
-          val (content, label) = proposals.last
-          new ContentProposal(content, label, null)
-      }(collection.breakOut) // we get only the latest variable with given name (shadowing)
+    stackFrame.visibleVariables().asScala.iterator
+      .map { variable =>
+        val typeName = variable.typeName()
+        (variable.name(), s"${variable.name()}: ${javaNameToScalaName(typeName)}")
+      }
+      .toSeq
+      .groupBy { case (content, _) => content }
+      .valuesIterator
+      .map { proposals =>
+        val (content, label) = proposals.last
+        new ContentProposal(content, label, null): IContentProposal
+      }
+      .toSeq // we get only the latest variable with given name (shadowing)
 
   private def getMembersNamesViaJdi(thisReference: ReferenceType): Seq[(String, String)] =
-    thisReference.allMethods().asScala
+    thisReference.allMethods().asScala.iterator
       .flatMap { m =>
         val name = NameTransformer.decode(m.name())
         if (shouldBeProposal(name)) {
           val returnedType = getReturnedTypeNameViaJdi(m)
           List((name, s"$name: $returnedType"))
         } else Nil
-      }(collection.breakOut)
+      }
+      .toSeq
 
   private def getReturnedTypeNameViaJdi(method: Method): String =
     try {
@@ -183,7 +188,7 @@ object SimpleContentProposalProvider extends HasLogger {
     val pairs = tpe.members.map(symbol => (symbol, symbol.name.decodedName.toString.trim()))
       .filter { case (_, name) => shouldBeProposal(name) }
 
-    pairs.flatMap {
+    pairs.iterator.flatMap {
       case (symbol, name) =>
         if (symbol.isMethod)
           List((name, formatMethodLabel(name, symbol)))
@@ -193,7 +198,7 @@ object SimpleContentProposalProvider extends HasLogger {
           List((name, formatVariableLabel(name, symbol)))
         else
           Nil
-    }(collection.breakOut)
+    }.toSeq
   }
 
   private def getTypeTag[T: ru.TypeTag](obj: T) = ru.typeTag[T]
@@ -219,5 +224,7 @@ object SimpleContentProposalProvider extends HasLogger {
 
   private def getDistinct(proposals: Seq[IContentProposal]): Seq[IContentProposal] =
     proposals.groupBy(_.getLabel)
-      .flatMap { case (_, proposals) => List(proposals.head) }(collection.breakOut)
+      .valuesIterator
+      .map(_.head)
+      .toSeq
 }

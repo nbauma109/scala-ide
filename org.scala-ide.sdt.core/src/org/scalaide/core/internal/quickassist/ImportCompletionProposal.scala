@@ -58,7 +58,7 @@ case class ImportCompletionProposal(importName: String)
              compiler.asyncExec {
                val refactoring = new AddImportStatement { val global = compiler }
                refactoring.addImport(scalaSourceFile.file, importName)
-             } getOption()
+             }.getOption()
          }) getOrElse Nil
 
       } getOrElse (Nil)

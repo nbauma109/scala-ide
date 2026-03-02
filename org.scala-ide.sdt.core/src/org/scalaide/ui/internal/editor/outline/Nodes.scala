@@ -1,5 +1,5 @@
 package org.scalaide.ui.internal.editor.outline
-import scala.collection.mutable.MutableList
+import scala.collection.mutable.ListBuffer
 
 trait HasReturnType {
   private var rt: Option[String] = None
@@ -94,8 +94,8 @@ case class RootNode() extends ContainerNode(null) {
    * @return nodes with structural and content difference.
    */
   def updateAll(src: RootNode): (Iterable[Node], Iterable[Node]) = {
-    val toUpdate = new MutableList[Node]
-    val toRefresh = new MutableList[Node]
+    val toUpdate = new ListBuffer[Node]
+    val toRefresh = new ListBuffer[Node]
     def visitContainer(cn: ContainerNode, cn1: ContainerNode): Unit = {
       var children = collection.immutable.ListMap[NodeKey, Node]()
       var needUpdate = false

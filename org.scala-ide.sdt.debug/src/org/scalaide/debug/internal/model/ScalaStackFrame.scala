@@ -147,9 +147,9 @@ class ScalaStackFrame private (val thread: ScalaThread, @volatile private var st
   private lazy val variables: Seq[ScalaVariable] = jdiSynchronized {
     (safeStackFrameCalls(Nil) or wrapJDIException("Exception while retrieving stack frame's visible variables")) {
       import scala.collection.JavaConverters._
-      val visibleVariables = {
-        (Exception.handling(classOf[AbsentInformationException]) by (_ => Seq.empty)) {
-          stackFrame.visibleVariables.asScala.map(new ScalaLocalVariable(_, this))
+      val visibleVariables: List[ScalaVariable] = {
+        (Exception.handling(classOf[AbsentInformationException]) by (_ => List.empty[ScalaVariable])) {
+          stackFrame.visibleVariables.asScala.iterator.map(v => new ScalaLocalVariable(v, this): ScalaVariable).toList
         }
       }
 
@@ -158,7 +158,7 @@ class ScalaStackFrame private (val thread: ScalaThread, @volatile private var st
         // 'this' is not available for native and static methods
         visibleVariables
       } else {
-        new ScalaThisVariable(stackFrame.thisObject, this) +: visibleVariables
+        (new ScalaThisVariable(stackFrame.thisObject, this): ScalaVariable) :: visibleVariables
       }
     }
   }

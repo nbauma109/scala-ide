@@ -255,7 +255,10 @@ object SDTTestUtils extends HasLogger {
     project.javaProject.getPackageFragmentRoot(project.underlying.getFolder("/src")).createPackageFragment(name, true, null)
 
   def createCompilationUnit(pack: IPackageFragment, name: String, sourceCode: String, force: Boolean = false): ICompilationUnit = {
-    BlockingProgressMonitor.waitUntilDone(pack.createCompilationUnit(name, sourceCode, force, _))
+    val monitor = new NullProgressMonitor
+    val unit = pack.createCompilationUnit(name, sourceCode, force, monitor)
+    if (monitor.isCanceled()) throw new BlockingProgressMonitor.CancellationException
+    unit
   }
 
   def addToClasspath(prj: IScalaProject, entries: IClasspathEntry*): Unit = {

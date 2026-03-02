@@ -12,6 +12,7 @@ import org.scalaide.ui.internal.preferences.ImplicitsPreferencePage
 import org.scalaide.ui.internal.editor.decorators.implicits.ImplicitHighlightingPresenter
 import org.scalaide.core.internal.jdt.model.ScalaCompilationUnit
 import org.scalaide.core.compiler.IScalaPresentationCompiler
+import org.scalaide.core.FlakyTest
 
 object ImplicitsHighlightingTest extends TestProjectSetup("implicits-highlighting")
 
@@ -23,7 +24,7 @@ class ImplicitsHighlightingTest extends HighlightingTestHelpers(ImplicitsHighlig
   }
 
   @Test
-  def implicitConversion(): Unit = {
+  def implicitConversion(): Unit = FlakyTest.retry("implicitConversion") {
     withCompilationUnitAndCompiler("implicit-highlighting/Implicits.scala") { (src, compiler) =>
 
       val expected = List(
@@ -50,7 +51,7 @@ class ImplicitsHighlightingTest extends HighlightingTestHelpers(ImplicitsHighlig
   }
 
   @Test
-  def implicitArguments(): Unit = {
+  def implicitArguments(): Unit = FlakyTest.retry("implicitArguments") {
     withCompilationUnitAndCompiler("implicit-highlighting/ImplicitArguments.scala") {(src, compiler) =>
 
       val expected = List (

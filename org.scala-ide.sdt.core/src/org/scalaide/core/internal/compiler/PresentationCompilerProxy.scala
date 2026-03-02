@@ -8,7 +8,7 @@ import scala.reflect.internal.FatalError
 import org.scalaide.core.compiler._
 import org.scalaide.core.compiler.IScalaPresentationCompiler
 import org.scalaide.core.compiler.InteractiveCompilationUnit
-import scala.collection.mutable.Publisher
+import org.scalaide.util.internal.collection.Publisher
 
 /** Holds a reference to a 'live' presentation compiler and manages its lifecycle.
   *
@@ -16,8 +16,6 @@ import scala.collection.mutable.Publisher
   */
 final class PresentationCompilerProxy(name: String, initializeSettings: () => Settings) extends IPresentationCompilerProxy
     with Publisher[PresentationCompilerActivity] with HasLogger {
-
-  override type Pub = PresentationCompilerProxy
 
   /** Current 'live' instance of the presentation compiler.
     *
@@ -152,7 +150,11 @@ final class PresentationCompilerProxy(name: String, initializeSettings: () => Se
     pcLock.synchronized {
       try {
         val compilerSettings = initializeSettings()
-        compilerSettings.classpath.value = System.getProperty("scala.ide.compile.classpath");
+        Option(System.getProperty("scala.ide.compile.classpath"))
+          .map(_.trim)
+          .filter(_.nonEmpty)
+          .filterNot(v => v.startsWith("${") && v.endsWith("}"))
+          .foreach(compilerSettings.classpath.value = _)
         val pc = new ScalaPresentationCompiler(name, compilerSettings)
         logger.debug(pc.settings.userSetSettings.toSeq.sortBy(_.name.toLowerCase).mkString(s"Presentation compiler settings for $name:\n  ", "\n  ", ""))
         publish(Start)

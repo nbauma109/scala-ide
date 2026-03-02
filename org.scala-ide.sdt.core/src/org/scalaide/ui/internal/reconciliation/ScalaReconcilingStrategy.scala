@@ -19,7 +19,7 @@ class ScalaReconcilingStrategy(icuEditor: InteractiveCompilationUnitEditor) exte
    *
    * @note This member is a def, not a lazy val, to avoid doc/reconciler
    * desynchronizations if the underlying document is swapped.
-   *  (see https://github.com/scala-ide/scala-ide/pull/309#discussion_r3048592)
+   *  (see https://github.com/nbauma109/scala-ide/pull/309#discussion_r3048592)
    */
   private def icUnit = icuEditor.getInteractiveCompilationUnit()
 

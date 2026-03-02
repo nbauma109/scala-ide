@@ -176,8 +176,14 @@ object EclipseUtils extends HasLogger {
     val parentFolder = bundlePath.removeLastSegments(1)
 
     val sourceBundleId = bundleId + ".source" + specificSourceVersion(scalaVersion)
-    // the expected filename for the source jar
-    val sourceJarFile = jarFile.replace(bundleId, sourceBundleId)
+    // the expected filename for the source jar when running from a plugins folder
+    val sourceJarFile = {
+      val replacedJarFile = jarFile.replace(bundleId, sourceBundleId)
+      if (replacedJarFile == jarFile)
+        s"$sourceBundleId-${parentFolder.lastSegment()}.jar"
+      else
+        replacedJarFile
+    }
 
     // the source jar location when the files are from the plugins folder
     val installedLocation = parentFolder / sourceJarFile
@@ -186,16 +192,21 @@ object EclipseUtils extends HasLogger {
       // found in the plugins folder
       Some(installedLocation)
     } else {
-      val versionString = parentFolder.lastSegment()
-      val groupFolder = parentFolder.removeLastSegments(2)
-      // the source jar location when the files are from a local m2 repo
-      val buildLocation = groupFolder / sourceBundleId / versionString / sourceJarFile
-      if (buildLocation.toFile().exists()) {
-        // found in the m2 repo
-        Some(buildLocation)
+      // source jar location for plain Maven artifacts (e.g. scala-library-2.12.21-sources.jar)
+      val mavenSourceJarFile = jarFile.stripSuffix(".jar") + "-sources.jar"
+      val mavenLocation = parentFolder / mavenSourceJarFile
+      if (mavenLocation.toFile().exists()) {
+        Some(mavenLocation)
       } else {
-        // not found
-        None
+        val versionString = parentFolder.lastSegment()
+        val groupFolder = parentFolder.removeLastSegments(2)
+        // source jar location for OSGi source bundle artifacts in local m2
+        val buildLocation = groupFolder / sourceBundleId / versionString / sourceJarFile
+        if (buildLocation.toFile().exists()) {
+          Some(buildLocation)
+        } else {
+          None
+        }
       }
     }
   }

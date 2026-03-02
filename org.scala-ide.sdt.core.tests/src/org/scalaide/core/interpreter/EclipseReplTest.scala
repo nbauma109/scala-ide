@@ -48,7 +48,7 @@ import EclipseReplTest._
 //  - capitalized {Starting,...,Unknown} are expected for the Client methods
 
 class EclipseReplTest {
-  BasicConfigurator.configure()
+  EclipseReplTest.ensureLog4jConfigured()
   val helloWorld = InOut("println(\"hello world\")", _ => "hello world\n")
   val onePlusOne = InOut("1+1", "res" + _ + ": Int = 2\n")
 
@@ -121,6 +121,16 @@ class EclipseReplTest {
 
 object EclipseReplTest {
   import org.scalaide.util.TestFutureUtil._
+
+  private[this] lazy val log4jInitialized: Unit = {
+    val rootLogger = org.apache.log4j.LogManager.getRootLogger
+    if (!rootLogger.getAllAppenders.hasMoreElements) BasicConfigurator.configure()
+  }
+
+  private def ensureLog4jConfigured(): Unit = {
+    log4jInitialized
+    ()
+  }
 
   def test(ses: Seq[Expect]*): Unit = {
     val rs = ses map { new Recorder(_) }

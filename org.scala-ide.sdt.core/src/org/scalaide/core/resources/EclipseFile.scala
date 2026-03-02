@@ -21,7 +21,6 @@ object EclipseResource extends HasLogger {
     case file: IFile                  => new EclipseFile(file)
     case container: IContainer        => new EclipseContainer(container)
     case null                         => throw new NullPointerException()
-    case r if r.getLocation() == null => throw new NullPointerException(r.toString)
   }
 
   def unapply(file: AbstractFile): Option[IResource] = file match {
@@ -68,19 +67,19 @@ abstract class EclipseResource[+R <: IResource] extends AbstractFile {
 
   def name: String = underlying.getName
 
-  def path: String = {
-    val loc = underlying.getLocation
-    if (loc eq null)
-      throw new NullPointerException("underlying.getLocation == null for: " + underlying)
+  protected def resolvedLocationPath: Option[IPath] =
+    Option(underlying.getLocation).orElse(Option(underlying.getRawLocation))
 
-    loc.toOSString
-  }
+  protected def fallbackPath: String =
+    Option(underlying.getLocationURI).map(new File(_).getAbsolutePath).getOrElse(underlying.getFullPath.toString)
+
+  def path: String = resolvedLocationPath.map(_.toOSString).getOrElse(fallbackPath)
 
   def workspacePath: IPath = underlying.getFullPath
 
   def container: AbstractFile = new EclipseContainer(underlying.getParent)
 
-  def file: File = underlying.getLocation.toFile
+  def file: File = resolvedLocationPath.map(_.toFile).getOrElse(new File(fallbackPath))
 
   def lastModified: Long = underlying.getLocalTimeStamp
 
@@ -124,8 +123,8 @@ class EclipseFile(override val underlying: IFile) extends EclipseResource[IFile]
 
   override def sizeOption: Option[Int] = getFileInfo.map(_.getLength.toInt)
 
-  private def getFileInfo = {
-    val fs = FileBuffers.getFileStoreAtLocation(underlying.getLocation)
+  private def getFileInfo: Option[org.eclipse.core.filesystem.IFileInfo] = {
+    val fs = resolvedLocationPath.map(path => FileBuffers.getFileStoreAtLocation(path)).orNull
     if (fs == null)
       None
     else

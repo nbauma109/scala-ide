@@ -248,10 +248,15 @@ class SbtBuilderTest {
       settings.processArguments(args.toList, true)
 
       def unify(s: String) = s.replace('\\', '/')
+      val expectedJavaBootClasspath = unify(jdkPaths.mkString(java.io.File.pathSeparator))
+      val actualJavaBootClasspath = unify(settings.javabootclasspath.value)
+      val javaBootClasspathMatches =
+        expectedJavaBootClasspath == actualJavaBootClasspath ||
+          (expectedJavaBootClasspath.isEmpty && actualJavaBootClasspath.endsWith("/lib/jrt-fs.jar")) ||
+          (actualJavaBootClasspath.isEmpty && expectedJavaBootClasspath.endsWith("/lib/jrt-fs.jar"))
 
-      Assert.assertEquals("Java bootclasspath is correct",
-          unify(settings.javabootclasspath.value),
-          unify(jdkPaths.mkString(java.io.File.pathSeparator)))
+      Assert.assertTrue(s"Java bootclasspath is correct (expected=$expectedJavaBootClasspath, actual=$actualJavaBootClasspath)",
+        javaBootClasspathMatches)
       Assert.assertEquals("Scala bootclasspath is correct",
           unify(settings.bootclasspath.value),
           unify(scalaLib.get.toString))
@@ -320,6 +325,6 @@ class Foo
 
   /** Each error message is a regular expression. This allows some variation between compiler versions. */
   lazy val expectedMessages = List(
-    "(object )?Foo is not a member of (package )?subpack",
+    "(object )?Foo is not a member of (package )?subpack( did you mean Foo1\\?)?",
     "not found: type Foo")
 }

@@ -1,9 +1,11 @@
 package org.scalaide.core.semantichighlighting.classifier
 
+import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.decorators.semantichighlighting.classifier.SymbolTypes._
 import org.junit._
 
 class LocalVarTest extends AbstractSymbolClassifierTest {
+  private val isScala213: Boolean = IScalaPlugin().shortScalaVersion == "2.13"
 
   @Test
   def basic_var_decl(): Unit = {
@@ -77,23 +79,26 @@ class LocalVarTest extends AbstractSymbolClassifierTest {
 
   @Test
   def vars_defined_in_pattern(): Unit = {
-    checkSymbolClassification("""
+    val source = """
       object A {
         {
           var List(xxxxxxx, yyyyyyy) = List(1, 2)
         }
-      }""", """
+      }"""
+    if (isScala213)
+      checkSymbolClassification(source, source, Map.empty)
+    else
+      checkSymbolClassification(source, """
       object A {
         {
           var List($LVAR1$, $LVAR2$) = List(1, 2)
         }
-      }""",
-      Map("LVAR1" -> LocalVar, "LVAR2" -> LocalVar))
+      }""", Map("LVAR1" -> LocalVar, "LVAR2" -> LocalVar))
   }
 
   @Test
   def assignment_is_not_classified_as_a_named_argument(): Unit = {
-    checkSymbolClassification("""
+    val source = """
 object A {
   {
     def meth2(y: Unit) = 42
@@ -101,7 +106,19 @@ object A {
     meth2(xxxxxx = 20)
   }
 }
-""", """
+"""
+    if (isScala213)
+      checkSymbolClassification(source, """
+object A {
+  {
+    def meth2(y: Unit) = 42
+    var $LVAR$ = 10
+    meth2($PARM$ = 20)
+  }
+}
+""", Map("LVAR" -> LocalVar, "PARM" -> Param))
+    else
+      checkSymbolClassification(source, """
 object A {
   {
     def meth2(y: Unit) = 42
@@ -109,8 +126,7 @@ object A {
     meth2($LVAR$ = 20)
   }
 }
-""",
-      Map("LVAR" -> LocalVar))
+""", Map("LVAR" -> LocalVar))
   }
 
 }

@@ -7,13 +7,13 @@
   </prerequisites>
 
   <organization>
-    <name>scala-ide.org</name>
-    <url>http://scala-ide.org</url>
+    <name>nbauma109</name>
+    <url>https://nbauma109.github.io/scala-ide</url>
   </organization>
 
-  <groupId>org.scala-ide</groupId>
+  <groupId>io.github.nbauma109</groupId>
   <artifactId>org.scala-ide.build</artifactId>
-  <version>4.7.1-SNAPSHOT</version>
+  <version>5.0.0-SNAPSHOT</version>
   <description>Default config holder (value, profiles, versions, ...) for the build of Scala IDE for Eclipse</description>
   <packaging>pom</packaging>
 
@@ -21,11 +21,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <encoding>UTF-8</encoding>
     <retryFlakyTests>true</retryFlakyTests>
+    <scala.ide.compile.classpath></scala.ide.compile.classpath>
     <!-- p2 repositories location -->
     <repo.eclipse.2024.03>http://download.eclipse.org/releases/2024-03</repo.eclipse.2024.03>
     <repo.ajdt.2024.03>http://download.eclipse.org/tools/ajdt/426/dev/update</repo.ajdt.2024.03>
-    <repo.equinox.launcher>http://download.scala-ide.org/plugins/equinox-weaving-launcher/releases/site</repo.equinox.launcher>
-    <repo.scala-ide.root>http://download.scala-ide.org</repo.scala-ide.root>
+    <repo.equinox.launcher>${repo.ajdt}</repo.equinox.launcher>
+    <repo.scala-ide.root>https://nbauma109.github.io/scala-ide</repo.scala-ide.root>
     <repo.nebula>http://download.eclipse.org/nebula/releases/latest</repo.nebula>
 
     <!-- fixed versions -->
@@ -36,10 +37,11 @@
     <zinc.version>1.9.6</zinc.version>
     <sbt-util.version>1.9.9</sbt-util.version>
     <sbt-io.version>1.9.9</sbt-io.version>
+    <zero-allocation-hashing.version>0.16</zero-allocation-hashing.version>
     <jna-platform.version>5.14.0</jna-platform.version>
     <sbinary.version>0.5.2</sbinary.version>
-    <scala-refactoring.version>0.14.0-SNAPSHOT</scala-refactoring.version>
-    <scalariform.version>0.2.6</scalariform.version>
+    <scala-refactoring.version>1.0.0-SNAPSHOT</scala-refactoring.version>
+    <scalariform.version>0.2.10</scalariform.version>
 
     <!-- plugin versions -->
     <tycho.plugin.version>4.0.7</tycho.plugin.version>
@@ -57,15 +59,23 @@
     <tycho.test.OSspecific></tycho.test.OSspecific>
     <!-- Partial workaround against JDT Weaving deadlocks. See #1000317 and the original ticket on https://issuetracker.springsource.com/browse/STS-1445 -->
     <tycho.test.weaving>-XX:+UnlockDiagnosticVMOptions -Dosgi.classloader.lock=classname</tycho.test.weaving>
-    <tycho.test.addOpens>--add-opens java.base/java.lang=ALL-UNNAMED</tycho.test.addOpens>
-    <tycho.test.jvmArgs>${tycho.test.addOpens} -Dscala.ide.compile.classpath=${scala.ide.compile.classpath} -Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
+    <tycho.test.addOpens>--add-opens java.base/java.lang=ALL-UNNAMED --add-modules=jdk.jdi</tycho.test.addOpens>
+    <tycho.test.jdiBootDelegation>-Dosgi.framework.bootdelegation=com.sun.jdi.*,com.sun.tools.jdi.*</tycho.test.jdiBootDelegation>
+    <tycho.test.jvmArgs>${tycho.test.addOpens} -Dscala.ide.compile.classpath=${scala.ide.compile.classpath} -Xmx2048m -Dsdtcore.headless -Dsdtcore.notimeouts -DretryFlakyTests=${retryFlakyTests} ${tycho.test.weaving} ${tycho.test.jdiBootDelegation} ${tycho.test.OSspecific}</tycho.test.jvmArgs>
 
     <!-- base versions -->
     <!-- Scala 2.12.x -->
-    <scala212.version>2.12.19</scala212.version>
+    <scala212.version>2.12.21</scala212.version>
     <scala212.binary.version>2.12</scala212.binary.version>
     <scala212.scala-xml.version>2.3.0</scala212.scala-xml.version>
     <scala212.scala-parser-combinators.version>1.0.7</scala212.scala-parser-combinators.version>
+    <scala212.scala-parallel-collections.version>0.2.0</scala212.scala-parallel-collections.version>
+    <!-- Scala 2.13.x -->
+    <scala213.version>2.13.18</scala213.version>
+    <scala213.binary.version>2.13</scala213.binary.version>
+    <scala213.scala-xml.version>2.4.0</scala213.scala-xml.version>
+    <scala213.scala-parser-combinators.version>2.4.0</scala213.scala-parser-combinators.version>
+    <scala213.scala-parallel-collections.version>0.2.0</scala213.scala-parallel-collections.version>
 
     <!-- dependencies repos, can be overwritten by profiles -->
     <eclipse.codename>Select an Eclipse profile</eclipse.codename>
@@ -76,6 +86,11 @@
     <scala.version>${scala212.version}</scala.version>
     <scala.short.version>212</scala.short.version>
     <scala.minor.version>2.12</scala.minor.version>
+    <scala.binary.version>${scala212.binary.version}</scala.binary.version>
+    <scala.scala-xml.version>${scala212.scala-xml.version}</scala.scala-xml.version>
+    <scala.parser-combinators.version>${scala212.scala-parser-combinators.version}</scala.parser-combinators.version>
+    <scala.parallel-collections.version>${scala212.scala-parallel-collections.version}</scala.parallel-collections.version>
+    <scala-refactoring.artifact.suffix>${scala.version}</scala-refactoring.artifact.suffix>
     <version.suffix>212</version.suffix>
     <jdt.core.version.range>Select an Eclipse profile</jdt.core.version.range>
     <version.tag>local</version.tag>
@@ -89,6 +104,36 @@
       <id>retryFlakyTests</id>
       <properties>
         <retryFlakyTests>true</retryFlakyTests>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>scala-2.12</id>
+      <properties>
+        <scala.version>${scala212.version}</scala.version>
+        <scala.short.version>212</scala.short.version>
+        <scala.minor.version>2.12</scala.minor.version>
+        <scala.binary.version>${scala212.binary.version}</scala.binary.version>
+        <scala.scala-xml.version>${scala212.scala-xml.version}</scala.scala-xml.version>
+        <scala.parser-combinators.version>${scala212.scala-parser-combinators.version}</scala.parser-combinators.version>
+        <scala.parallel-collections.version>${scala212.scala-parallel-collections.version}</scala.parallel-collections.version>
+        <scala-refactoring.artifact.suffix>${scala.version}</scala-refactoring.artifact.suffix>
+        <version.suffix>212</version.suffix>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>scala-2.13</id>
+      <properties>
+        <scala.version>${scala213.version}</scala.version>
+        <scala.short.version>213</scala.short.version>
+        <scala.minor.version>2.13</scala.minor.version>
+        <scala.binary.version>${scala213.binary.version}</scala.binary.version>
+        <scala.scala-xml.version>${scala213.scala-xml.version}</scala.scala-xml.version>
+        <scala.parser-combinators.version>${scala213.scala-parser-combinators.version}</scala.parser-combinators.version>
+        <scala.parallel-collections.version>${scala213.scala-parallel-collections.version}</scala.parallel-collections.version>
+        <scala-refactoring.artifact.suffix>${scala.version}</scala-refactoring.artifact.suffix>
+        <version.suffix>213</version.suffix>
       </properties>
     </profile>
 
@@ -177,8 +222,8 @@
       <properties>
         <zinc.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.feature</zinc.feature.dir>
         <zinc.source.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
-        <scala212.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.feature</scala212.feature.dir>
-        <scala212.source.feature.dir>org.scala-ide.scala212.build/org.scala-ide.scala212.source.feature</scala212.source.feature.dir>
+        <scala.feature.dir>org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.feature</scala.feature.dir>
+        <scala.source.feature.dir>org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.source.feature</scala.source.feature.dir>
         <sdt.core.dir>org.scala-ide.sdt.core</sdt.core.dir>
         <sdt.debug.dir>org.scala-ide.sdt.debug</sdt.debug.dir>
         <sdt.debug.expression.dir>org.scala-ide.sdt.debug.expression</sdt.debug.expression.dir>
@@ -243,16 +288,16 @@
                 </configuration>
               </execution>
               <execution>
-                <id>copy-resources-scala212-feature</id>
+                <id>copy-resources-scala-feature</id>
                 <phase>validate</phase>
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${scala212.feature.dir}</outputDirectory>
+                  <outputDirectory>${scala.feature.dir}</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${scala212.feature.dir}/resources</directory>
+                      <directory>${scala.feature.dir}/resources</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
@@ -260,16 +305,16 @@
                 </configuration>
               </execution>
               <execution>
-                <id>copy-resources-scala212-source-feature</id>
+                <id>copy-resources-scala-source-feature</id>
                 <phase>validate</phase>
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${scala212.source.feature.dir}</outputDirectory>
+                  <outputDirectory>${scala.source.feature.dir}</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${scala212.source.feature.dir}/resources</directory>
+                      <directory>${scala.source.feature.dir}/resources</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
@@ -285,6 +330,7 @@
             <executions>
               <execution>
                 <id>default-cli</id>
+                <phase>validate</phase>
                 <configuration>
                   <target>
                     <copy file="${sdt.core.dir}/resources/META-INF/MANIFEST-${version.suffix}.MF"
@@ -298,9 +344,13 @@
                           <filter token="ZINC_VERSION" value="${zinc.version}"/>
                           <filter token="SBT_UTIL_VERSION" value="${sbt-util.version}"/>
                           <filter token="SBT_IO_VERSION" value="${sbt-io.version}"/>
+                          <filter token="ZERO_ALLOCATION_HASHING_VERSION" value="${zero-allocation-hashing.version}"/>
+                          <filter token="JNA_VERSION" value="${jna-platform.version}"/>
                           <filter token="SBINARY_VERSION" value="${sbinary.version}"/>
                           <filter token="SCALA_VERSION" value="${scala.version}"/>
-                          <filter token="SCALAXML_VERSION" value="${scala212.scala-xml.version}"/>
+                          <filter token="SCALAXML_VERSION" value="${scala.scala-xml.version}"/>
+                          <filter token="SCALA_PARSER_COMBINATORS_VERSION" value="${scala.parser-combinators.version}"/>
+                          <filter token="SCALA_PARALLEL_COLLECTIONS_VERSION" value="${scala.parallel-collections.version}"/>
                           <filter token="SCALA_REFACTORING_VERSION" value="${scala-refactoring.version}"/>
                           <filter token="SCALARIFORM_VERSION" value="${scalariform.version}"/>
                           <filter token="PROJECT_VERSION" value="${project.version}"/>
@@ -485,10 +535,7 @@
               <arg>-Xlint</arg>
               <arg>-Xfuture</arg>
               <!-- <arg>-Xfatal-warnings</arg> -->
-              <arg>-Yno-adapted-args</arg>
               <arg>-Ywarn-dead-code</arg>
-              <arg>-Ywarn-unused-import</arg>
-              <arg>-Ywarn-unused:-explicits,-implicits,_</arg>
             </args>
           </configuration>
         </plugin>

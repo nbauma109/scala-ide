@@ -87,7 +87,7 @@ abstract class CompletionTests extends TextEditTests with CompilerSupport {
 
       val completions = new ScalaCompletions()
         .findCompletions(ScalaWordFinder.findWord(doc, caretOffset), caretOffset, unit)
-        .sorted(CompletionProposalOrdering).to[IndexedSeq]
+        .sorted(CompletionProposalOrdering).toIndexedSeq
 
       def completionList = completions.map(_.display).mkString("\n")
 
@@ -110,8 +110,11 @@ abstract class CompletionTests extends TextEditTests with CompilerSupport {
         throw new ComparisonFailure("There are expected completions that do not exist.", missingCompletions.mkString("\n"), completionList)
 
       if (expectedCompletions.nonEmpty && respectOrderOfExpectedCompletions) {
-        val indexes = expectedCompletions.map(c => indexOfCompletion(c))
-        val sorted = indexes.zip(indexes.tail).forall(i => i._2 - i._1 == 1)
+        val indexes: Seq[Int] = expectedCompletions.map(c => indexOfCompletion(c))
+        val sorted = indexes.sliding(2).forall {
+          case Seq(prev, next) => next - prev == 1
+          case _ => true
+        }
         if (!sorted)
           throw new ComparisonFailure(s"The order of completition is wrong", expectedCompletions.mkString("\n"), completionList)
         if (indexes.head != 0)

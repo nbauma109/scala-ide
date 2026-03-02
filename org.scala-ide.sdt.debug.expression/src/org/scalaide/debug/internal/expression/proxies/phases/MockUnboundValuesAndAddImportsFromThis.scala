@@ -83,7 +83,7 @@ class MockUnboundValuesAndAddImportsFromThis(val toolbox: ToolBox[universe.type]
       val genericProvider = new GenericProvider
 
       val implicits = genericProvider.implicits
-      val implicitsNames: Set[String] = implicits.map(_.name)(collection.breakOut)
+      val implicitsNames: Set[String] = implicits.iterator.map(_.name).toSet
 
       val namesWithThis: Seq[Variable] = (names.toSeq ++ context.syntheticVariables).distinct
         .filterNot(v => implicitsNames.contains(v.name.toString)) //order matter in case of this values

@@ -32,8 +32,7 @@ object BuildProblemMarker extends MarkerFactory(SdtConstants.ProblemMarkerId) {
 
   private def position(pos: ScalacPosition): Position = {
     if (pos.isDefined) {
-      val source = pos.source
-      val length = source.identifier(pos).map(_.length).getOrElse(0)
+      val length = if (pos.isRange) math.max(0, pos.end - pos.start) else 0
       RegionPosition(pos.point, length, pos.line)
     } else NoPosition
   }

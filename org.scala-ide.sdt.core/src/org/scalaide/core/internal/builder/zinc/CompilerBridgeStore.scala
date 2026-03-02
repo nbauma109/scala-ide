@@ -123,7 +123,20 @@ class CompilerBridgeStore(base: IPath, plugin: ScalaPlugin) extends HasLogger {
         monitor.worked(1)
 
         val label = installation.version.unparse
-        val raw = new RawCompiler(scalaInstanceForInstallation(installation), ClasspathOptionsUtil.auto, log)
+        val instance = scalaInstanceForInstallation(installation)
+        logger.info(
+          s"""Compiler bridge inputs for $label:
+             |  source = ${compilerBridge.toOSString}
+             |  zinc-interface = ${zincInterface.toOSString}
+             |  install-library = ${installation.library.classJar.toOSString}
+             |  install-compiler = ${installation.compiler.classJar.toOSString}
+             |  install-extra = ${installation.extraJars.map(_.classJar.toOSString).mkString(",")}
+             |  instance-libraryJars = ${instance.libraryJars.mkString(",")}
+             |  instance-compilerJars = ${instance.compilerJars.mkString(",")}
+             |  instance-otherJars = ${instance.otherJars.mkString(",")}
+             |  instance-allJars = ${instance.allJars.mkString(",")}
+             |""".stripMargin)
+        val raw = new RawCompiler(instance, ClasspathOptionsUtil.auto, log)
         AnalyzingCompiler.compileSources(List(compilerBridge.toFile.toPath), targetJar.toFile.toPath, List(zincInterface.toFile.toPath), label, raw, log)
 
         monitor.worked(1)

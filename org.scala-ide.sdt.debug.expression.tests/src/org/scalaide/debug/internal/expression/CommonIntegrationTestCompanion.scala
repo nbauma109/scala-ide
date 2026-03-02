@@ -8,7 +8,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder
 import org.eclipse.core.runtime.{NullProgressMonitor => NPM}
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.scalaide.core.testsetup.BlockingProgressMonitor
 import org.scalaide.core.testsetup.SDTTestUtils
 import org.scalaide.core.testsetup.TestProjectSetup
 import org.scalaide.debug.internal.ScalaDebugRunningTest
@@ -58,7 +57,7 @@ class CommonIntegrationTestCompanion(projectName: String)
 
   private def deleteProject(): Unit = {
     try {
-      BlockingProgressMonitor.waitUntilDone(SDTTestUtils.deleteProjects(project)(_))
+      SDTTestUtils.deleteProjects(project)(new NPM)
     } catch {
       case _: ResourceException => // could not delete resource, but don't you worry ;)
     }

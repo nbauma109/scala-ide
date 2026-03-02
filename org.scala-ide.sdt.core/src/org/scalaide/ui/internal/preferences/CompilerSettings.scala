@@ -2,8 +2,8 @@ package org.scalaide.ui.internal.preferences
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
+import org.scalaide.util.internal.collection.Publisher
+import org.scalaide.util.internal.collection.Subscriber
 import scala.tools.nsc.Settings
 import scala.tools.nsc.settings.Final
 import scala.tools.nsc.settings.ScalaVersion

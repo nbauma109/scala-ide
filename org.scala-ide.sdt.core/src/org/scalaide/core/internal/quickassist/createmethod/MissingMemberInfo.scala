@@ -32,11 +32,11 @@ class MissingMemberInfo(
       for (members <- membersInScope.getOption()) yield {
         compiler.asyncExec {
           val elements = members.collect {
-            case compiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor && sym.decodedName.equalsIgnoreCase( className) =>
-              compiler.getJavaElement(tpe.typeSymbol, icu.scalaProject.javaProject).map(_.getParent)
+            case sm: compiler.ScopeMember if sm.accessible && !sm.sym.isConstructor && sm.sym.decodedName.equalsIgnoreCase(className) =>
+              compiler.getJavaElement(sm.tpe.typeSymbol, icu.scalaProject.javaProject).map(_.getParent)
           }
           elements.flatten.toSet[IJavaElement]
-        } getOption()
+        }.getOption()
       }
     }.flatten
 

@@ -7,7 +7,6 @@ import org.scalaide.core.classpath.ClasspathContainersTests
 import org.scalaide.core.classpath.ClasspathTests
 import org.scalaide.core.classpath.DesiredScalaInstallationTests
 import org.scalaide.core.compiler.NamePrinterTest
-import org.scalaide.core.compiler.PresentationCompilerActivityListenerTest
 import org.scalaide.core.compiler.settings.CompilerSettingsTest
 import org.scalaide.core.completion.CompletionTests
 import org.scalaide.core.completion.ScalaJavaCompletionTests
@@ -66,8 +65,6 @@ import org.scalaide.util.eclipse.RegionUtilsTest
 import org.scalaide.util.internal.eclipse.TextSelectionTest
 import org.scalaide.core.sbtbuilder.CompilerBridgeStoreTest
 import org.scalaide.ui.internal.preferences.StringListMapperTest
-import org.scalaide.core.sbtbuilder.Scala210Compilation
-import org.scalaide.core.sbtbuilder.Scala211Compilation
 import org.scalaide.core.sbtbuilder.SourcePathFinderTest
 import org.scalaide.core.scalaelements.ScalaElementsNameTest
 import org.scalaide.core.compiler.ResidentCompilerTest
@@ -95,7 +92,6 @@ import org.scalaide.core.internal.jdt.model.ScalaClassFileDescriberTest
     classOf[PresentationCompilerRefreshTest],
     classOf[PresentationCompilerDocTest],
     classOf[PresentationCompilerTest],
-    classOf[PresentationCompilerActivityListenerTest],
     classOf[MultipleErrorsTest],
     classOf[NestedProjectsTest],
     classOf[OccurrencesFinderTest],
@@ -140,10 +136,8 @@ import org.scalaide.core.internal.jdt.model.ScalaClassFileDescriberTest
     classOf[CompilerBridgeStoreTest],
     classOf[ScalacNotUnderstandJavaTest],
     classOf[ScalaJavaDepTwoScopesTest],
-    classOf[Scala210Compilation],
     classOf[SourcePathFinderTest],
     classOf[ScalaElementsNameTest],
-    classOf[Scala211Compilation],
     classOf[ResidentCompilerTest],
     classOf[ScalaClassFileDescriberTest]
 ))

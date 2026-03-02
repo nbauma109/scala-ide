@@ -3,8 +3,8 @@ Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: Scala Plugin
 Bundle-SymbolicName: org.scala-ide.sdt.core;singleton:=true
-Bundle-Version: 4.7.1.qualifier
-Bundle-Vendor: scala-ide.org
+Bundle-Version: 5.0.0.qualifier
+Bundle-Vendor: nbauma109
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-Activator: org.scalaide.core.internal.ScalaPlugin
@@ -191,8 +191,8 @@ Bundle-ClassPath: .,
  target/lib/util-control_2.12-@SBT_UTIL_VERSION@.jar,
  target/lib/util-relation_2.12-@SBT_UTIL_VERSION@.jar,
  target/lib/io_2.12-@SBT_IO_VERSION@.jar,
+ target/lib/zero-allocation-hashing-@ZERO_ALLOCATION_HASHING_VERSION@.jar,
  target/lib/jna-@JNA_VERSION@.jar,
  target/lib/jna-platform-@JNA_VERSION@.jar,
  target/lib/sbinary_2.12-@SBINARY_VERSION@.jar,
  target/lib/scalap-@SCALA_VERSION@.jar
-

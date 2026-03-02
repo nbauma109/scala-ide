@@ -36,8 +36,8 @@ import org.scalaide.core.internal.repl.EclipseRepl.Exec
 import org.scalaide.core.internal.repl.EclipseRepl
 import org.scalaide.util.ui.DisplayThread
 import org.scalaide.core.internal.project.ScalaInstallation.platformInstallation
-import scala.collection.mutable.Subscriber
-import scala.collection.mutable.Publisher
+import org.scalaide.util.internal.collection.Subscriber
+import org.scalaide.util.internal.collection.Publisher
 import org.scalaide.core.BuildSuccess
 import org.scalaide.core.IScalaProjectEvent
 import org.scalaide.core.internal.compiler.ScalaPresentationCompiler

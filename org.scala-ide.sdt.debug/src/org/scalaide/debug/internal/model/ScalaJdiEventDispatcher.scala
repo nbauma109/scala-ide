@@ -16,6 +16,7 @@ import com.sun.jdi.event.EventSet
 import com.sun.jdi.event.VMDeathEvent
 import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
+import com.sun.jdi.event.Event
 import com.sun.jdi.request.EventRequest
 import scala.util.Properties
 
@@ -128,18 +129,14 @@ private[model] class ScalaJdiEventDispatcherSubordinate private (scalaDebugTarge
    */
   private def processEventSet(eventSet: EventSet): Unit = {
     import scala.concurrent.ExecutionContext.Implicits._
-    import scala.collection.JavaConverters._
 
     var staySuspendeds = List[Future[Boolean]]()
+    val events = extractEvents(eventSet)
     logger.debug {
-      eventSet.asScala.mkString(Properties.lineSeparator)
+      events.mkString(Properties.lineSeparator)
     }
-    /* Cannot use the eventSet directly. The JDI specification says it should implement java.util.Set,
-     * but the eclipse implementation doesn't.
-     *
-     * see eclipse bug #383625 */
     // forward each event to the interested subordinate
-    eventSet.eventIterator.asScala.foreach {
+    events.foreach {
       case event @ (_: VMStartEvent | _: VMDisconnectEvent | _: VMDeathEvent) =>
         staySuspendeds ::= scalaDebugTarget.handle(event)
       case event =>
@@ -150,9 +147,32 @@ private[model] class ScalaJdiEventDispatcherSubordinate private (scalaDebugTarge
         }
     }
 
-    Future.foldLeft(staySuspendeds)(false)(_ | _).andThen {
-      case Success(false) => eventSet.resume()
-      case _ =>
+    Option(eventSet).foreach { currentEventSet =>
+      Future.foldLeft(staySuspendeds)(false)(_ | _).andThen {
+        case Success(false) => currentEventSet.resume()
+        case _              =>
+      }
+    }
+  }
+
+  private def extractEvents(eventSet: EventSet): List[Event] = {
+    if (eventSet == null) Nil
+    else {
+      val iterator = eventSet.eventIterator
+      if (iterator == null) Nil
+      else {
+        val builder = List.newBuilder[Event]
+        try {
+          while (iterator.hasNext) {
+            builder += iterator.nextEvent()
+          }
+          builder.result()
+        } catch {
+          case e: NullPointerException =>
+            logger.warn("Dropping malformed JDI event set due to null iterator state", e)
+            builder.result()
+        }
+      }
     }
   }
 

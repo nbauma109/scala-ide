@@ -1,12 +1,17 @@
 package org.scalaide.core.ui.completion
 
 import org.junit.Test
+import org.scalaide.core.IScalaPlugin
 
 object CompletionOrderTests extends CompletionTests
 
 class CompletionOrderTests {
 
   import CompletionOrderTests._
+  private val includeClassManifest: Boolean = IScalaPlugin().shortScalaVersion != "2.13"
+  private def expectedClassCompletions(top: String): Seq[String] =
+    if (includeClassManifest) Seq(top, "ClassManifest", "Class")
+    else Seq(top, "Class")
 
   @Test
   def completeFieldOnTop() = """
@@ -24,7 +29,7 @@ class CompletionOrderTests {
       f(ClassName^)
     }
   """ after Completion("ClassName",
-      expectedCompletions = Seq("ClassName", "ClassManifest", "Class"),
+      expectedCompletions = expectedClassCompletions("ClassName"),
       respectOrderOfExpectedCompletions = true)
 
 
@@ -44,6 +49,6 @@ class CompletionOrderTests {
       f(ClassName^)
     }
   """ after Completion("ClassName: String",
-      expectedCompletions = Seq("ClassName: String", "ClassManifest", "Class"),
+      expectedCompletions = expectedClassCompletions("ClassName: String"),
       respectOrderOfExpectedCompletions = true)
 }

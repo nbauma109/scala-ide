@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status
 import org.scalaide.core.internal.project.ModifiedScalaInstallations
 import scala.util.Failure
 import scala.util.Success
-import scala.collection.mutable.Publisher
+import org.scalaide.util.internal.collection.Publisher
 import org.scalaide.core.internal.project.CustomScalaInstallationLabel
 import org.scalaide.core.internal.project.LabeledScalaInstallation
 import scala.PartialFunction.cond

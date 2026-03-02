@@ -42,6 +42,6 @@ package object quickassist {
         new NullProgressMonitor)
 
     import scala.collection.JavaConverters._
-    resultCollector.asScala
+    resultCollector.asScala.toSeq
   }
 }

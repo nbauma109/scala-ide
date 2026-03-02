@@ -74,11 +74,11 @@ class ClassTest extends AbstractSymbolClassifierTest {
   @Test
   def import_a_class(): Unit = {
     checkSymbolClassification("""
-      import scala.collection.generic.GenMapFactory
+      import scala.collection.mutable.ListBuffer
         """, """
-      import scala.collection.generic.$   CL      $
+      import scala.collection.mutable.$CLASSREF$
         """,
-      Map("CL" -> Class))
+      Map("CLASSREF" -> Class))
   }
 
   @Test

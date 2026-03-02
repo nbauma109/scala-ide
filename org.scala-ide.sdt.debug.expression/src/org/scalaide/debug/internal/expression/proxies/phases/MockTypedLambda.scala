@@ -49,7 +49,7 @@ case class MockTypedLambda(toolbox: ToolBox[universe.type])
       case Apply(on, args) if on.toString() == onString =>
         Some(args.map {
           case ident @ Ident(name: TermName) => name -> TypeNames.getFromTree(ident)
-        }(collection.breakOut))
+        }.toMap)
       case _ => None
     }
   }

@@ -42,5 +42,6 @@ trait SourceCodeEditor extends ISourceViewerEditor with InteractiveCompilationUn
   //        ensure that the `IDocument` hold by the compilation unit is always in synch with the one used by `this` editor.
   override def getInteractiveCompilationUnit(): UnderlyingCompilationUnit = compilationUnitProvider.fromEditor(this)
 
-  override def getViewer: ISourceViewer = getSourceViewer
+  override def getViewer: ISourceViewer =
+    getAdapter(classOf[ISourceViewer]).asInstanceOf[ISourceViewer]
 }

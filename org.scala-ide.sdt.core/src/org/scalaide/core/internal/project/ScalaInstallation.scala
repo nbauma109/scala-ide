@@ -1,6 +1,7 @@
 package org.scalaide.core.internal.project
 
 import java.net.URLClassLoader
+import java.io.Serializable
 import java.util.Properties
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -201,7 +202,7 @@ object BundledScalaInstallation {
   def detectBundledInstallations(): List[BundledScalaInstallation] = {
     // find the bundles with the right pattern
     val matchingBundles: List[Bundle] =
-      ScalaPlugin().getBundle().getBundleContext().getBundles().to[List]
+      ScalaPlugin().getBundle().getBundleContext().getBundles().toList
         .filter { b => ScalaBundleJarsRegex.unapplySeq(b.getSymbolicName()).isDefined }
 
     matchingBundles.flatMap(BundledScalaInstallation(_))
@@ -230,9 +231,14 @@ case class MultiBundleScalaInstallation(
   override val label = MultiBundleScalaInstallationLabel()
   def osgiVersion = libraryBundleVersion
 
+  private val scalaBinaryVersion = shortString(version)
+
   override lazy val extraJars = Seq(
     findLibraryForBundle(ScalaReflectBundleId, libraryBundleVersion),
-    findLibraryForBundle(ScalaSwingBundleId, libraryBundleVersion)).flatten
+    findLibraryForBundle(ScalaSwingBundleId, libraryBundleVersion),
+    findLibraryForAnyVersion(ScalaXmlBundleIds).orElse(findEmbeddedLibraryInCoreBundle(s"scala-xml_${scalaBinaryVersion}")),
+    findLibraryForAnyVersion(ScalaParserCombinatorsBundleIds).orElse(findEmbeddedLibraryInCoreBundle(s"scala-parser-combinators_${scalaBinaryVersion}")),
+    findLibraryForAnyVersion(ScalaParallelCollectionsBundleIds).orElse(findEmbeddedLibraryInCoreBundle(s"scala-parallel-collections_${scalaBinaryVersion}"))).flatten
 }
 
 object MultiBundleScalaInstallation {
@@ -243,6 +249,14 @@ object MultiBundleScalaInstallation {
   val ScalaReflectBundleId = "org.scala-lang.scala-reflect"
   val ScalaXmlBundleId = "org.scala-lang.modules.scala-xml"
   val ScalaParserCombinatorsBundleId = "org.scala-lang.modules.scala-parser-combinators"
+  val ScalaParallelCollectionsBundleId = "org.scala-lang.modules.scala-parallel-collections"
+  val WrappedScalaXmlBundleId = "wrapped.org.scala-lang.modules.scala-xml_2.13"
+  val WrappedScalaParserCombinatorsBundleId = "wrapped.org.scala-lang.modules.scala-parser-combinators_2.13"
+  val WrappedScalaParallelCollectionsBundleId = "wrapped.org.scala-lang.modules.scala-parallel-collections_2.13"
+
+  val ScalaXmlBundleIds = Seq(ScalaXmlBundleId, WrappedScalaXmlBundleId)
+  val ScalaParserCombinatorsBundleIds = Seq(ScalaParserCombinatorsBundleId, WrappedScalaParserCombinatorsBundleId)
+  val ScalaParallelCollectionsBundleIds = Seq(ScalaParallelCollectionsBundleId, WrappedScalaParallelCollectionsBundleId)
 
   private def bundlePath(bundle: Bundle) =
     Path.fromOSString(FileLocator.getBundleFile(bundle).getAbsolutePath())
@@ -250,7 +264,7 @@ object MultiBundleScalaInstallation {
   private def findBundle(bundleId: String, version: Version): Option[Bundle] = {
     def doesBundleVersionQualifierEncloseVersionQualifier(bundleQualifier: String, qualifier: String) =
       qualifier.intersect(bundleQualifier) == qualifier
-    Option(Platform.getBundles(bundleId, null)).getOrElse(Array()).to[List].find { bundle =>
+    Option(Platform.getBundles(bundleId, null)).getOrElse(Array()).toList.find { bundle =>
       val bundleVersion = bundle.getVersion
       bundleVersion.getMajor == version.getMajor &&
         bundleVersion.getMinor == version.getMinor &&
@@ -262,6 +276,32 @@ object MultiBundleScalaInstallation {
   private def findLibraryForBundle(bundleId: String, version: Version): Option[ScalaModule] = {
     val classPath = findBundle(bundleId, version).map(bundlePath)
     classPath.map(cp => ScalaModule(cp, EclipseUtils.computeSourcePath(bundleId, cp)))
+  }
+
+  private def findLibraryForAnyVersion(bundleIds: Seq[String]): Option[ScalaModule] = {
+    val allBundles = bundleIds.flatMap { bundleId =>
+      Option(Platform.getBundles(bundleId, null)).getOrElse(Array()).toSeq.map(bundle => (bundleId, bundle))
+    }
+
+    allBundles.reduceOption { (left, right) =>
+      if (left._2.getVersion.compareTo(right._2.getVersion) >= 0) left else right
+    }.map {
+      case (bundleId, bundle) =>
+        val classPath = bundlePath(bundle)
+        ScalaModule(classPath, EclipseUtils.computeSourcePath(bundleId, classPath))
+    }
+  }
+
+  private def findEmbeddedLibraryInCoreBundle(jarPrefix: String): Option[ScalaModule] = {
+    val coreBundle = ScalaPlugin().getBundle()
+    val entries = Option(coreBundle.findEntries("target/lib", s"${jarPrefix}-*.jar", false))
+    entries.flatMap { urls =>
+      if (!urls.hasMoreElements) None
+      else {
+        val classPath = Path.fromOSString(FileLocator.toFileURL(urls.nextElement()).getPath)
+        Some(ScalaModule(classPath, None))
+      }
+    }
   }
 
   def apply(libraryBundle: Bundle): Option[MultiBundleScalaInstallation] = {
@@ -280,7 +320,7 @@ object MultiBundleScalaInstallation {
 
   def detectInstallations(): List[MultiBundleScalaInstallation] = {
 
-    val scalaLibraryBundles = Platform.getBundles(ScalaLibraryBundleId, null).to[List]
+    val scalaLibraryBundles = Platform.getBundles(ScalaLibraryBundleId, null).toList
 
     scalaLibraryBundles.flatMap(MultiBundleScalaInstallation(_))
   }
@@ -310,12 +350,25 @@ object ScalaInstallation {
 
   def scalaInstanceForInstallation(si: IScalaInstallation): ScalaInstance = {
     val store = ScalaPlugin().classLoaderStore
-    val scalaLoader: ClassLoader = store.getOrUpdate(si)(new URLClassLoader(si.allJars.map(_.classJar.toFile.toURI.toURL).toArray, ClassLoader.getSystemClassLoader))
+    val libraryJar = si.library.classJar.toFile
+    val allJars = si.allJars.map(_.classJar.toFile).toArray
+    val compilerJars = allJars
 
-    new ScalaInstance(si.version.unparse, scalaLoader, si.library.classJar.toFile, si.compiler.classJar.toFile, si.extraJars.map(_.classJar.toFile).toArray, None)
+    val libraryLoader = new URLClassLoader(Array(libraryJar.toURI.toURL), ClassLoader.getSystemClassLoader)
+    val scalaLoader: ClassLoader = store.getOrUpdate(si)(new URLClassLoader(allJars.map(_.toURI.toURL), libraryLoader))
+
+    new ScalaInstance(
+      si.version.unparse,
+      scalaLoader,
+      scalaLoader,
+      libraryLoader,
+      Array(libraryJar),
+      compilerJars,
+      allJars,
+      None)
   }
 
-  lazy val customInstallations: Set[LabeledScalaInstallation] = initialScalaInstallations.map(customize(_))(collection.breakOut)
+  lazy val customInstallations: Set[LabeledScalaInstallation] = Set.empty[LabeledScalaInstallation] ++ initialScalaInstallations.map(customize(_))
 
   /** Return the Scala installation currently running in Eclipse. */
   lazy val platformInstallation: LabeledScalaInstallation =

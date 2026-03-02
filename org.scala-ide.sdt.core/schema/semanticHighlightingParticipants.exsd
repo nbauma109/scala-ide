@@ -81,7 +81,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         For an example on how to use this extension point, see the relevant section in the developer documentation at: http://scala-ide.org/docs/dev/ide-extensions/ide-extensions.html
+         For an example on how to use this extension point, see the relevant section in the developer documentation at: https://nbauma109.github.io/scala-ide/docs/dev/ide-extensions/ide-extensions.html
       </documentation>
    </annotation>
 

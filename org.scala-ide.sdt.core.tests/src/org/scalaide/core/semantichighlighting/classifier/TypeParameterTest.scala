@@ -1,9 +1,11 @@
 package org.scalaide.core.semantichighlighting.classifier
 
+import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.internal.decorators.semantichighlighting.classifier.SymbolTypes._
 import org.junit._
 
 class TypeParameterTest extends AbstractSymbolClassifierTest {
+  private val isScala213: Boolean = IScalaPlugin().shortScalaVersion == "2.13"
 
   @Test
   def basic_type_param(): Unit = {
@@ -73,16 +75,23 @@ class TypeParameterTest extends AbstractSymbolClassifierTest {
 
   @Test
   def partial_compound_type_param(): Unit = {
-    checkSymbolClassification("""
+    val source = """
       trait X {
         def xs[TypeParam]: Seq[TypeParam] with collection.IterableLike[TypeParam, TypeParam]
       }
-      """, """
+      """
+    if (isScala213)
+      checkSymbolClassification(source, """
+      trait X {
+        def xs[$TPARAM $]: Seq[$TPARAM $] with collection.IterableLike[TypeParam, TypeParam]
+      }
+      """, Map("TPARAM" -> TypeParameter))
+    else
+      checkSymbolClassification(source, """
       trait X {
         def xs[$TPARAM $]: Seq[$TPARAM $] with collection.IterableLike[$TPARAM $, $TPARAM $]
       }
-      """,
-      Map("TPARAM" -> TypeParameter))
+      """, Map("TPARAM" -> TypeParameter))
   }
 
   @Test

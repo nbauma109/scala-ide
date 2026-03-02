@@ -61,7 +61,7 @@ abstract class ScalaClasspathContainerInitializer(desc: String) extends Classpat
 }
 
 class ScalaLibraryClasspathContainerInitializer extends ScalaClasspathContainerInitializer(SdtConstants.ScalaLibContName) {
-  override def entries = (platformInstallation.library +: platformInstallation.extraJars).map {_.libraryEntries()}.to[Array]
+  override def entries = (platformInstallation.library +: platformInstallation.extraJars).map { _.libraryEntries() }.toArray
 }
 
 class ScalaCompilerClasspathContainerInitializer extends ScalaClasspathContainerInitializer(SdtConstants.ScalaCompilerContName) {

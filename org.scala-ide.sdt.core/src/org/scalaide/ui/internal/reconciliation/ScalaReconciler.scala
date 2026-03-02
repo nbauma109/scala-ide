@@ -1,6 +1,7 @@
 package org.scalaide.ui.internal.reconciliation
 
-import scala.collection.mutable.Subscriber
+import org.scalaide.util.internal.collection.Subscriber
+import org.scalaide.util.internal.collection.Publisher
 
 import org.eclipse.jface.text.ITextViewer
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy
@@ -47,8 +48,8 @@ class ScalaReconciler(editor: InteractiveCompilationUnitEditor,
   }
 
   /** Listen for presentation-compiler restart events. */
-  object compilerListener extends Subscriber[PresentationCompilerActivity, PresentationCompilerProxy] {
-    override def notify(pub: PresentationCompilerProxy, event: PresentationCompilerActivity): Unit = event match {
+  object compilerListener extends Subscriber[PresentationCompilerActivity, Publisher[PresentationCompilerActivity]] {
+    override def notify(pub: Publisher[PresentationCompilerActivity], event: PresentationCompilerActivity): Unit = event match {
       case Restart =>
         if (pub == compilerProxy) {
           logger.debug(s"Reconciling ${editor.getTitle} due to restart")

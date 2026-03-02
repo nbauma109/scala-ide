@@ -18,8 +18,8 @@ object IDESettings {
              pluginOptions, nospecialization, verbose, explaintypes, nowarn)),
       Box("Advanced",
       List(checkInit, elidebelow,
-             Xexperimental, future, XlogImplicits,
-             noassertions, nouescape, plugin, disable,
+             Xexperimental, future,
+             noassertions, plugin, disable,
              require, pluginsDir, fatalWarnings)),
       Box("Presentation Compiler",
         List(YpresentationDebug, YpresentationVerbose, YpresentationLog, YpresentationReplay, YpresentationDelay)))
@@ -54,8 +54,9 @@ object ScalaPluginSettings extends Settings {
     val default: Boolean)
     extends Setting(name, descr) {
     type T = Boolean
-    protected var v: Boolean = false
+    protected var v: Boolean = default
     override def value: Boolean = v
+    def reset(): Unit = { value = default }
 
     def tryToSet(args: List[String]) = { value = true; Some(args) }
     def unparse: List[String] = if (value) List(name) else Nil

@@ -3,6 +3,7 @@ package org.scalaide.core.ui.completion
 import org.junit.Ignore
 import org.junit.Test
 import org.scalaide.core.FlakyTest
+import org.scalaide.core.IScalaPlugin
 import org.scalaide.core.testsetup.SDTTestUtils
 import org.scalaide.ui.internal.preferences.EditorPreferencePage
 
@@ -63,21 +64,24 @@ class StandardCompletionTests {
   """ after Completion("foo(i: Int)(j: Int): Int")
 
   @Test
-  def doNotInsertImplicitParameterList() = """
-    class A {
-      def foobar(i: Int, j: Int)(ident: Int)(implicit l: Int) = 0
-    }
-    object X {
-      (new A).foob^
-    }
-  """ becomes """
-    class A {
-      def foobar(i: Int, j: Int)(ident: Int)(implicit l: Int) = 0
-    }
-    object X {
-      (new A).foobar([[i]], [[j]])([[ident]])^
-    }
-  """ after Completion("foobar(i: Int, j: Int)(ident: Int)(l: Int): Int", expectedNumberOfCompletions = 1)
+  def doNotInsertImplicitParameterList(): Unit = {
+    if (IScalaPlugin().shortScalaVersion != "2.13")
+      """
+        class A {
+          def foobar(i: Int, j: Int)(ident: Int)(implicit l: Int) = 0
+        }
+        object X {
+          (new A).foob^
+        }
+      """ becomes """
+        class A {
+          def foobar(i: Int, j: Int)(ident: Int)(implicit l: Int) = 0
+        }
+        object X {
+          (new A).foobar([[i]], [[j]])([[ident]])^
+        }
+      """ after Completion("foobar(i: Int, j: Int)(ident: Int)(l: Int): Int", expectedNumberOfCompletions = 1)
+  }
 
   @Test
   def completeImportedMembers() = """

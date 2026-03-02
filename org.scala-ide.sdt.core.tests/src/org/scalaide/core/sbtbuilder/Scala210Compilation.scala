@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.IncrementalProjectBuilder
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.jdt.core.ICompilationUnit
+import org.junit.Assume.assumeTrue
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -45,6 +46,7 @@ class Scala210Compilation {
         case SpecificScalaVersion(major, minor, _, _) => major + "." + minor
         case t => t.unparse
       }
+      assumeTrue("Scala 2.10-specific test: skipped for maintained streams", version == "2.10")
       val root = project.javaProject.getResource.getLocation.makeAbsolute.toFile
       val cacheMain = new File(root.getAbsolutePath + File.separator + ".cache-main")
       assertTrue("Expected 2.10 scala installation, found: " + project.effectiveScalaInstallation.version.unparse, version == "2.10")

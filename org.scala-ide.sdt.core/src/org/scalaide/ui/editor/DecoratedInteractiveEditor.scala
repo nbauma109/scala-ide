@@ -1,7 +1,6 @@
 package org.scalaide.ui.editor
 
 import scala.collection.JavaConverters._
-import scala.collection.breakOut
 
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.compiler.IProblem
@@ -44,7 +43,7 @@ trait DecoratedInteractiveEditor extends ISourceViewerEditor {
       val annotation = new ProblemAnnotation(e, cu) // no compilation unit
       val position = new Position(e.getSourceStart, e.getSourceEnd - e.getSourceStart + 1)
       (annotation, position)
-    })(breakOut)
+    }).toMap
 
     model.replaceAnnotations(previousAnnotations, newAnnotations)
     previousAnnotations = newAnnotations.keys.toList

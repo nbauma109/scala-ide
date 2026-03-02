@@ -13,7 +13,7 @@ This is the process for committing code into master. There are of course excepti
 2. Before starting to work on a feature or a fix, you have to make sure that there is a ticket for your work in the project's issue tracker. If not, create it first.
 3. You should always perform your work in a Git branch. The branch should be given a descriptive name that explains its intent and the ticket number should be suffixed, e.g., scala-java-interop-1000508.
 4. When the feature or fix is completed you should open a [Pull Request](https://help.github.com/articles/using-pull-requests) on GitHub.
-5. The Pull Request should be reviewed by other maintainers (as many as feasible/practical). Note that the maintainers can consist of outside contributors, both within and outside the [Scala IDE Team](http://scala-ide.org/team). Outside contributors are encouraged to participate in the review process, it is not a closed process.
+5. The Pull Request should be reviewed by other maintainers (as many as feasible/practical). Note that the maintainers can consist of outside contributors, both within and outside the [Scala IDE Team](https://nbauma109.github.io/scala-ide/team). Outside contributors are encouraged to participate in the review process, it is not a closed process.
 6. After the review you should fix the issues as needed, **pushing the changes as additional commits**, iterating until the reviewers give their thumbs up.
     - If after the review no action is taken from the contributor for more than 2 weeks, the Pull Request will be closed. Of course, you are free to reopen it as soon as you have addressed the reviewers’ comments.
 7. Once the code has passed review, it’s ok to amend commits as it makes sense (see the ‘Creating Commits And Writing Commit Messages’ section below).
@@ -30,7 +30,7 @@ For a Pull Request to be considered at all it has to meet these requirements:
    - [Boy Scout Rule](http://programmer.97things.oreilly.com/wiki/index.php/The_Boy_Scout_Rule) needs to have been applied.
 2. Regardless if the code introduces new features or fixes bugs or regressions, it must have comprehensive tests. The only exception is UI code, because our infrastructure allows to run test only in a headless environment.
 3. The code must be well documented.
-4. User documentation should be provided for all new features. This can be done by opening a Pull Request in our [Documentation](https://github.com/scala-ide/docs) repository.
+4. User documentation should be provided for all new features. This can be done by opening a Pull Request in our [Documentation](https://github.com/nbauma109/docs) repository.
 5. Rebase you branch on the latest master if it can’t be cleanly merged.
 6. The Pull Request validator successfully builds. What the pull request validator does is making sure that the current master branch would still compile fine after the currently in-review Pull Request is merged.
     - The Pull Request validator will start within 1 hour from the moment you opened the Pull Request.
@@ -67,8 +67,8 @@ Example:
 ## Resources
 
 * [Assembla issue tracker](https://www.assembla.com/spaces/scala-ide/tickets)
-* [Website](http://scala-ide.org/)
+* [Website](https://nbauma109.github.io/scala-ide/)
 * [Contributor License Agreement](http://www.typesafe.com/contribute/cla)
 * [Issue Tracker](http://scala-ide-portfolio.assembla.com/spaces/scala-ide/support/tickets)
-* [Developer Documentation](http://scala-ide.org/docs/dev/index.html)
+* [Developer Documentation](https://nbauma109.github.io/scala-ide/docs/dev/index.html)
 * [scala-ide-dev mailing list](https://groups.google.com/group/scala-ide-dev)
