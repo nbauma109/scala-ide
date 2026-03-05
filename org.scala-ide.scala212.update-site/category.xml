@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.scala-ide.scala212.feature_0.0.0.jar" id="org.scala-ide.scala212.feature" version="0.0.0">
+      <category name="scala212"/>
+   </feature>
+   <feature url="features/org.scala-ide.scala212.source.feature_0.0.0.jar" id="org.scala-ide.scala212.source.feature" version="0.0.0">
+      <category name="scala212-source"/>
+   </feature>
+   <category-def name="scala212" label="Scala 2.12 Toolchain">
+      <description>
+         Scala 2.12 language tooling features for Scala IDE.
+      </description>
+   </category-def>
+   <category-def name="scala212-source" label="Scala 2.12 Toolchain Source">
+      <description>
+         Source features for Scala 2.12 language tooling.
+      </description>
+   </category-def>
+</site>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.scala-ide.zinc.feature_0.0.0.jar" id="org.scala-ide.zinc.feature" version="0.0.0">
+      <category name="zinc"/>
+   </feature>
+   <feature url="features/org.scala-ide.zinc.source.feature_0.0.0.jar" id="org.scala-ide.zinc.source.feature" version="0.0.0">
+      <category name="zinc-source"/>
+   </feature>
+   <category-def name="zinc" label="Scala IDE Zinc Toolchain">
+      <description>
+         Scala IDE Zinc compiler bridge and incremental compiler integration.
+      </description>
+   </category-def>
+   <category-def name="zinc-source" label="Scala IDE Zinc Toolchain Source">
+      <description>
+         Source features for Scala IDE Zinc toolchain components.
+      </description>
+   </category-def>
+</site>
