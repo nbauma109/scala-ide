@@ -53,6 +53,7 @@ jobs:
 
       - name: Build
         env:
+          SCALA_STREAMS: scala-2.12
           ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
           SCALA_IDE_COMPILE_CLASSPATH: "${{ env.JAVA8_HOME }}/jre/lib/rt.jar:${{ env.JAVA8_HOME }}/lib/tools.jar"
         run: ./build-all.sh
