@@ -13,7 +13,7 @@
 
   <groupId>io.github.nbauma109</groupId>
   <artifactId>org.scala-ide.build</artifactId>
-  <version>5.0.2</version>
+  <version>5.0.3</version>
   <description>Default config holder (value, profiles, versions, ...) for the build of Scala IDE for Eclipse</description>
   <packaging>pom</packaging>
 
