@@ -39,8 +39,8 @@ run_stream() {
   echo "Building Scala stream ${stream_label} (${stream_profile})"
   echo "==================================================================="
 
-  run_ "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
-  run_ "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
+  run_mvn "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
+  run_mvn "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
   run_mvn "${ROOT_DIR}/org.scala-ide.build-toolchain" "${common_opts[@]}" "${GOALS[@]}"
   run_mvn "${ROOT_DIR}/org.scala-ide.p2-toolchain" "${p2_opts[@]}" "${GOALS[@]}"
 
