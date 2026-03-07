@@ -2,13 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MVNW="${ROOT_DIR}/mvnw"
 BUILD_NUMBER="${BUILD_NUMBER:-$(git -C "${ROOT_DIR}" rev-parse --short HEAD)}"
 SCALA_STREAMS="${SCALA_STREAMS:-scala-2.12 scala-2.13}"
-
-if [[ ! -x "${MVNW}" ]]; then
-  chmod +x "${MVNW}"
-fi
 
 if [[ $# -eq 0 ]]; then
   GOALS=(clean install)
@@ -19,8 +14,8 @@ fi
 run_mvn() {
   local dir="$1"
   shift
-  echo "==> (${dir}) ./mvnw $*"
-  (cd "${dir}" && "${MVNW}" "$@")
+  echo "==> (${dir}) mvn $*"
+  (cd "${dir}" && mvn "$@")
 }
 
 run_stream() {
@@ -44,8 +39,8 @@ run_stream() {
   echo "Building Scala stream ${stream_label} (${stream_profile})"
   echo "==================================================================="
 
-  run_mvn "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
-  run_mvn "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
+  run_ "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
+  run_ "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
   run_mvn "${ROOT_DIR}/org.scala-ide.build-toolchain" "${common_opts[@]}" "${GOALS[@]}"
   run_mvn "${ROOT_DIR}/org.scala-ide.p2-toolchain" "${p2_opts[@]}" "${GOALS[@]}"
 
@@ -66,7 +61,7 @@ if [[ -n "${SCALA_IDE_COMPILE_CLASSPATH:-}" ]]; then
 else
   echo "SCALA_IDE_COMPILE_CLASSPATH is not set."
 fi
-"${MVNW}" --version
+mvn --version
 
 for stream in ${SCALA_STREAMS}; do
   case "${stream}" in
