@@ -80,7 +80,7 @@ jobs:
 
           current_escaped="$(printf '%s' "${current_version}" | sed 's/[.[\*^$()+?{|]/\\&/g')"
           new_escaped="$(printf '%s' "${new_version}" | sed 's/[&/]/\\&/g')"
-          mapfile -t pom_files < <(git ls-files | rg '(^|/)pom\.xml$')
+          mapfile -t pom_files < <(git ls-files | grep -E '(^|/)pom\.xml$')
 
           for pom_file in "${pom_files[@]}"; do
             perl -0pi -e "s#<version>${current_escaped}</version>#<version>${new_escaped}</version>#g" "${pom_file}"
