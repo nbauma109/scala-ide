@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.nbauma109</groupId>
     <artifactId>org.scala-ide.p2-update-site</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.1</version>
     <relativePath>../org.scala-ide.p2-update-site/pom.xml</relativePath>
   </parent>
   <artifactId>org.scala-ide.p2-update-site.update-site</artifactId>
