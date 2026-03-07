@@ -50,18 +50,6 @@ jobs:
         run: |
           mvn -v
 
-      - name: Provide mvnw shim (repo does not include Maven Wrapper)
-        shell: bash
-        run: |
-          if [ ! -f "./mvnw" ]; then
-            cat > ./mvnw <<'EOF'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          exec mvn "$@"
-          EOF
-            chmod +x ./mvnw
-          fi
-
       - name: Publish scala-refactoring SNAPSHOTs locally
         shell: bash
         run: |
