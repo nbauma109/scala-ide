@@ -1,0 +1,103 @@
+name: Update Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Semantic version component to bump
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.repository.default_branch }}
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version and create tag
+        id: bump
+        env:
+          RELEASE_TYPE: ${{ inputs.release_type }}
+        run: |
+          set -euo pipefail
+
+          current_version="$(sed -n 's|^[[:space:]]*<version>\(.*\)</version>[[:space:]]*$|\1|p' pom.xml | head -n 1)"
+          if [[ -z "${current_version}" ]]; then
+            echo "Unable to determine current version from pom.xml" >&2
+            exit 1
+          fi
+
+          base_version="${current_version%-SNAPSHOT}"
+          IFS='.' read -r major minor patch <<EOF
+          ${base_version}
+          EOF
+
+          case "${RELEASE_TYPE}" in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+            *)
+              echo "Unsupported release type: ${RELEASE_TYPE}" >&2
+              exit 1
+              ;;
+          esac
+
+          new_version="${major}.${minor}.${patch}"
+          new_tag="v${new_version}"
+
+          if git rev-parse "${new_tag}" >/dev/null 2>&1; then
+            echo "Tag ${new_tag} already exists" >&2
+            exit 1
+          fi
+
+          current_escaped="$(printf '%s' "${current_version}" | sed 's/[.[\*^$()+?{|]/\\&/g')"
+          new_escaped="$(printf '%s' "${new_version}" | sed 's/[&/]/\\&/g')"
+          mapfile -t pom_files < <(git ls-files | rg '(^|/)pom\.xml$')
+
+          for pom_file in "${pom_files[@]}"; do
+            perl -0pi -e "s#<version>${current_escaped}</version>#<version>${new_escaped}</version>#g" "${pom_file}"
+          done
+
+          git add "${pom_files[@]}"
+
+          git commit -m "Release ${new_tag}"
+          git tag -a "${new_tag}" -m "${new_tag}"
+
+          echo "version=${new_version}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${new_tag}" >> "${GITHUB_OUTPUT}"
+
+      - name: Push branch and tag
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          git push origin "HEAD:${DEFAULT_BRANCH}"
+          git push origin "${{ steps.bump.outputs.tag }}"

@@ -54,7 +54,7 @@ SUCH DAMAGE.
    </license>
 
    <url>
-      <update label="Scala IDE for Eclipse update site" url="https://nbauma109.github.io/scala-ide/update-current"/>
+      <update label="Scala IDE for Eclipse update site" url="https://nbauma109.github.io/scala-ide/updates/latest/"/>
    </url>
 
    <includes
@@ -63,10 +63,6 @@ SUCH DAMAGE.
 
    <includes
          id="org.scala-ide.zinc.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.scala-ide.scala${scala.short.version}.feature"
          version="0.0.0"/>
 
    <requires>

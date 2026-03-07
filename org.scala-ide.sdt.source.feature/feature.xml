@@ -53,7 +53,7 @@ SUCH DAMAGE.
   </license>
 
   <url>
-    <update url="https://nbauma109.github.io/scala-ide/update-current-35" label="Scala IDE for Eclipse update site"/>
+    <update url="https://nbauma109.github.io/scala-ide/updates/latest/" label="Scala IDE for Eclipse update site"/>
   </url>
 
   <plugin

@@ -40,7 +40,7 @@
     <zero-allocation-hashing.version>0.16</zero-allocation-hashing.version>
     <jna-platform.version>5.14.0</jna-platform.version>
     <sbinary.version>0.5.2</sbinary.version>
-    <scala-refactoring.version>1.0.0-SNAPSHOT</scala-refactoring.version>
+    <scala-refactoring.version>1.0.4</scala-refactoring.version>
     <scalariform.version>0.2.10</scalariform.version>
 
     <!-- plugin versions -->
@@ -96,7 +96,7 @@
     <version.tag>local</version.tag>
 
     <!-- the repos containing the Scala dependencies -->
-    <repo.scala-refactoring>https://oss.sonatype.org/content/repositories/snapshots</repo.scala-refactoring>
+    <repo.scala-refactoring>https://repo1.maven.org/maven2</repo.scala-refactoring>
   </properties>
 
   <profiles>
@@ -370,9 +370,6 @@
                           <filter token="JDTCORE_RANGE" value="${jdt.core.version.range}"/>
                         </filterset>
                     </copy>
-                    <copy file="${sdt.update-site.dir}/resources/site-${version.suffix}.xml"
-                        tofile="${sdt.update-site.dir}/site.xml"
-                        overwrite="true" />
                   </target>
                 </configuration>
                 <goals>

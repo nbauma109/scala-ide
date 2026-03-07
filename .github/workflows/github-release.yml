@@ -1,0 +1,120 @@
+name: GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          clean: true
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v5
+        with:
+          java-version: "8"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Capture JDK 8 home
+        run: |
+          echo "JAVA8_HOME=${JAVA_HOME}" >> "${GITHUB_ENV}"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Capture JDK 17 home
+        run: |
+          echo "JAVA17_HOME=${JAVA_HOME}" >> "${GITHUB_ENV}"
+
+      - name: Validate tag version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          release_version="${TAG_NAME#v}"
+          build_version="$(sed -n 's|^[[:space:]]*<version>\(.*\)</version>[[:space:]]*$|\1|p' pom.xml | head -n 1)"
+
+          if [[ -z "${build_version}" ]]; then
+            echo "Unable to determine build version from pom.xml" >&2
+            exit 1
+          fi
+
+          if [[ "${release_version}" != "${build_version}" ]]; then
+            echo "Tag version ${release_version} does not match pom.xml version ${build_version}" >&2
+            exit 1
+          fi
+
+      - name: Build release update sites
+        env:
+          BUILD_NUMBER: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          export BUILD_NUMBER="${BUILD_NUMBER:0:8}"
+          export ADDITIONAL_MVN_OPTS="--no-transfer-progress -Dversion.tag=release"
+          export SCALA_IDE_COMPILE_CLASSPATH="${JAVA8_HOME}/jre/lib/rt.jar:${JAVA8_HOME}/lib/tools.jar"
+          export SCALA_STREAMS="scala-2.12 scala-2.13"
+
+          JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh clean package
+
+      - name: Package update site
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          release_version="${TAG_NAME#v}"
+          out_dir="${RUNNER_TEMP}/release-artifacts"
+          mkdir -p "${out_dir}"
+
+          (
+            cd org.scala-ide.sdt.update-site/target/repository
+            zip -qr "${out_dir}/scala-ide-${release_version}-update-site.zip" .
+          )
+
+          (
+            cd "${out_dir}"
+            sha256sum ./*.zip > SHA256SUMS.txt
+          )
+
+      - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t artifacts < <(find "${RUNNER_TEMP}/release-artifacts" -maxdepth 1 -type f | sort)
+
+          if [[ "${#artifacts[@]}" -eq 0 ]]; then
+            echo "No release artifacts found" >&2
+            exit 1
+          fi
+
+          if gh release view "${TAG_NAME}" >/dev/null 2>&1; then
+            gh release upload "${TAG_NAME}" --clobber "${artifacts[@]}"
+          else
+            gh release create "${TAG_NAME}" \
+              --title "${TAG_NAME}" \
+              --generate-notes \
+              "${artifacts[@]}"
+          fi

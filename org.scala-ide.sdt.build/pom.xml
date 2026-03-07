@@ -70,10 +70,16 @@
       <url>file:${project.basedir}/../org.scala-ide.zinc.update-site/target/repository</url>
     </repository>
     <repository>
-      <id>scala${scala.short.version}</id>
-      <name>Scala ${scala.short.version} library and jars</name>
+      <id>scala212</id>
+      <name>Scala 2.12 library and jars</name>
       <layout>p2</layout>
-      <url>file:${project.basedir}/../org.scala-ide.scala${scala.short.version}.update-site/target/repository</url>
+      <url>file:${project.basedir}/../org.scala-ide.scala212.update-site/target/repository</url>
+    </repository>
+    <repository>
+      <id>scala213</id>
+      <name>Scala 2.13 library and jars</name>
+      <layout>p2</layout>
+      <url>file:${project.basedir}/../org.scala-ide.scala213.update-site/target/repository</url>
     </repository>
   </repositories>
 

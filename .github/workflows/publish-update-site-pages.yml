@@ -1,0 +1,157 @@
+name: Publish Update Site Pages
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          clean: true
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v5
+        with:
+          java-version: "8"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Capture JDK 8 home
+        run: |
+          echo "JAVA8_HOME=${JAVA_HOME}" >> "${GITHUB_ENV}"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Capture JDK 17 home
+        run: |
+          echo "JAVA17_HOME=${JAVA_HOME}" >> "${GITHUB_ENV}"
+
+      - name: Validate tag version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          release_version="${TAG_NAME#v}"
+          build_version="$(sed -n 's|^[[:space:]]*<version>\(.*\)</version>[[:space:]]*$|\1|p' pom.xml | head -n 1)"
+
+          if [[ -z "${build_version}" ]]; then
+            echo "Unable to determine build version from pom.xml" >&2
+            exit 1
+          fi
+
+          if [[ "${release_version}" != "${build_version}" ]]; then
+            echo "Tag version ${release_version} does not match pom.xml version ${build_version}" >&2
+            exit 1
+          fi
+
+      - name: Build update sites
+        env:
+          BUILD_NUMBER: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          export BUILD_NUMBER="${BUILD_NUMBER:0:8}"
+          export ADDITIONAL_MVN_OPTS="--no-transfer-progress -Dversion.tag=release"
+          export SCALA_IDE_COMPILE_CLASSPATH="${JAVA8_HOME}/jre/lib/rt.jar:${JAVA8_HOME}/lib/tools.jar"
+          export SCALA_STREAMS="scala-2.12 scala-2.13"
+
+          JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh clean package
+
+      - name: Prepare GitHub Pages content
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          umask 077
+
+          release_version="${TAG_NAME#v}"
+          pages_dir="${RUNNER_TEMP}/gh-pages"
+          remote_url="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads "${remote_url}" gh-pages >/dev/null 2>&1; then
+            git clone --depth 1 --branch gh-pages "${remote_url}" "${pages_dir}"
+          else
+            mkdir -p "${pages_dir}"
+            git init "${pages_dir}"
+            git -C "${pages_dir}" checkout -b gh-pages
+            git -C "${pages_dir}" remote add origin "${remote_url}"
+          fi
+
+          git -C "${pages_dir}" config user.name "github-actions[bot]"
+          git -C "${pages_dir}" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          touch "${pages_dir}/.nojekyll"
+
+          mkdir -p "${pages_dir}/updates/latest"
+          mkdir -p "${pages_dir}/updates/${release_version}"
+
+          rsync -a --delete org.scala-ide.sdt.update-site/target/repository/ "${pages_dir}/updates/latest/"
+          rsync -a --delete org.scala-ide.sdt.update-site/target/repository/ "${pages_dir}/updates/${release_version}/"
+
+          cat > "${pages_dir}/updates/index.html" <<EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>Scala IDE Update Sites</title>
+          </head>
+          <body>
+            <h1>Scala IDE Update Sites</h1>
+            <p>Release ${release_version}</p>
+            <ul>
+              <li><a href="./latest/">Latest combined update site</a></li>
+              <li><a href="./${release_version}/">Version ${release_version}</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+          cat > "${pages_dir}/index.html" <<EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>Scala IDE</title>
+          </head>
+          <body>
+            <h1>Scala IDE</h1>
+            <ul>
+              <li><a href="./updates/latest/">Latest combined update site</a></li>
+              <li><a href="./updates/${release_version}/">Version ${release_version}</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+          git -C "${pages_dir}" add -A
+          if git -C "${pages_dir}" diff --cached --quiet; then
+            echo "No Pages changes to publish"
+            exit 0
+          fi
+
+          git -C "${pages_dir}" commit -m "Publish update site ${TAG_NAME}"
+          git -C "${pages_dir}" push origin gh-pages

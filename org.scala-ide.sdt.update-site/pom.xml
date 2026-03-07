@@ -11,6 +11,69 @@
   <artifactId>org.scala-ide.sdt.update-site</artifactId>
   <packaging>eclipse-repository</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.sdt.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.sdt.source.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.sdt.dev.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.p2-update-site.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.zinc.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.zinc.source.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.scala212.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.scala212.source.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.scala213.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nbauma109</groupId>
+      <artifactId>org.scala-ide.scala213.source.feature</artifactId>
+      <version>${project.version}</version>
+      <type>eclipse-feature</type>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

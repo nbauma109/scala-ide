@@ -13,6 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout scala-refactoring
+        uses: actions/checkout@v4
+        with:
+          repository: nbauma109/scala-refactoring
+          path: scala-refactoring
+
       - name: Set up JDK 8
         uses: actions/setup-java@v4
         with:
@@ -30,6 +36,11 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: maven
+
+      - name: Set up sbt
+        uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: 1.10.2
 
       - name: Capture JDK 17 home
         run: |
@@ -51,8 +62,24 @@ jobs:
             chmod +x ./mvnw
           fi
 
-      - name: Build
+      - name: Publish scala-refactoring SNAPSHOTs locally
+        shell: bash
+        run: |
+          pushd scala-refactoring
+          JAVA_HOME="${JAVA8_HOME}" PATH="${JAVA8_HOME}/bin:$PATH" sbt -batch "++2.12.21!" clean test publishLocal
+          JAVA_HOME="${JAVA8_HOME}" PATH="${JAVA8_HOME}/bin:$PATH" sbt -batch "++2.13.18!" clean compile Test/compile publishLocal
+          popd
+
+      - name: Build scala-ide (2.12 stream)
         env:
           ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
           SCALA_IDE_COMPILE_CLASSPATH: "${{ env.JAVA8_HOME }}/jre/lib/rt.jar:${{ env.JAVA8_HOME }}/lib/tools.jar"
-        run: ./build-all.sh
+          SCALA_STREAMS: "scala-2.12"
+        run: JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh
+
+      - name: Build scala-ide (2.13 stream)
+        env:
+          ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
+          SCALA_IDE_COMPILE_CLASSPATH: "${{ env.JAVA8_HOME }}/jre/lib/rt.jar:${{ env.JAVA8_HOME }}/lib/tools.jar"
+          SCALA_STREAMS: "scala-2.13"
+        run: JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh
