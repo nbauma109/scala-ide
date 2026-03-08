@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.List
 import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.ui.console.IConsoleConstants
 import org.eclipse.ui.internal.console.ConsolePluginImages
-import org.eclipse.ui.internal.console.IInternalConsoleConstants
 import org.eclipse.ui.part.ViewPart
 import org.scalaide.core.internal.repl.EclipseRepl.Exec
 import org.scalaide.core.internal.repl.EclipseRepl
@@ -96,9 +95,9 @@ class ReplConsoleView extends ViewPart with InterpreterConsoleView {
     setToolTipText("Erase History and Terminate")
 
     import IInternalDebugUIConstants._
-    setImageDescriptor(DebugPluginImages.getImageDescriptor(IMG_LCL_TERMINATE))
+    setImageDescriptor(DebugPluginImages.getImageDescriptor(IMG_ELCL_TERMINATE))
     setDisabledImageDescriptor(DebugPluginImages.getImageDescriptor(IMG_DLCL_TERMINATE))
-    setHoverImageDescriptor(DebugPluginImages.getImageDescriptor(IMG_LCL_TERMINATE))
+    setHoverImageDescriptor(DebugPluginImages.getImageDescriptor(IMG_ELCL_TERMINATE))
 
     override def run(): Unit = {
       repl.drop()
@@ -110,8 +109,8 @@ class ReplConsoleView extends ViewPart with InterpreterConsoleView {
 
   protected object clearConsoleAction extends Action("Clear Output") {
     setToolTipText("Clear Output")
-    setImageDescriptor(ConsolePluginImages.getImageDescriptor(IInternalConsoleConstants.IMG_ELCL_CLEAR));
-    setDisabledImageDescriptor(ConsolePluginImages.getImageDescriptor(IInternalConsoleConstants.IMG_DLCL_CLEAR));
+    setImageDescriptor(ConsolePluginImages.getImageDescriptor(IConsoleConstants.IMG_LCL_CLEAR));
+    setDisabledImageDescriptor(ConsolePluginImages.getImageDescriptor(IConsoleConstants.IMG_LCL_CLEAR));
     setHoverImageDescriptor(ConsolePluginImages.getImageDescriptor(IConsoleConstants.IMG_LCL_CLEAR));
 
     override def run(): Unit = {

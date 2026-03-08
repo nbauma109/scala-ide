@@ -32,7 +32,11 @@ trait LocateSymbol { self: ScalaPresentationCompiler =>
 
       val name = symClassName(sym)
       packName.flatMap { pn =>
-        val pfs = new SearchableEnvironment(javaProject.asInstanceOf[JavaProject], null: Array[ICompilationUnit], false).nameLookup.findPackageFragments(pn, false)
+        val pfs = new SearchableEnvironment(
+          javaProject.asInstanceOf[JavaProject],
+          null: Array[ICompilationUnit],
+          false,
+          JavaProject.NO_RELEASE).nameLookup.findPackageFragments(pn, false)
         name.flatMap { nm =>
           if (pfs eq null)
             None
@@ -50,7 +54,11 @@ trait LocateSymbol { self: ScalaPresentationCompiler =>
 
     def findPath(): Option[IPath] = {
       logger.info("Looking for a compilation unit for " + sym.fullName)
-      val nameLookup = new SearchableEnvironment(javaProject.asInstanceOf[JavaProject], null: Array[ICompilationUnit], false).nameLookup
+      val nameLookup = new SearchableEnvironment(
+        javaProject.asInstanceOf[JavaProject],
+        null: Array[ICompilationUnit],
+        false,
+        JavaProject.NO_RELEASE).nameLookup
 
       val name = asyncExec {
         if ((sym != NoSymbol) && sym.owner.isPackageObject) sym.owner.owner.fullName + ".package" else sym.enclosingTopLevelClass.fullName

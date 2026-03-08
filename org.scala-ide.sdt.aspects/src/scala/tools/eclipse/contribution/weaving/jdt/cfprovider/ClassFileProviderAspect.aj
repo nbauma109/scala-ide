@@ -265,8 +265,8 @@ public privileged aspect ClassFileProviderAspect {
       cuei = (CompilationUnitElementInfo)info;
     
     
-    if (stc.has1_5Compliance && cuei != null && cuei.annotationNumber > 10) { // experimental value
-      // if more than 10 annotations, diet parse as this is faster
+    if (cuei != null && cuei.annotationNumber >= CompilationUnitElementInfo.ANNOTATION_THRESHOLD_FOR_DIET_PARSE) {
+      // Keep the aspect aligned with current JDT SourceTypeConverter diet parsing.
       return new Parser(stc.problemReporter, true).dietParse(stc.cu, compilationResult);
     }
 

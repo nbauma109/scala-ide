@@ -60,7 +60,7 @@ class ScalaCopyQualifiedNameAction(editor: ScalaCompilationUnitEditor) extends S
   private def initGui(): Unit = {
     setText(ActionMessages.CopyQualifiedNameAction_ActionName);
     setToolTipText(ActionMessages.CopyQualifiedNameAction_ToolTipText);
-    setDisabledImageDescriptor(JavaPluginImages.DESC_DLCL_COPY_QUALIFIED_NAME);
+    setDisabledImageDescriptor(JavaPluginImages.DESC_ELCL_COPY_QUALIFIED_NAME);
     setImageDescriptor(JavaPluginImages.DESC_ELCL_COPY_QUALIFIED_NAME);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.COPY_QUALIFIED_NAME_ACTION);
   }

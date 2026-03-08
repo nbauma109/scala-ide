@@ -190,19 +190,16 @@ public privileged aspect DOMAspect {
     int start = methodInfo.getNameSourceStart();
     int end = methodInfo.getNameSourceEnd();
 
-    // convert 1.5 specific constructs only if compliance is 1.5 or above
     TypeParameter[] typeParams = null;
-    if (stc.has1_5Compliance) {
-      /* convert type parameters */
-      char[][] typeParameterNames = methodInfo.getTypeParameterNames();
-      if (typeParameterNames != null) {
-        int parameterCount = typeParameterNames.length;
-        if (parameterCount > 0) { // method's type parameters must be null if no type parameter
-          char[][][] typeParameterBounds = methodInfo.getTypeParameterBounds();
-          typeParams = new TypeParameter[parameterCount];
-          for (int i = 0; i < parameterCount; i++) {
-            typeParams[i] = stc.createTypeParameter(typeParameterNames[i], typeParameterBounds[i], start, end);
-          }
+    /* convert type parameters */
+    char[][] typeParameterNames = methodInfo.getTypeParameterNames();
+    if (typeParameterNames != null) {
+      int parameterCount = typeParameterNames.length;
+      if (parameterCount > 0) { // method's type parameters must be null if no type parameter
+        char[][][] typeParameterBounds = methodInfo.getTypeParameterBounds();
+        typeParams = new TypeParameter[parameterCount];
+        for (int i = 0; i < parameterCount; i++) {
+          typeParams[i] = stc.createTypeParameter(typeParameterNames[i], typeParameterBounds[i], start, end);
         }
       }
     }
@@ -258,11 +255,8 @@ public privileged aspect DOMAspect {
     method.declarationSourceStart = methodInfo.getDeclarationSourceStart();
     method.declarationSourceEnd = methodInfo.getDeclarationSourceEnd();
 
-    // convert 1.5 specific constructs only if compliance is 1.5 or above
-    if (stc.has1_5Compliance) {
-      /* convert annotations */
-      method.annotations = stc.convertAnnotations(methodHandle);
-    }
+    /* convert annotations */
+    method.annotations = stc.convertAnnotations(methodHandle);
 
     /* convert arguments */
     String[] argumentTypeSignatures = methodHandle.getParameterTypes();

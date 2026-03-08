@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Menu
 import org.eclipse.swt.widgets.MenuItem
 import org.eclipse.ui.ISharedImages
 import org.eclipse.ui.PlatformUI
+import org.eclipse.ui.console.IConsoleConstants
 import org.eclipse.ui.internal.console.ConsolePluginImages
-import org.eclipse.ui.internal.console.IInternalConsoleConstants
 import org.scalaide.util.eclipse.SWTUtils
 
 class StyledTextWithSimpleMenu(parent: Composite, style: Int) extends StyledText(parent, style) with CopyAndClearMenu
@@ -37,7 +37,7 @@ trait CopyAndClearMenu extends StyledText {
     new MenuItem(contextMenu, SWT.SEPARATOR)
     val clearTextItem = new MenuItem(contextMenu, SWT.NORMAL)
     clearTextItem.setText("Clear")
-    clearTextItem.setImage(ConsolePluginImages.getImage(IInternalConsoleConstants.IMG_ELCL_CLEAR))
+    clearTextItem.setImage(ConsolePluginImages.getImage(IConsoleConstants.IMG_LCL_CLEAR))
 
     setMenu(contextMenu)
 

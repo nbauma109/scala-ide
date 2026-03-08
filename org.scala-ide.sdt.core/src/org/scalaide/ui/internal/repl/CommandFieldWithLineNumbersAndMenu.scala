@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.MenuItem
 import org.eclipse.ui.ISharedImages
 import org.eclipse.ui.PlatformUI
 import org.eclipse.ui.internal.console.ConsolePluginImages
-import org.eclipse.ui.internal.console.IInternalConsoleConstants
 import org.scalaide.util.eclipse.SWTUtils._
 
 class CommandFieldWithLineNumbersAndMenu(parent: Composite, style: Int)
@@ -86,7 +85,7 @@ trait InputContextMenuAndLineNumbers extends CommandField {
     createSimpleMenuItem(menu, "Paste", sharedImages.getImage(ISharedImages.IMG_TOOL_PASTE), paste())
 
   private def createClearMenuItem(menu: Menu) =
-    createSimpleMenuItem(menu, "Clear", ConsolePluginImages.getImage(IInternalConsoleConstants.IMG_ELCL_CLEAR), clear())
+    createSimpleMenuItem(menu, "Clear", ConsolePluginImages.getImage(org.eclipse.ui.console.IConsoleConstants.IMG_LCL_CLEAR), clear())
 
   private def createLineNumbersMenuItem(menu: Menu) = {
     val lineNumbersItem = new MenuItem(menu, SWT.CHECK)
