@@ -163,6 +163,9 @@ class SbtBuilderTest {
   }
 
   @Test def dependentProject_should_restart_PC_after_build(): Unit = {
+    depProject.project // force initialization of the dependent project
+    depProject.project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+
     val fooCU = depProject.compilationUnit("subpack/Foo.scala")
     val changedErrors = SDTTestUtils.buildWith(fooCU.getResource, changedFooScala, unitsToWatch)
 
@@ -172,6 +175,7 @@ class SbtBuilderTest {
     Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
+    project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
 
     reload(fooClientCU)
 

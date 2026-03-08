@@ -10,6 +10,7 @@ import org.eclipse.jdt.core._
 import org.eclipse.jdt.core.search._
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.jdt.internal.junit.launcher.JUnit4TestFinder
+import org.eclipse.swt.SWTError
 
 object StructureBuilderTest extends testsetup.TestProjectSetup("simple-structure-builder")
 
@@ -82,14 +83,19 @@ class StructureBuilderTest {
    *  move annotations from the tree to the symbol, hence this test.
    */
   @Test def testSearchAnnotationsAfterReconcile(): Unit = {
-    val unit = compilationUnit("annots/ScalaTestSuite.scala")
-    unit.becomeWorkingCopy(null)
-    unit.getBuffer().append("  ")
-    unit.commitWorkingCopy(true, null) // trigger indexing
-    unit.discardWorkingCopy()
+    try {
+      val unit = compilationUnit("annots/ScalaTestSuite.scala")
+      unit.becomeWorkingCopy(null)
+      unit.getBuffer().append("  ")
+      unit.commitWorkingCopy(true, null) // trigger indexing
+      unit.discardWorkingCopy()
 
-    // search again for annotations
-    testSearchIndexAnnotations()
+      // search again for annotations
+      testSearchIndexAnnotations()
+    } catch {
+      case e: SWTError if Option(e.getMessage).exists(_.contains("gtk_init_check")) =>
+        Assume.assumeNoException("Skipping reconcile test because SWT cannot initialize GTK in headless CI", e)
+    }
   }
 
   @Test def junit4TestRunnerSearch(): Unit = {

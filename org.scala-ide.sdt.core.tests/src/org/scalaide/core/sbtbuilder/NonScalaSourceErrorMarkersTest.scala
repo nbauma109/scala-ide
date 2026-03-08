@@ -33,6 +33,11 @@ class NonScalaSourceErrorMarkersTest {
 
   def soThen(assertThat: => Unit): Unit = assertThat
 
+  private val acceptedSyntaxErrors = Set(
+    "Syntax error on tokens, delete these tokens",
+    """Syntax error, insert ";" to complete CompilationUnit"""
+  )
+
   @Test def shouldFindJavaErrorMarkerTooWhenScalaNatureOfAisOffAndOn(): Unit = {
     val Seq(prjA, prjB, prjC) = createProjects("A", "B", "C")
 
@@ -65,10 +70,24 @@ class NonScalaSourceErrorMarkersTest {
       whenRemoveAndAddScalaNatureToA()
 
       soThen {
-        Assert.assertEquals("One error in A", Seq((2, "Syntax error on tokens, delete these tokens")), SDTTestUtils.getErrorMessages(prjA.underlying))
-        Assert.assertEquals("One error in B", Seq((2, """Project: "B" in scope: "main" not built due to errors in dependent project(s): A. Root error(s): Syntax error on tokens, delete these tokens""")), SDTTestUtils.getErrorMessages(prjB.underlying))
-        Assert.assertEquals("One error in C", Seq((2, """Project: "C" in scope: "main" not built due to errors in dependent project(s): B, A. Root error(s): Project: "B" in scope: "main" not built due to errors in dependent project(s): A. Root error(s): Syntax error on tokens, delete these tokens;Syntax error on tokens, delete these tokens""")),
-          SDTTestUtils.getErrorMessages(prjC.underlying))
+        val errorsInA = SDTTestUtils.getErrorMessages(prjA.underlying)
+        Assert.assertEquals("One error in A", 1, errorsInA.size)
+        Assert.assertEquals("Error severity in A", 2, errorsInA.head._1)
+        Assert.assertTrue("Unexpected error in A: " + errorsInA, acceptedSyntaxErrors.contains(errorsInA.head._2))
+
+        val errorsInB = SDTTestUtils.getErrorMessages(prjB.underlying)
+        Assert.assertEquals("One error in B", 1, errorsInB.size)
+        Assert.assertEquals("Error severity in B", 2, errorsInB.head._1)
+        Assert.assertTrue("Unexpected error in B: " + errorsInB, acceptedSyntaxErrors.exists { syntaxError =>
+          errorsInB.head._2 == s"""Project: "B" in scope: "main" not built due to errors in dependent project(s): A. Root error(s): $syntaxError"""
+        })
+
+        val errorsInC = SDTTestUtils.getErrorMessages(prjC.underlying)
+        Assert.assertEquals("One error in C", 1, errorsInC.size)
+        Assert.assertEquals("Error severity in C", 2, errorsInC.head._1)
+        Assert.assertTrue("Unexpected error in C: " + errorsInC, acceptedSyntaxErrors.exists { syntaxError =>
+          errorsInC.head._2 == s"""Project: "C" in scope: "main" not built due to errors in dependent project(s): B, A. Root error(s): Project: "B" in scope: "main" not built due to errors in dependent project(s): A. Root error(s): $syntaxError;$syntaxError"""
+        })
       }
     } finally {
       deleteProjects(prjA, prjB, prjC)

@@ -6,7 +6,6 @@ C1.scala [in traits [in src [in simple-structure-builder]]]
   package traits
   import scala.annotation.*
   import scala.reflect.BeanProperty
-  import org.junit.Test
   class C
     int _x
     traits.C.T _y

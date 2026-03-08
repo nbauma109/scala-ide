@@ -2,7 +2,6 @@ package traits
 
 import scala.annotation._
 import scala.reflect.BeanProperty
-import org.junit.Test
 
 abstract class C[T](_x: Int, _y: T) extends Ordered[String] {
 
@@ -30,7 +29,7 @@ abstract class C[T](_x: Int, _y: T) extends Ordered[String] {
     println(x)
   }
 
-  @Test
+  @org.junit.Test
   def annotatedMethod: Unit = {
 
   }
