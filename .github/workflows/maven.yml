@@ -30,21 +30,21 @@ jobs:
         run: |
           echo "JAVA8_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: "17"
+          java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Capture JDK 21 home
+        run: |
+          echo "JAVA21_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
 
       - name: Set up sbt
         uses: sbt/setup-sbt@v1
         with:
           sbt-runner-version: 1.10.2
-
-      - name: Capture JDK 17 home
-        run: |
-          echo "JAVA17_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
 
       - name: Ensure Maven is available
         run: |
@@ -61,13 +61,15 @@ jobs:
       - name: Build scala-ide (2.12 stream)
         env:
           ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
+          MVN_CMD: "mvn"
           SCALA_IDE_COMPILE_CLASSPATH: "${{ env.JAVA8_HOME }}/jre/lib/rt.jar:${{ env.JAVA8_HOME }}/lib/tools.jar"
           SCALA_STREAMS: "scala-2.12"
-        run: JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh
+        run: JAVA_HOME="${JAVA21_HOME}" PATH="${JAVA21_HOME}/bin:$PATH" ./build-all.sh
 
       - name: Build scala-ide (2.13 stream)
         env:
           ADDITIONAL_MVN_OPTS: "--no-transfer-progress"
+          MVN_CMD: "mvn"
           SCALA_IDE_COMPILE_CLASSPATH: "${{ env.JAVA8_HOME }}/jre/lib/rt.jar:${{ env.JAVA8_HOME }}/lib/tools.jar"
           SCALA_STREAMS: "scala-2.13"
-        run: JAVA_HOME="${JAVA17_HOME}" PATH="${JAVA17_HOME}/bin:$PATH" ./build-all.sh
+        run: JAVA_HOME="${JAVA21_HOME}" PATH="${JAVA21_HOME}/bin:$PATH" ./build-all.sh

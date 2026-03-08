@@ -2,7 +2,7 @@
 <feature
       id="org.scala-ide.scala212.feature"
       label="Scala 2.12.21"
-      version="5.0.0.qualifier"
+      version="5.0.3.qualifier"
       provider-name="nbauma109"
       plugin="org.scala-lang.scala-library">
 

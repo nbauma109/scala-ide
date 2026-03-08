@@ -3,7 +3,7 @@ Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: Scala Debug Plugin
 Bundle-SymbolicName: org.scala-ide.sdt.debug;singleton:=true
-Bundle-Version: 5.0.0.qualifier
+Bundle-Version: 5.0.3.qualifier
 Bundle-Vendor: nbauma109
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

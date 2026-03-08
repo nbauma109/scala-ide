@@ -80,13 +80,31 @@ jobs:
 
           current_escaped="$(printf '%s' "${current_version}" | sed 's/[.[\*^$()+?{|]/\\&/g')"
           new_escaped="$(printf '%s' "${new_version}" | sed 's/[&/]/\\&/g')"
+          current_feature_version="${base_version}.qualifier"
+          current_feature_escaped="$(printf '%s' "${current_feature_version}" | sed 's/[.[\*^$()+?{|]/\\&/g')"
+          new_feature_escaped="$(printf '%s' "${new_version}.qualifier" | sed 's/[&/]/\\&/g')"
           mapfile -t pom_files < <(git ls-files | grep -E '(^|/)pom\.xml$')
+          mapfile -t target_files < <(git ls-files | grep -E '^target-platform/.*\.target$')
+          mapfile -t feature_files < <(git ls-files | grep -E '(^|/)feature\.xml$')
+          mapfile -t manifest_files < <(git ls-files | grep -E '(^|/)MANIFEST\.MF$|(^|/)MANIFEST-[0-9]+\.MF$')
 
           for pom_file in "${pom_files[@]}"; do
             perl -0pi -e "s#<version>${current_escaped}</version>#<version>${new_escaped}</version>#g" "${pom_file}"
           done
 
-          git add "${pom_files[@]}"
+          for target_file in "${target_files[@]}"; do
+            perl -0pi -e "s#(<artifactId>org\\.scala-ide\\.zinc\\.(?:compiler\\.bridge|library)</artifactId>\\s*<version>)${current_escaped}(-SNAPSHOT)?(</version>)#\\1${new_escaped}\\3#gms" "${target_file}"
+          done
+
+          for feature_file in "${feature_files[@]}"; do
+            perl -0pi -e "s#version=\"${current_feature_escaped}\"#version=\"${new_feature_escaped}\"#g" "${feature_file}"
+          done
+
+          for manifest_file in "${manifest_files[@]}"; do
+            perl -0pi -e "s#(Bundle-Version:\\s*)${current_feature_escaped}#\\1${new_feature_escaped}#g" "${manifest_file}"
+          done
+
+          git add "${pom_files[@]}" "${target_files[@]}" "${feature_files[@]}" "${manifest_files[@]}"
 
           git commit -m "Release ${new_tag}"
           git tag -a "${new_tag}" -m "${new_tag}"

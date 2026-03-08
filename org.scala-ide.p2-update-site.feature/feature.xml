@@ -2,7 +2,7 @@
 <feature
       id="org.scala-ide.p2-update-site.feature"
       label="Scala IDE Refactoring"
-      version="5.0.0.qualifier"
+      version="5.0.3.qualifier"
       provider-name="nbauma109"
       plugin="org.scala-refactoring.library">
 

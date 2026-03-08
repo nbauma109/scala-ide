@@ -2,7 +2,7 @@
 <feature
       id="org.scala-ide.scala213.source.feature"
       label="Scala ${scala213.version} sources"
-      version="5.0.0.qualifier"
+      version="5.0.3.qualifier"
       provider-name="nbauma109">
 
    <description url="https://nbauma109.github.io/scala-ide">

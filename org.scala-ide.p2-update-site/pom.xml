@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.nbauma109</groupId>
     <artifactId>org.scala-ide.p2-toolchain</artifactId>
-    <version>5.0.3</version>
+    <version>5.0.3-SNAPSHOT</version>
     <relativePath>../org.scala-ide.p2-toolchain/pom.xml</relativePath>
   </parent>
 
@@ -38,7 +38,7 @@
   <repositories>
     <repository>
         <id>eclipse-releases</id>
-        <url>http://download.eclipse.org/releases/2024-03/</url>
+        <url>https://download.eclipse.org/releases/2025-12/</url>
         <layout>p2</layout>
     </repository>
     <repository>
@@ -57,4 +57,3 @@
   </modules>
 
 </project>
-

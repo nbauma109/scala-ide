@@ -2,7 +2,7 @@
 <feature
       id="org.scala-ide.zinc.source.feature"
       label="zinc 1.9.6 sources"
-      version="5.0.0.qualifier"
+      version="5.0.3.qualifier"
       provider-name="nbauma109">
 
    <description url="https://nbauma109.github.io/scala-ide">
@@ -47,6 +47,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <plugin
          id="org.scala-ide.zinc.library.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.scala-ide.zinc.compiler.bridge.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

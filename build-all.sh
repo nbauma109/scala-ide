@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MVN_CMD="${MVN_CMD:-mvn}"
 BUILD_NUMBER="${BUILD_NUMBER:-$(git -C "${ROOT_DIR}" rev-parse --short HEAD)}"
 SCALA_STREAMS="${SCALA_STREAMS:-scala-2.12 scala-2.13}"
 
@@ -14,14 +15,14 @@ fi
 run_mvn() {
   local dir="$1"
   shift
-  echo "==> (${dir}) mvn $*"
-  (cd "${dir}" && mvn "$@")
+  echo "==> (${dir}) ${MVN_CMD} $*"
+  (cd "${dir}" && "${MVN_CMD}" "$@")
 }
 
 run_stream() {
   local stream_profile="$1"
   local stream_label="$2"
-  local common_opts=(-DbuildNumber="${BUILD_NUMBER}" -Peclipse-2024-03 "-P${stream_profile}")
+  local common_opts=(-DbuildNumber="${BUILD_NUMBER}" -Peclipse-2025-12 "-P${stream_profile}")
   if [[ -n "${ADDITIONAL_MVN_OPTS:-}" ]]; then
     local -a extra_opts
     read -r -a extra_opts <<< "${ADDITIONAL_MVN_OPTS}"
@@ -40,8 +41,8 @@ run_stream() {
   echo "==================================================================="
 
   run_mvn "${ROOT_DIR}" "${common_opts[@]}" "${GOALS[@]}"
-  run_mvn "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files antrun:run
-  run_mvn "${ROOT_DIR}/org.scala-ide.build-toolchain" "${common_opts[@]}" "${GOALS[@]}"
+  run_mvn "${ROOT_DIR}" "${common_opts[@]}" -Pset-version-specific-files validate
+  run_mvn "${ROOT_DIR}/org.scala-ide.build-toolchain" "${common_opts[@]}" clean install
   run_mvn "${ROOT_DIR}/org.scala-ide.p2-toolchain" "${p2_opts[@]}" "${GOALS[@]}"
 
   if [[ -n "${SET_VERSIONS:-}" ]]; then
@@ -51,7 +52,7 @@ run_stream() {
   run_mvn "${ROOT_DIR}/org.scala-ide.sdt.build" "${sdt_opts[@]}" "${GOALS[@]}"
 }
 
-echo "Tycho builds require JDK 17 or newer."
+echo "Tycho builds require JDK 21 or newer for the Eclipse 2025-12 target platform."
 echo "JAVA_HOME=${JAVA_HOME:-<unset>}"
 echo "BUILD_NUMBER=${BUILD_NUMBER}"
 echo "STREAMS=${SCALA_STREAMS}"
@@ -61,7 +62,7 @@ if [[ -n "${SCALA_IDE_COMPILE_CLASSPATH:-}" ]]; then
 else
   echo "SCALA_IDE_COMPILE_CLASSPATH is not set."
 fi
-mvn --version
+"${MVN_CMD}" --version
 
 for stream in ${SCALA_STREAMS}; do
   case "${stream}" in

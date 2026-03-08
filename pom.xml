@@ -13,7 +13,7 @@
 
   <groupId>io.github.nbauma109</groupId>
   <artifactId>org.scala-ide.build</artifactId>
-  <version>5.0.3</version>
+  <version>5.0.3-SNAPSHOT</version>
   <description>Default config holder (value, profiles, versions, ...) for the build of Scala IDE for Eclipse</description>
   <packaging>pom</packaging>
 
@@ -23,8 +23,9 @@
     <retryFlakyTests>true</retryFlakyTests>
     <scala.ide.compile.classpath></scala.ide.compile.classpath>
     <!-- p2 repositories location -->
-    <repo.eclipse.2024.03>http://download.eclipse.org/releases/2024-03</repo.eclipse.2024.03>
-    <repo.ajdt.2024.03>http://download.eclipse.org/tools/ajdt/426/dev/update</repo.ajdt.2024.03>
+    <repo.eclipse.2025.12>https://download.eclipse.org/releases/2025-12</repo.eclipse.2025.12>
+    <!-- AJDT does not publish a stream for every Eclipse train; use the latest dev update site. -->
+    <repo.ajdt.dev>https://download.eclipse.org/tools/ajdt/439/dev/update</repo.ajdt.dev>
     <repo.equinox.launcher>${repo.ajdt}</repo.equinox.launcher>
     <repo.scala-ide.root>https://nbauma109.github.io/scala-ide</repo.scala-ide.root>
     <repo.nebula>http://download.eclipse.org/nebula/releases/latest</repo.nebula>
@@ -138,13 +139,13 @@
     </profile>
 
     <profile>
-      <id>eclipse-2024-03</id>
+      <id>eclipse-2025-12</id>
       <properties>
-        <eclipse.codename>2024-03</eclipse.codename>
-        <repo.eclipse>${repo.eclipse.2024.03}</repo.eclipse>
-        <repo.ajdt>${repo.ajdt.2024.03}</repo.ajdt>
+        <eclipse.codename>2025-12</eclipse.codename>
+        <repo.eclipse>${repo.eclipse.2025.12}</repo.eclipse>
+        <repo.ajdt>${repo.ajdt.dev}</repo.ajdt>
         <jdt.core.version.range>[3.10.0,4.0.0)</jdt.core.version.range>
-        <weaving.hook.plugin.version>1.4.0.v20240213-1357</weaving.hook.plugin.version>
+        <weaving.hook.plugin.version>1.4.400.v20250628-0635</weaving.hook.plugin.version>
       </properties>
     </profile>
 
@@ -220,10 +221,10 @@
     <profile>
       <id>set-version-specific-files</id>
       <properties>
-        <zinc.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.feature</zinc.feature.dir>
-        <zinc.source.feature.dir>org.scala-ide.zinc/org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
-        <scala.feature.dir>org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.feature</scala.feature.dir>
-        <scala.source.feature.dir>org.scala-ide.scala${scala.short.version}.build/org.scala-ide.scala${scala.short.version}.source.feature</scala.source.feature.dir>
+        <zinc.feature.dir>org.scala-ide.zinc.feature</zinc.feature.dir>
+        <zinc.source.feature.dir>org.scala-ide.zinc.source.feature</zinc.source.feature.dir>
+        <scala.feature.dir>org.scala-ide.scala${scala.short.version}.feature</scala.feature.dir>
+        <scala.source.feature.dir>org.scala-ide.scala${scala.short.version}.source.feature</scala.source.feature.dir>
         <sdt.core.dir>org.scala-ide.sdt.core</sdt.core.dir>
         <sdt.debug.dir>org.scala-ide.sdt.debug</sdt.debug.dir>
         <sdt.debug.expression.dir>org.scala-ide.sdt.debug.expression</sdt.debug.expression.dir>
