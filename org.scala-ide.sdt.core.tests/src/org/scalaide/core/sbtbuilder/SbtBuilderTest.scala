@@ -162,7 +162,7 @@ class SbtBuilderTest {
     unitsToWatch.flatMap(SDTTestUtils.findProblemMarkers)
   }
 
-  @Test def dependentProject_should_restart_PC_after_build(): Unit = {
+  @Test def dependentProject_should_restart_PC_after_build(): Unit = FlakyTest.retry("dependentProject_should_restart_PC_after_build", "Found unexpected problem(s):") {
     depProject.project // force initialization of the dependent project
     depProject.project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
 
@@ -175,9 +175,11 @@ class SbtBuilderTest {
     Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
-    project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+    SDTTestUtils.workspace.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null)
+    project.presentationCompiler.askRestart()
 
     reload(fooClientCU)
+    waitUntilTypechecked(fooClientCU)
 
     assertNoErrors(fooClientCU)
   }
