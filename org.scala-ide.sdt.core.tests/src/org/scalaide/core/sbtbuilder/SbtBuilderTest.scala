@@ -177,11 +177,16 @@ class SbtBuilderTest {
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
     SDTTestUtils.workspace.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null)
     project.presentationCompiler.askRestart()
+    project.presentationCompiler(_ => ())
 
-    reload(fooClientCU)
+    // Re-register the unit explicitly after the compiler restart and dependent rebuild have completed.
+    fooClientCU.forceReload()
     waitUntilTypechecked(fooClientCU)
+    val refreshedProblems = fooClientCU.forceReconcile()
 
-    assertNoErrors(fooClientCU)
+    Assert.assertTrue(
+      "Found unexpected problem(s):\n" + refreshedProblems.mkString("-", "\n", "."),
+      refreshedProblems.isEmpty)
   }
 
   @Test def scalaLibrary_in_dependent_project_shouldBe_on_BootClasspath(): Unit = {
