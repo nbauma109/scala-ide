@@ -28,9 +28,17 @@ import org.scalaide.logging.Logger
  *  volatile fields don't offer atomic operations such as `getAndSet`).
  */
 object EclipseLogger extends Logger {
-  private val pluginLogger: ILog = IScalaPlugin().getLog()
+  private val fallbackPluginId = "org.scala-ide.sdt.core"
 
   private val lastCrash: AtomicReference[Throwable] = new AtomicReference
+
+  private def plugin = Option(IScalaPlugin())
+
+  private def pluginLogger: Option[ILog] =
+    plugin.map(_.getLog())
+
+  private def pluginId: String =
+    plugin.flatMap(p => Option(p.getBundle)).map(_.getSymbolicName).getOrElse(fallbackPluginId)
 
   override def trace(message: => Any): Unit = {
     info(message)
@@ -102,9 +110,19 @@ object EclipseLogger extends Logger {
     if (message == null && exception == null)
       error("Error occurred in logger: message and exception are both null", new IllegalArgumentException)
     else {
-      val status = new Status(severity, IScalaPlugin().getBundle.getSymbolicName, if (message == null) "" else message.toString, exception)
-      if (IScalaPlugin().headlessMode) pluginLogger.log(status)
-      else DisplayThread.asyncExec { pluginLogger.log(status) }
+      val status = new Status(severity, pluginId, if (message == null) "" else message.toString, exception)
+      pluginLogger match {
+        case Some(log) if plugin.exists(_.headlessMode) =>
+          log.log(status)
+        case Some(log) =>
+          DisplayThread.asyncExec { log.log(status) }
+        case None =>
+          val stream =
+            if (severity >= IStatus.ERROR) System.err
+            else System.out
+          stream.println(s"[${pluginId}] ${status.getMessage}")
+          Option(exception).foreach(_.printStackTrace(stream))
+      }
     }
   }
 }
