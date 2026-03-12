@@ -175,14 +175,11 @@ class SbtBuilderTest {
     Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
-    SDTTestUtils.workspace.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null)
-    project.presentationCompiler.askRestart()
-    project.presentationCompiler(_ => ())
-
-    // Re-register the unit explicitly after the compiler restart and dependent rebuild have completed.
-    fooClientCU.forceReload()
-    waitUntilTypechecked(fooClientCU)
-    val refreshedProblems = fooClientCU.forceReconcile()
+    val sf = fooClientCU.lastSourceMap().sourceFile
+    fooClientCU.scalaProject.presentationCompiler { comp =>
+      comp.askReload(fooClientCU, sf).get
+    }
+    val refreshedProblems = fooClientCU.asInstanceOf[ScalaSourceFile].getProblems().toList
 
     Assert.assertTrue(
       "Found unexpected problem(s):\n" + refreshedProblems.mkString("-", "\n", "."),
