@@ -176,10 +176,25 @@ class SbtBuilderTest {
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
     val sf = fooClientCU.lastSourceMap().sourceFile
-    fooClientCU.scalaProject.presentationCompiler { comp =>
-      comp.askReload(fooClientCU, sf).get
+
+    @annotation.tailrec
+    def awaitClearedProblems(attemptsRemaining: Int): List[String] = {
+      fooClientCU.scalaProject.presentationCompiler { comp =>
+        comp.askReload(fooClientCU, sf).get
+      }
+      val currentProblems =
+        Option(fooClientCU.asInstanceOf[ScalaSourceFile].getProblems())
+          .map(_.toList.map(_.getMessage))
+          .getOrElse(Nil)
+
+      if (currentProblems.isEmpty || attemptsRemaining <= 1) currentProblems
+      else {
+        Thread.sleep(250)
+        awaitClearedProblems(attemptsRemaining - 1)
+      }
     }
-    val refreshedProblems = fooClientCU.asInstanceOf[ScalaSourceFile].getProblems().toList
+
+    val refreshedProblems = awaitClearedProblems(attemptsRemaining = 20)
 
     Assert.assertTrue(
       "Found unexpected problem(s):\n" + refreshedProblems.mkString("-", "\n", "."),
