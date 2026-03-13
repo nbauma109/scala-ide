@@ -175,15 +175,16 @@ class SbtBuilderTest {
     Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
-    val sf = fooClientCU.lastSourceMap().sourceFile
+    val fooClientSource = fooClientCU.asInstanceOf[ScalaSourceFile]
 
     @annotation.tailrec
     def awaitClearedProblems(attemptsRemaining: Int): List[String] = {
-      fooClientCU.scalaProject.presentationCompiler { comp =>
-        comp.askReload(fooClientCU, sf).get
-      }
+      fooClientSource.forceReload()
+      waitUntilTypechecked(fooClientCU)
+      fooClientSource.forceReconcile()
+
       val currentProblems =
-        Option(fooClientCU.asInstanceOf[ScalaSourceFile].getProblems())
+        Option(fooClientSource.getProblems())
           .map(_.toList.map(_.getMessage))
           .getOrElse(Nil)
 
