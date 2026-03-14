@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile
 import org.junit.Before
 import org.scalaide.core.internal.jdt.model.ScalaSourceFile
 import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.jdt.core.JavaCore
 import scala.tools.nsc.Settings
 import org.scalaide.core.IScalaProject
@@ -162,6 +163,11 @@ class SbtBuilderTest {
     unitsToWatch.flatMap(SDTTestUtils.findProblemMarkers)
   }
 
+  private def waitForWorkspaceBuildJobs(): Unit = {
+    Job.getJobManager.join(org.eclipse.core.resources.ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor)
+    Job.getJobManager.join(org.eclipse.core.resources.ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor)
+  }
+
   @Test def dependentProject_should_restart_PC_after_build(): Unit = FlakyTest.retry("dependentProject_should_restart_PC_after_build", "Found unexpected problem(s):") {
     depProject.project // force initialization of the dependent project
     depProject.project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
@@ -171,14 +177,30 @@ class SbtBuilderTest {
 
     Assert.assertEquals("Build problems " + changedErrors, 2, changedErrors.size)
 
-    val errorMessages = SDTTestUtils.buildWith(fooCU.getResource, originalFooScala, unitsToWatch)
-    Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
+    waitForWorkspaceBuildJobs()
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
     val fooClientSource = fooClientCU.asInstanceOf[ScalaSourceFile]
 
+    fooClientSource.discard()
+    fooClientSource.forceReload()
+    waitUntilTypechecked(fooClientCU)
+    fooClientSource.forceReconcile()
+
+    val brokenProblems =
+      Option(fooClientSource.getProblems())
+        .map(_.toList.map(_.getMessage))
+        .getOrElse(Nil)
+
+    Assert.assertEquals("Presentation compiler errors while dependency is broken.", 2, brokenProblems.size)
+
+    val errorMessages = SDTTestUtils.buildWith(fooCU.getResource, originalFooScala, unitsToWatch)
+    Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
+    waitForWorkspaceBuildJobs()
+
     @annotation.tailrec
     def awaitClearedProblems(attemptsRemaining: Int): List[String] = {
+      fooClientSource.discard()
       fooClientSource.forceReload()
       waitUntilTypechecked(fooClientCU)
       fooClientSource.forceReconcile()
@@ -195,7 +217,7 @@ class SbtBuilderTest {
       }
     }
 
-    val refreshedProblems = awaitClearedProblems(attemptsRemaining = 20)
+    val refreshedProblems = awaitClearedProblems(attemptsRemaining = 40)
 
     Assert.assertTrue(
       "Found unexpected problem(s):\n" + refreshedProblems.mkString("-", "\n", "."),
