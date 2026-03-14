@@ -169,15 +169,24 @@ class SbtBuilderTest {
   }
 
   @Test def dependentProject_should_restart_PC_after_build(): Unit = FlakyTest.retry("dependentProject_should_restart_PC_after_build", "Found unexpected problem(s):") {
+    def rebuild(prj: IScalaProject): List[IMarker] = {
+      prj.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+      waitForWorkspaceBuildJobs()
+      getProblemMarkers()
+    }
+
     depProject.project // force initialization of the dependent project
-    depProject.project.underlying.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+    rebuild(depProject.project)
+    Assert.assertTrue("Initial build problems: " + rebuild(project), rebuild(project).isEmpty)
 
     val fooCU = depProject.compilationUnit("subpack/Foo.scala")
-    val changedErrors = SDTTestUtils.buildWith(fooCU.getResource, changedFooScala, unitsToWatch)
+    val fooResource = fooCU.getResource.getAdapter(classOf[IFile]).asInstanceOf[IFile]
+
+    SDTTestUtils.changeContentOfFile(fooResource, changedFooScala)
+    rebuild(depProject.project)
+    val changedErrors = rebuild(project)
 
     Assert.assertEquals("Build problems " + changedErrors, 2, changedErrors.size)
-
-    waitForWorkspaceBuildJobs()
 
     val fooClientCU = scalaCompilationUnit("test/dependency/FooClient.scala")
     val fooClientSource = fooClientCU.asInstanceOf[ScalaSourceFile]
@@ -194,9 +203,10 @@ class SbtBuilderTest {
 
     Assert.assertEquals("Presentation compiler errors while dependency is broken.", 2, brokenProblems.size)
 
-    val errorMessages = SDTTestUtils.buildWith(fooCU.getResource, originalFooScala, unitsToWatch)
+    SDTTestUtils.changeContentOfFile(fooResource, originalFooScala)
+    rebuild(depProject.project)
+    val errorMessages = rebuild(project)
     Assert.assertEquals("No build problems: " + errorMessages, 0, errorMessages.size)
-    waitForWorkspaceBuildJobs()
 
     @annotation.tailrec
     def awaitClearedProblems(attemptsRemaining: Int): List[String] = {
