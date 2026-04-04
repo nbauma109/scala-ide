@@ -154,7 +154,7 @@ final class PresentationCompilerProxy(name: String, initializeSettings: () => Se
           .map(_.trim)
           .filter(_.nonEmpty)
           .filterNot(v => v.startsWith("${") && v.endsWith("}"))
-          .foreach(compilerSettings.classpath.value = _)
+          .foreach(compilerSettings.javabootclasspath.value = _)
         val pc = new ScalaPresentationCompiler(name, compilerSettings)
         logger.debug(pc.settings.userSetSettings.toSeq.sortBy(_.name.toLowerCase).mkString(s"Presentation compiler settings for $name:\n  ", "\n  ", ""))
         publish(Start)
